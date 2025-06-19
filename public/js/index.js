@@ -1,7 +1,7 @@
 // This script contains logic specific to the index.html (main order page).
 
-// Initialize Stripe (moved here, assuming index.html has this script tag)
-const stripe = Stripe('pk_test_51RUy79GgUCD1xOEWjVwuJ0g8JsDt1npUR5JVj1HRaIBgLLKPZAHFkmYQSPbHObEeYFqpInDUYiOUA043Tj2krv52004zHbr5wj'); // Make sure this is your actual Stripe public key
+// Removed Stripe initialization from here, it's now handled in index.html to ensure load order.
+// The 'stripe' variable is now globally available because it was defined in index.html.
 
 // Get elements from the order form and cart display
 const payBtn = document.getElementById('payWithCardBtn');
@@ -98,7 +98,9 @@ function updateCartDisplay() {
         } else {
             cart.forEach(item => {
                 const listItem = document.createElement('li');
-                let itemText = `${item.name} (£${item.price.toFixed(2)})`;
+                // FIX: This line is crucial. item.name already contains "Item Name - Size (£Price)".
+                // We no longer append item.price here to avoid duplication.
+                let itemText = item.name; 
 
                 // Append customization details if available
                 if (item.customizations) {
@@ -205,21 +207,26 @@ if (payBtn) {
 
       if (data.error) {
         alert('❌ Stripe error: ' + data.error); // Using alert for now as discussed
+        console.error("Stripe Checkout Session Error:", data.error); // Log the server error for more details
         return;
       }
 
       if (data.id) {
-        //alert('✅ Redirecting to Stripe...'); // Using alert for now as discussed
+        // Correctly redirect using the Stripe.js library
+        // 'stripe' is now globally available because it was defined in index.html
         const result = await stripe.redirectToCheckout({ sessionId: data.id });
         if (result.error) {
-          alert('❌ Stripe error: ' + result.error.message); // Using alert for now as discussed
+          // This error happens if the redirect itself fails for some reason
+          alert('❌ Stripe Redirect Error: ' + result.error.message); // Using alert for now as discussed
+          console.error('Stripe Redirect Error:', result.error.message);
         }
       } else {
-        alert('⚠️ Failed to create Stripe session.'); // Using alert for now as discussed
+        alert('⚠️ Failed to receive Stripe session ID from server.'); // Using alert for now as discussed
+        console.error('No session ID received from /create-checkout-session');
       }
     } catch (err) {
-      alert('🚨 An error occurred while trying to checkout with Stripe.'); // Using alert for now as discussed
-      console.error('Fetch error:', err); 
+      alert('🚨 An unexpected error occurred while trying to checkout with Stripe.'); // Using alert for now as discussed
+      console.error('Fetch error during Stripe checkout:', err); 
     } finally {
         // Re-enable button regardless of success/failure if not redirected
         payBtn.disabled = false;

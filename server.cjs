@@ -1,6 +1,5 @@
-// server.js
+// server.cjs
 const path = require("path");
-// FIX: Corrected typo here from 'require = require' to just 'require'
 const { query, initializeDatabase } = require("./db"); 
 console.log("🧪 Starting up server.js...");
 console.log("Current directory:", __dirname);

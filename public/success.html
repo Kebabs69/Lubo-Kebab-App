@@ -1,83 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Order Confirmed - Lubo's Kebab</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #fffaf3;
-      color: #333;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed! - Lubo's Kebab</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #d2691e; /* Earthy orange/brown for branding */
+            --text-color: #333;
+            --light-bg: #fdf5e6; /* Light cream background */
+        }
 
-    .container {
-      max-width: 700px;
-      margin: 60px auto;
-      background: #ffffff;
-      border: 2px solid #c0392b;
-      border-radius: 12px;
-      padding: 40px;
-      text-align: center;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.05);
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light-bg);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            flex-direction: column;
+        }
 
-    h1 {
-      color: #27ae60;
-      font-size: 32px;
-      margin-bottom: 20px;
-    }
+        .content-container { /* Renamed from content-overlay for clarity */
+            background-color: #ffffff; /* Solid white background */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            max-width: 600px;
+            width: 100%;
+            z-index: 10;
+            position: relative;
+            transform: translateY(-50%) scale(0.95); /* Initial state for animation */
+            animation: fadeInScale 0.8s ease-out forwards; /* Animation on load */
+            border: 1px solid #eee; /* Subtle border */
+        }
 
-    p {
-      font-size: 18px;
-      line-height: 1.6;
-    }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translateY(-50%) scale(0.95); }
+            to { opacity: 1; transform: translateY(0%) scale(1); }
+        }
 
-    .emoji {
-      font-size: 48px;
-      margin-bottom: 20px;
-    }
+        .logo-small {
+            width: 120px; /* Adjust size of the logo */
+            height: auto;
+            margin-bottom: 25px; /* Space below the logo */
+            border-radius: 8px; /* If your logo is square/rectangular */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Subtle shadow for the logo */
+        }
 
-    .home-btn {
-      margin-top: 30px;
-      padding: 12px 24px;
-      font-size: 18px;
-      font-weight: bold;
-      background-color: #c0392b;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
+        h1 {
+            color: var(--primary-color);
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap; /* Allow icon/text to wrap on small screens */
+        }
 
-    .home-btn:hover {
-      background-color: #a93226;
-    }
+        h1 .icon {
+            margin-right: 15px;
+            font-size: 1.2em;
+            color: #28a745; /* Green for success */
+        }
 
-    footer {
-      margin-top: 60px;
-      text-align: center;
-      color: #777;
-      font-size: 14px;
-    }
-  </style>
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .back-to-home {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 25px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .back-to-home:hover {
+            background-color: #a04000;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .content-container {
+                padding: 25px;
+                transform: translateY(0) scale(1); /* No initial transform for mobile */
+                animation: fadeIn 0.8s ease-out forwards; /* Simpler animation for mobile */
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            h1 {
+                font-size: 2em;
+                flex-direction: column; /* Stack icon and text */
+            }
+            h1 .icon {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            p {
+                font-size: 1em;
+            }
+            .logo-small {
+                width: 100px; /* Smaller logo on very small screens */
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+    <!-- Font Awesome for the checkmark icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-  <div class="container">
-    <div class="emoji">✅</div>
-    <h1>Thank You for Your Order!</h1>
-    <p>Your order has been received and is being prepared with care.</p>
-    <p>We'll contact you if we have any questions, and your food will be on its way shortly!</p>
-    <a class="home-btn" href="index.html">← Back to Home</a>
-  </div>
+    <div class="content-container">
+        <img src="/assets/logo.png" alt="Lubo's Kebab Logo" class="logo-small">
+        <h1>
+            <span class="icon fas fa-check-circle"></span> Order Confirmed!
+        </h1>
+        <p>Thank you for your order from **Lubo's Kebab**!</p>
+        <p>Your order has been successfully placed and is now being processed. We will send a detailed confirmation to your email shortly.</p>
+        <p>If you have any questions, please feel free to contact us.</p>
+        <a href="/index.html" class="back-to-home">Back to Menu</a>
+    </div>
 
-  <footer>
-    &copy; 2025 Lubo's Kebab — Fresh, Fast & Flavorful.
-  </footer>
+    <!-- Script to clear login status on success page if needed, though typically done on logout -->
+    <script>
+        // This script is here to ensure the page renders before any potential redirect
+        // No localStorage clearing here, as user is likely still logged in for next order
+    </script>
 </body>
 </html>

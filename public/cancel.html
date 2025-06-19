@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,15 +10,56 @@
       padding: 50px;
       background-color: #ffebee;
       color: #c62828;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .cancel-container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+      border: 1px solid #c62828; /* Red border to match cancel theme */
     }
     h1 {
       font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #c62828;
+    }
+    p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 25px;
+      font-size: 1rem;
+      font-weight: bold;
+      background-color: #c62828;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+    a:hover {
+      background-color: #a91f1f;
     }
   </style>
 </head>
 <body>
-  <h1>❌ Payment Canceled</h1>
-  <p>Your payment was canceled. If this was a mistake, you can return to try again.</p>
-  <a href="index.html">Return to Homepage</a>
+  <div class="cancel-container">
+    <h1>❌ Payment Canceled</h1>
+    <p>Your payment was canceled. If this was a mistake, you can return to try again.</p>
+    <a href="index.html">Return to Homepage</a>
+  </div>
 </body>
 </html>
