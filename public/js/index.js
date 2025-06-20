@@ -11,6 +11,9 @@ const orderForm = document.getElementById('orderForm');
 const cartItemsList = document.getElementById('cartItems');
 const totalPriceSpan = document.getElementById('totalPrice');
 const logoutBtn = document.getElementById('logoutBtn');
+// NEW: Get the Clear Cart button
+const clearCartBtn = document.getElementById('clearCartBtn');
+
 
 // Elements for the image preview modal
 const imageModalOverlay = document.getElementById('imageModalOverlay');
@@ -273,24 +276,36 @@ document.querySelectorAll('.item-quantity').forEach(input => {
 });
 
 
-// 🔥🔥🔥 CRITICAL FIX: REMOVING THE EVENT LISTENERS THAT CAUSED THE UNWANTED MODAL 🔥🔥🔥
-// These event listeners were incorrectly re-added in the previous step after a miscommunication.
-// By removing them, the modal will no longer appear when customization checkboxes/textareas are interacted with.
-// The customizations will only be captured when an item is *added* via its 'Add' button.
-// This is the desired behavior for a simpler flow.
-/*
-document.querySelectorAll('.kebab-item .customization-options input[type="checkbox"], .kebab-item .customization-options textarea').forEach(element => {
-    if (element.tagName === 'TEXTAREA') {
-        element.addEventListener('input', () => {
-            showMessageModal('Customization Changed', 'To apply new notes/customizations to items already in your cart, please remove and re-add them.', 'info');
+// REMOVED: Previous event listeners for customization changes that showed unwanted modals.
+// Customization changes (sauces, toppings, notes) will now apply to the *next* time an item
+// is added to the cart via its 'Add' button or when its quantity is changed.
+// Existing items in the cart will retain the customizations they had when they were first added.
+
+
+// NEW: Event listener for the "Clear Cart" button
+if (clearCartBtn) {
+    clearCartBtn.addEventListener('click', () => {
+        cart = []; // Clear the global cart array
+        updateCartDisplay(); // Update the display to show an empty cart
+
+        // Reset all quantity inputs back to 0 on the menu
+        document.querySelectorAll('.item-quantity').forEach(input => {
+            input.value = 0;
         });
-    } else { // Checkboxes
-        element.addEventListener('change', () => {
-             showMessageModal('Customization Changed', 'To apply new customizations (sauces/toppings) to items already in your cart, please remove and re-add them.', 'info');
+
+        // Clear all customization checkboxes
+        document.querySelectorAll('.customization-options input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
         });
-    }
-});
-*/
+
+        // Clear all customization notes textareas
+        document.querySelectorAll('.customization-options textarea.item-notes').forEach(textarea => {
+            textarea.value = '';
+        });
+
+        showMessageModal('Cart Cleared!', '🛒 Your cart has been emptied.', 'info');
+    });
+}
 
 
 // Toggle payment buttons visibility based on selection
@@ -468,6 +483,18 @@ if (orderForm) {
       if (response.ok) {
         cart = []; // Clear cart on successful order
         updateCartDisplay(); // Update display to show empty cart
+        // Also clear quantities and customizations from the menu after successful order
+        document.querySelectorAll('.item-quantity').forEach(input => {
+            input.value = 0;
+        });
+        document.querySelectorAll('.customization-options input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        document.querySelectorAll('.customization-options textarea.item-notes').forEach(textarea => {
+            textarea.value = '';
+        });
+
+
         window.location.href = 'https://Lubo-Kebab-App.onrender.com/success.html'; // Redirect to success page on successful cash order (Absolute path)
       } else {
         const errorResult = await response.json();
