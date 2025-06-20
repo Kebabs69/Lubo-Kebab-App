@@ -12,11 +12,18 @@ const cartItemsList = document.getElementById('cartItems');
 const totalPriceSpan = document.getElementById('totalPrice');
 const logoutBtn = document.getElementById('logoutBtn');
 
-// NEW: Elements for the image preview modal
+// Elements for the image preview modal
 const imageModalOverlay = document.getElementById('imageModalOverlay');
 const modalImage = document.getElementById('modalImage');
 const modalImageTitle = document.getElementById('modalImageTitle');
 const imageModalCloseBtn = document.querySelector('.image-modal-close');
+
+// NEW: Elements for the generic message modal
+const messageModalOverlay = document.getElementById('messageModalOverlay');
+const messageModalTitle = document.getElementById('messageModalTitle');
+const messageModalText = document.getElementById('messageModalText');
+const messageModalButton = document.getElementById('messageModalButton');
+const messageModalCloseBtn = document.querySelector('#messageModalOverlay .message-modal-close');
 
 
 // ✅ Login Check for index.html - Ensures user is logged in
@@ -24,6 +31,60 @@ const imageModalCloseBtn = document.querySelector('.image-modal-close');
 // and redirects to login if not authenticated.
 if (localStorage.getItem('isLoggedIn') !== 'true') {
     window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html'; // Absolute path for redirection
+}
+
+
+// NEW: Function to display the custom message modal
+function showMessageModal(title, message, type = 'info') {
+    if (!messageModalOverlay || !messageModalTitle || !messageModalText || !messageModalButton) {
+        console.error("Message modal elements not found, falling back to alert:", title, message);
+        alert(title + "\n" + message);
+        return;
+    }
+
+    // Reset classes to ensure only one type is applied
+    messageModalOverlay.className = 'message-modal-overlay';
+    messageModalContent.className = 'message-modal-content'; // Ensure this targets the content div
+
+    // Set title, text, and icon based on message type
+    messageModalTitle.innerHTML = `<i class="fas fa-info-circle icon"></i> ${title}`; // Default info icon
+    messageModalText.textContent = message;
+
+    // Apply specific classes and icons based on type
+    if (type === 'success') {
+        messageModalContent.classList.add('success');
+        messageModalTitle.innerHTML = `<i class="fas fa-check-circle icon"></i> ${title}`;
+    } else if (type === 'error') {
+        messageModalContent.classList.add('error');
+        messageModalTitle.innerHTML = `<i class="fas fa-times-circle icon"></i> ${title}`;
+    } else if (type === 'warning') {
+        messageModalContent.classList.add('warning');
+        messageModalTitle.innerHTML = `<i class="fas fa-exclamation-triangle icon"></i> ${title}`;
+    }
+
+    messageModalOverlay.style.display = 'flex'; // Use flex to center content
+
+    // Ensure only one click listener for the OK button
+    messageModalButton.onclick = null; // Clear previous listeners
+    messageModalButton.addEventListener('click', () => {
+        messageModalOverlay.style.display = 'none';
+    }, { once: true }); // Use {once: true} to automatically remove listener after first click
+
+    // Ensure only one click listener for the close 'x' button
+    if (messageModalCloseBtn) {
+        messageModalCloseBtn.onclick = null; // Clear previous listeners
+        messageModalCloseBtn.addEventListener('click', () => {
+            messageModalOverlay.style.display = 'none';
+        }, { once: true });
+    }
+
+    // Close modal when clicking outside
+    messageModalOverlay.onclick = (event) => {
+        if (event.target === messageModalOverlay) {
+            messageModalOverlay.style.display = 'none';
+            messageModalOverlay.onclick = null; // Remove event listener
+        }
+    };
 }
 
 
@@ -175,7 +236,7 @@ if (payBtn) {
     const cartItems = buildCart();
 
     if (cartItems.length === 0) {
-      alert('🛒 Your cart is empty! Please select at least one item.'); // Using alert for now as discussed
+      showMessageModal('Empty Cart', '🛒 Your cart is empty! Please select at least one item.', 'warning');
       return;
     }
 
@@ -184,7 +245,7 @@ if (payBtn) {
 
     // Client-side email validation
     if (!customerEmail || !customerEmail.includes('@') || customerEmail.indexOf('.') === -1 || customerEmail.length < 5) {
-        alert('Please enter a valid email address for payment.'); // Using alert for now as discussed
+        showMessageModal('Invalid Email', 'Please enter a valid email address for payment.', 'error');
         customerEmailInput.focus();
         return;
     }
@@ -206,7 +267,7 @@ if (payBtn) {
       const data = await response.json();
 
       if (data.error) {
-        alert('❌ Stripe error: ' + data.error); // Using alert for now as discussed
+        showMessageModal('Stripe Error', '❌ Stripe error: ' + data.error, 'error');
         console.error("Stripe Checkout Session Error:", data.error); // Log the server error for more details
         return;
       }
@@ -217,15 +278,15 @@ if (payBtn) {
         const result = await stripe.redirectToCheckout({ sessionId: data.id });
         if (result.error) {
           // This error happens if the redirect itself fails for some reason
-          alert('❌ Stripe Redirect Error: ' + result.error.message); // Using alert for now as discussed
+          showMessageModal('Stripe Redirect Error', '❌ Stripe Redirect Error: ' + result.error.message, 'error');
           console.error('Stripe Redirect Error:', result.error.message);
         }
       } else {
-        alert('⚠️ Failed to receive Stripe session ID from server.'); // Using alert for now as discussed
+        showMessageModal('Payment Failed', '⚠️ Failed to receive Stripe session ID from server.', 'error');
         console.error('No session ID received from /create-checkout-session');
       }
     } catch (err) {
-      alert('🚨 An unexpected error occurred while trying to checkout with Stripe.'); // Using alert for now as discussed
+      showMessageModal('Network Error', '🚨 An unexpected error occurred while trying to checkout with Stripe. Please check your internet connection and try again.', 'error');
       console.error('Fetch error during Stripe checkout:', err); 
     } finally {
         // Re-enable button regardless of success/failure if not redirected
@@ -250,7 +311,7 @@ if (orderForm) {
     const cartItems = buildCart(); // This now includes customizations!
 
     if (cartItems.length === 0) { 
-        alert('🛒 Your cart is empty! Please select at least one item to place an order.'); // Using alert for now as discussed
+        showMessageModal('Empty Cart', '🛒 Your cart is empty! Please select at least one item to place an order.', 'warning');
         if (placeOrderBtn) { // Re-enable button if validation fails
             placeOrderBtn.disabled = false;
             placeOrderBtn.textContent = '🧾 Place Order';
@@ -275,7 +336,7 @@ if (orderForm) {
 
     // Basic validation for cash order customer details
     if (!customerNameInput.value || !customerEmailInput.value || !customerPhoneInput.value || !deliveryAddressInput.value) {
-        alert('Please fill in all your details (Full Name, Email, Mobile Number, Delivery Address) for cash on delivery.'); // Using alert for now as discussed
+        showMessageModal('Missing Details', 'Please fill in all your details (Full Name, Email, Mobile Number, Delivery Address) for cash on delivery.', 'warning');
         if (placeOrderBtn) { // Re-enable button if validation fails
             placeOrderBtn.disabled = false;
             placeOrderBtn.textContent = '🧾 Place Order';
@@ -286,7 +347,7 @@ if (orderForm) {
     // Client-side email validation for cash orders
     const customerEmail = customerEmailInput.value;
     if (!customerEmail || !customerEmail.includes('@') || customerEmail.indexOf('.') === -1 || customerEmail.length < 5) {
-        alert('Please enter a valid email address for your order confirmation.'); // Using alert for now as discussed
+        showMessageModal('Invalid Email', 'Please enter a valid email address for your order confirmation.', 'error');
         customerEmailInput.focus();
         if (placeOrderBtn) { // Re-enable button if validation fails
             placeOrderBtn.disabled = false;
@@ -315,11 +376,11 @@ if (orderForm) {
         window.location.href = 'https://Lubo-Kebab-App.onrender.com/success.html'; // Redirect to success page on successful cash order (Absolute path)
       } else {
         const errorResult = await response.json();
-        alert("❌ Failed to send order: " + (errorResult.message || "Unknown error")); // Using alert for now as discussed
+        showMessageModal('Order Failed', "❌ Failed to send order: " + (errorResult.message || "Unknown error"), 'error');
         console.error("Cash order server error:", errorResult);
       }
     } catch (error) {
-      alert("❌ An error occurred while placing the cash order. Please try again."); // Using alert for now as discussed
+      showMessageModal('Network Error', "🚨 An error occurred while placing the cash order. Please check your internet connection and try again.", 'error');
       console.error("Cash order fetch error:", error);
     } finally {
         // ✅ NEW: Re-enable the button if for some reason redirection didn't happen
@@ -337,9 +398,9 @@ document.querySelectorAll('.preview-btn').forEach(button => {
         const imageUrl = button.dataset.imageUrl;
         const imageTitle = button.dataset.imageTitle;
 
-        console.log('Preview button clicked!');
-        console.log('Image URL from dataset:', imageUrl);
-        console.log('Image Title from dataset:', imageTitle);
+        // console.log('Preview button clicked!'); // Keep commented unless needed for specific debug
+        // console.log('Image URL from dataset:', imageUrl);
+        // console.log('Image Title from dataset:', imageTitle);
 
         if (modalImage && imageModalOverlay && modalImageTitle) {
             modalImage.src = imageUrl;
@@ -352,12 +413,12 @@ document.querySelectorAll('.preview-btn').forEach(button => {
                 // Set a fallback image if the primary one fails
                 modalImage.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';
                 modalImageTitle.textContent = 'Image Unavailable'; // Update title for fallback
-                alert('Image could not be loaded. Showing placeholder.'); // Alert user
+                showMessageModal('Image Error', 'Image for "' + imageTitle + '" could not be loaded. Showing placeholder.', 'error'); // Use custom modal
             };
 
             // Optional: Add an onload handler to confirm successful loading
             modalImage.onload = () => {
-                console.log('Image loaded successfully:', imageUrl);
+                // console.log('Image loaded successfully:', imageUrl); // Keep commented unless needed for specific debug
             };
 
         } else {
