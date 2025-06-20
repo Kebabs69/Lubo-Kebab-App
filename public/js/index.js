@@ -18,17 +18,18 @@ const modalImage = document.getElementById('modalImage');
 const modalImageTitle = document.getElementById('modalImageTitle');
 const imageModalCloseBtn = document.querySelector('.image-modal-close');
 
-// NEW: Elements for the generic message modal
+// Elements for the generic message modal
 const messageModalOverlay = document.getElementById('messageModalOverlay');
+const messageModalContent = document.querySelector('#messageModalOverlay .message-modal-content'); // Get content for class toggling
 const messageModalTitle = document.getElementById('messageModalTitle');
 const messageModalText = document.getElementById('messageModalText');
 const messageModalButton = document.getElementById('messageModalButton');
 const messageModalCloseBtn = document.querySelector('#messageModalOverlay .message-modal-close');
 
+// NEW: Global array to store the cart state
+let cart = [];
 
 // ✅ Login Check for index.html - Ensures user is logged in
-// This script runs immediately when the body loads (due to its placement in index.html)
-// and redirects to login if not authenticated.
 if (localStorage.getItem('isLoggedIn') !== 'true') {
     window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html'; // Absolute path for redirection
 }
@@ -36,17 +37,16 @@ if (localStorage.getItem('isLoggedIn') !== 'true') {
 
 // NEW: Function to display the custom message modal
 function showMessageModal(title, message, type = 'info') {
-    if (!messageModalOverlay || !messageModalTitle || !messageModalText || !messageModalButton) {
+    if (!messageModalOverlay || !messageModalTitle || !messageModalText || !messageModalButton || !messageModalContent) {
         console.error("Message modal elements not found, falling back to alert:", title, message);
         alert(title + "\n" + message);
         return;
     }
 
     // Reset classes to ensure only one type is applied
-    messageModalOverlay.className = 'message-modal-overlay';
-    messageModalContent.className = 'message-modal-content'; // Ensure this targets the content div
+    messageModalContent.classList.remove('success', 'error', 'warning');
 
-    // Set title, text, and icon based on message type
+    // Set title and text
     messageModalTitle.innerHTML = `<i class="fas fa-info-circle icon"></i> ${title}`; // Default info icon
     messageModalText.textContent = message;
 
@@ -88,121 +88,214 @@ function showMessageModal(title, message, type = 'info') {
 }
 
 
-// Function to build the cart array from selected items, now including customizations
-function buildCart() {
-  const cartItems = [];
+// NEW: Function to get customizations for a given kebab item block
+function getKebabCustomizations(kebabItemDiv) {
+    const selectedSauces = [];
+    kebabItemDiv.querySelectorAll('input[type="checkbox"][data-custom-type="sauce"]:checked').forEach(sauceCheckbox => {
+        selectedSauces.push(sauceCheckbox.value);
+    });
 
-  // Iterate over kebab items
-  document.querySelectorAll('.kebab-item').forEach(itemDiv => {
-    const checkbox = itemDiv.querySelector('input[type="checkbox"]');
-    const select = itemDiv.querySelector('select');
-    
-    // Only process if the kebab is checked
-    if (checkbox && checkbox.checked && select) {
-      const name = checkbox.value + ' - ' + select.options[select.selectedIndex].text;
-      const price = parseFloat(select.options[select.selectedIndex].dataset.price);
+    const selectedToppings = [];
+    kebabItemDiv.querySelectorAll('input[type="checkbox"][data-custom-type="topping"]:checked').forEach(toppingCheckbox => {
+        selectedToppings.push(toppingCheckbox.value);
+    });
 
-      // --- Capture Customization Details ---
-      const selectedSauces = [];
-      itemDiv.querySelectorAll('input[type="checkbox"][data-custom-type="sauce"]:checked').forEach(sauceCheckbox => {
-          selectedSauces.push(sauceCheckbox.value);
-      });
+    const notesTextArea = kebabItemDiv.querySelector('textarea.item-notes');
+    const itemNotes = notesTextArea ? notesTextArea.value.trim() : '';
 
-      const selectedToppings = [];
-      itemDiv.querySelectorAll('input[type="checkbox"][data-custom-type="topping"]:checked').forEach(toppingCheckbox => {
-          selectedToppings.push(toppingCheckbox.value);
-      });
-
-      const notesTextArea = itemDiv.querySelector('textarea.item-notes');
-      const itemNotes = notesTextArea ? notesTextArea.value.trim() : '';
-
-      cartItems.push({ 
-        name, 
-        price, 
-        quantity: 1, // Quantity is always 1 per selected item, size is in name
-        customizations: {
-            sauces: selectedSauces,
-            toppings: selectedToppings,
-            notes: itemNotes
-        }
-      }); 
-    }
-  });
-
-  // Iterate over drink items (no customizations for drinks)
-  document.querySelectorAll('.drink-item input[type="checkbox"]:checked').forEach(cb => {
-    if (cb) { 
-      cartItems.push({ name: cb.value, price: parseFloat(cb.dataset.price), quantity: 1 }); 
-    }
-  });
-
-  // Iterate over side items (no customizations for sides)
-  document.querySelectorAll('.side-item input[type="checkbox"]:checked').forEach(cb => {
-    if (cb) { 
-      cartItems.push({ name: cb.value, price: parseFloat(cb.dataset.price), quantity: 1 }); 
-    }
-  });
-
-  return cartItems;
+    return {
+        sauces: selectedSauces,
+        toppings: selectedToppings,
+        notes: itemNotes
+    };
 }
+
+// NEW: Function to generate a unique ID for a cart item, including customizations
+// This is crucial to distinguish "Small Kebab with Garlic" from "Small Kebab with Chili"
+function generateCartItemId(name, customizations) {
+    let id = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase(); // Sanitize name for ID
+    if (customizations && (customizations.sauces.length > 0 || customizations.toppings.length > 0 || customizations.notes)) {
+        const customString = JSON.stringify(customizations).replace(/[^a-zA-Z0-9]/g, '');
+        id += '_' + customString;
+    }
+    return id;
+}
+
+
+// NEW: Function to add an item to the global cart array
+function addItemToCart(itemName, itemPrice, quantity, customizations = null) {
+    // If quantity is 0, do nothing or remove from cart if exists
+    if (quantity <= 0) {
+        // Remove item from cart if its quantity is set to 0 directly
+        const existingItemIndex = cart.findIndex(item =>
+            item.name === itemName &&
+            JSON.stringify(item.customizations) === JSON.stringify(customizations)
+        );
+        if (existingItemIndex > -1) {
+            cart.splice(existingItemIndex, 1);
+            updateCartDisplay();
+        }
+        return;
+    }
+
+    const itemId = generateCartItemId(itemName, customizations);
+
+    const existingItemIndex = cart.findIndex(item => item.id === itemId);
+
+    if (existingItemIndex > -1) {
+        // Item with same name AND customizations exists, just update quantity
+        cart[existingItemIndex].quantity = quantity;
+    } else {
+        // Item is new to the cart, add it
+        cart.push({
+            id: itemId,
+            name: itemName,
+            price: itemPrice,
+            quantity: quantity,
+            customizations: customizations || { sauces: [], toppings: [], notes: '' } // Ensure customizations object exists
+        });
+    }
+    updateCartDisplay();
+}
+
 
 // Function to update the cart display and total price in the UI
 function updateCartDisplay() {
-    const cart = buildCart();
-    let total = 0; 
-
-    if (cartItemsList) { 
-        cartItemsList.innerHTML = ''; 
+    let total = 0;
+    if (cartItemsList) {
+        cartItemsList.innerHTML = ''; // Clear current cart display
 
         if (cart.length === 0) {
             cartItemsList.innerHTML = '<li style="color: #666; text-align: center; padding: 10px;">Your cart is empty.</li>';
         } else {
             cart.forEach(item => {
-                const listItem = document.createElement('li');
-                // FIX: This line is crucial. item.name already contains "Item Name - Size (£Price)".
-                // We no longer append item.price here to avoid duplication.
-                let itemText = item.name; 
+                // Only display items with quantity > 0
+                if (item.quantity > 0) {
+                    const listItem = document.createElement('li');
+                    const itemSubtotal = item.price * item.quantity;
+                    let itemText = `${item.name} (x${item.quantity}) - £${itemSubtotal.toFixed(2)}`;
 
-                // Append customization details if available
-                if (item.customizations) {
-                    if (item.customizations.sauces && item.customizations.sauces.length > 0) {
-                        itemText += `<br>&nbsp;&nbsp;&nbsp;Sauces: ${item.customizations.sauces.join(', ')}`;
+                    // Append customization details if available and not empty
+                    if (item.customizations) {
+                        if (item.customizations.sauces && item.customizations.sauces.length > 0) {
+                            itemText += `<br>&nbsp;&nbsp;&nbsp;Sauces: ${item.customizations.sauces.join(', ')}`;
+                        }
+                        if (item.customizations.toppings && item.customizations.toppings.length > 0) {
+                            itemText += `<br>&nbsp;&nbsp;&nbsp;Toppings: ${item.customizations.toppings.join(', ')}`;
+                        }
+                        if (item.customizations.notes) {
+                            itemText += `<br>&nbsp;&nbsp;&nbsp;Notes: ${item.customizations.notes}`;
+                        }
                     }
-                    if (item.customizations.toppings && item.customizations.toppings.length > 0) {
-                        itemText += `<br>&nbsp;&nbsp;&nbsp;Toppings: ${item.customizations.toppings.join(', ')}`;
-                    }
-                    if (item.customizations.notes) {
-                        itemText += `<br>&nbsp;&nbsp;&nbsp;Notes: ${item.customizations.notes}`;
-                    }
+                    
+                    listItem.innerHTML = itemText;
+                    cartItemsList.appendChild(listItem);
+                    total += itemSubtotal;
                 }
-                
-                listItem.innerHTML = itemText; // Use innerHTML because of <br> tags
-                cartItemsList.appendChild(listItem);
-                total += item.price; 
             });
         }
     }
 
-    if (totalPriceSpan) { 
-        totalPriceSpan.textContent = total.toFixed(2); 
+    if (totalPriceSpan) {
+        totalPriceSpan.textContent = total.toFixed(2);
     }
 }
 
 
-// Add event listeners to all relevant input fields to trigger cart update
-// This includes the new customization checkboxes and textareas
-document.querySelectorAll('.kebab-item input[type="checkbox"], .kebab-item select, .kebab-item .customization-options input[type="checkbox"], .kebab-item .customization-options textarea, .drink-item input[type="checkbox"], .side-item input[type="checkbox"]').forEach(element => {
-    // For text areas, listen for 'input' event for real-time updates
-    if (element.tagName === 'TEXTAREA') {
-        element.addEventListener('input', updateCartDisplay);
-    } else {
-        element.addEventListener('change', updateCartDisplay);
-    }
+// NEW: Event listeners for "Add" buttons
+document.querySelectorAll('.add-to-cart-button').forEach(button => {
+    button.addEventListener('click', () => {
+        const itemName = button.dataset.itemName;
+        const itemPrice = parseFloat(button.dataset.itemPrice);
+        
+        // Find the quantity input associated with this specific "Add" button
+        const quantityInput = button.closest('.item-quantity-control').querySelector('.item-quantity');
+        let quantity = parseInt(quantityInput.value, 10);
+
+        // Validate quantity
+        if (isNaN(quantity) || quantity < 0) {
+            quantity = 0; // Default to 0 or handle as an error
+        }
+
+        let customizations = null;
+        // Check if this is a kebab item to get customizations
+        const kebabItemDiv = button.closest('.kebab-item');
+        if (kebabItemDiv) {
+            customizations = getKebabCustomizations(kebabItemDiv);
+        }
+
+        addItemToCart(itemName, itemPrice, quantity, customizations);
+        
+        // Reset quantity input to 0 after adding to cart
+        quantityInput.value = 0; 
+
+        // Show a success message
+        if (quantity > 0) { // Only show success if something was actually added/updated
+            showMessageModal('Item Added!', `"${itemName}" (x${quantity}) added to your cart.`, 'success');
+        } else {
+            showMessageModal('Item Removed!', `"${itemName}" removed from your cart.`, 'info');
+        }
+    });
+});
+
+// NEW: Add event listeners for quantity input changes
+// If a user types directly into the quantity box, update the cart immediately
+document.querySelectorAll('.item-quantity').forEach(input => {
+    input.addEventListener('change', (event) => {
+        const quantityInput = event.target;
+        let quantity = parseInt(quantityInput.value, 10);
+        
+        if (isNaN(quantity) || quantity < 0) {
+            quantity = 0;
+            quantityInput.value = 0; // Ensure invalid input resets to 0
+        }
+
+        // Find associated item details from parent 'item-selection-row'
+        const itemSelectionRow = quantityInput.closest('.item-selection-row');
+        if (!itemSelectionRow) {
+            console.error("Could not find parent .item-selection-row for quantity input.");
+            return;
+        }
+
+        const itemName = itemSelectionRow.querySelector('.add-to-cart-button').dataset.itemName;
+        const itemPrice = parseFloat(itemSelectionRow.querySelector('.add-to-cart-button').dataset.itemPrice);
+
+        let customizations = null;
+        // Check if this is a kebab item to get customizations (from its main kebab-item parent)
+        const kebabItemDiv = quantityInput.closest('.kebab-item');
+        if (kebabItemDiv) {
+            customizations = getKebabCustomizations(kebabItemDiv);
+        }
+
+        addItemToCart(itemName, itemPrice, quantity, customizations);
+    });
 });
 
 
-// Initial call to display empty cart or pre-selected items (runs when script loads)
-updateCartDisplay();
+// NEW: Add event listeners for customization changes (sauces, toppings, notes)
+// These should re-trigger updateCartDisplay to reflect customization changes for items ALREADY in cart.
+document.querySelectorAll('.kebab-item .customization-options input[type="checkbox"], .kebab-item .customization-options textarea').forEach(element => {
+    // For text areas, listen for 'input' event for real-time updates
+    if (element.tagName === 'TEXTAREA') {
+        element.addEventListener('input', () => {
+            // Re-evaluate existing items in cart with potentially new notes
+            // This is a more complex scenario. For simplicity, we'll suggest adding/removing them.
+            // A full implementation would find cart items with this kebab type and update their notes.
+            // For now, we'll prompt the user to re-add items if notes/customizations change.
+            showMessageModal('Customization Changed', 'To apply new notes/customizations to items already in your cart, please remove and re-add them.', 'info');
+            // Or, more advanced: find all items of this kebab type in the cart and update their customization object
+            // This would require iterating through the `cart` array and calling `addItemToCart` on them with updated customizations.
+        });
+    } else { // Checkboxes
+        element.addEventListener('change', () => {
+             // Re-evaluate existing items in cart with potentially new customizations
+             showMessageModal('Customization Changed', 'To apply new customizations (sauces/toppings) to items already in your cart, please remove and re-add them.', 'info');
+             // Similar to notes, for a simpler implementation, we advise re-adding.
+             // More advanced: iterate cart, find items whose `name` matches this kebab,
+             // then remove old item and add new one with updated customizations.
+        });
+    }
+});
 
 
 // Toggle payment buttons visibility based on selection
@@ -211,10 +304,10 @@ if (paymentToggle) {
     const val = paymentToggle.value;
     if (val === 'card') {
       if (payBtn) payBtn.style.display = 'block';
-      if (placeOrderBtn) placeOrderBtn.style.display = 'none'; 
+      if (placeOrderBtn) placeOrderBtn.style.display = 'none';
     } else { // 'cash'
       if (payBtn) payBtn.style.display = 'none';
-      if (placeOrderBtn) placeOrderBtn.style.display = 'block'; 
+      if (placeOrderBtn) placeOrderBtn.style.display = 'block';
     }
   });
   // Trigger the change event on load to set the initial correct state
@@ -233,9 +326,13 @@ if (paymentToggle && payBtn) {
 // Stripe payment initiation
 if (payBtn) {
   payBtn.addEventListener('click', async () => {
-    const cartItems = buildCart();
+    // Ensure cart is up-to-date before sending
+    updateCartDisplay();
 
-    if (cartItems.length === 0) {
+    // Filter out items with quantity 0 before sending to backend
+    const currentCart = cart.filter(item => item.quantity > 0);
+
+    if (currentCart.length === 0) {
       showMessageModal('Empty Cart', '🛒 Your cart is empty! Please select at least one item.', 'warning');
       return;
     }
@@ -259,8 +356,8 @@ if (payBtn) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          cart: cartItems, // This now includes customizations!
-          customerEmail: customerEmail 
+          cart: currentCart, // Pass the filtered global cart
+          customerEmail: customerEmail
         })
       });
 
@@ -274,7 +371,6 @@ if (payBtn) {
 
       if (data.id) {
         // Correctly redirect using the Stripe.js library
-        // 'stripe' is now globally available because it was defined in index.html
         const result = await stripe.redirectToCheckout({ sessionId: data.id });
         if (result.error) {
           // This error happens if the redirect itself fails for some reason
@@ -287,7 +383,7 @@ if (payBtn) {
       }
     } catch (err) {
       showMessageModal('Network Error', '🚨 An unexpected error occurred while trying to checkout with Stripe. Please check your internet connection and try again.', 'error');
-      console.error('Fetch error during Stripe checkout:', err); 
+      console.error('Fetch error during Stripe checkout:', err);
     } finally {
         // Re-enable button regardless of success/failure if not redirected
         payBtn.disabled = false;
@@ -298,7 +394,7 @@ if (payBtn) {
 
 // Handle form submission for cash orders
 if (orderForm) {
-  orderForm.addEventListener('submit', async e => {
+  placeOrderBtn.addEventListener('click', async e => { // Changed to click listener for placeOrderBtn
     e.preventDefault();
 
     // ✅ NEW: Disable the place order button immediately
@@ -308,9 +404,11 @@ if (orderForm) {
     }
 
     const method = paymentToggle.value;
-    const cartItems = buildCart(); // This now includes customizations!
+    // Ensure cart is up-to-date before sending
+    updateCartDisplay();
+    const currentCart = cart.filter(item => item.quantity > 0); // Filter out items with quantity 0
 
-    if (cartItems.length === 0) { 
+    if (currentCart.length === 0) {
         showMessageModal('Empty Cart', '🛒 Your cart is empty! Please select at least one item to place an order.', 'warning');
         if (placeOrderBtn) { // Re-enable button if validation fails
             placeOrderBtn.disabled = false;
@@ -361,7 +459,7 @@ if (orderForm) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          order: cartItems, // This now includes customizations!
+          order: currentCart, // Pass the filtered global cart
           customer: {
             name: customerNameInput.value,
             email: customerEmail,
@@ -373,6 +471,8 @@ if (orderForm) {
       });
 
       if (response.ok) {
+        cart = []; // Clear cart on successful order
+        updateCartDisplay(); // Update display to show empty cart
         window.location.href = 'https://Lubo-Kebab-App.onrender.com/success.html'; // Redirect to success page on successful cash order (Absolute path)
       } else {
         const errorResult = await response.json();
@@ -392,15 +492,11 @@ if (orderForm) {
   });
 }
 
-// NEW: Preview Button Logic (with enhanced debugging)
+// Preview Button Logic
 document.querySelectorAll('.preview-btn').forEach(button => {
     button.addEventListener('click', () => {
         const imageUrl = button.dataset.imageUrl;
         const imageTitle = button.dataset.imageTitle;
-
-        // console.log('Preview button clicked!'); // Keep commented unless needed for specific debug
-        // console.log('Image URL from dataset:', imageUrl);
-        // console.log('Image Title from dataset:', imageTitle);
 
         if (modalImage && imageModalOverlay && modalImageTitle) {
             modalImage.src = imageUrl;
@@ -416,18 +512,13 @@ document.querySelectorAll('.preview-btn').forEach(button => {
                 showMessageModal('Image Error', 'Image for "' + imageTitle + '" could not be loaded. Showing placeholder.', 'error'); // Use custom modal
             };
 
-            // Optional: Add an onload handler to confirm successful loading
-            modalImage.onload = () => {
-                // console.log('Image loaded successfully:', imageUrl); // Keep commented unless needed for specific debug
-            };
-
         } else {
             console.error('Modal elements not found for image preview.');
         }
     });
 });
 
-// Close modal when close button is clicked
+// Close image modal when close button is clicked
 if (imageModalCloseBtn) {
     imageModalCloseBtn.addEventListener('click', () => {
         if (imageModalOverlay) {
@@ -442,7 +533,7 @@ if (imageModalCloseBtn) {
     });
 }
 
-// Close modal when clicking outside the image content
+// Close image modal when clicking outside the image content
 if (imageModalOverlay) {
     imageModalOverlay.addEventListener('click', (event) => {
         // Check if the click occurred directly on the overlay, not on the content
@@ -467,14 +558,13 @@ function updateClock() {
   }
 }
 setInterval(updateClock, 1000);
-updateClock(); 
+updateClock();
 
 // Music toggle functionality
 const music = document.getElementById('bg-music');
 const playBtnMusic = document.getElementById('playBtn');
 const pauseBtnMusic = document.getElementById('pauseBtn');
 
-// Re-attaching event listeners directly here
 if (playBtnMusic) {
     playBtnMusic.addEventListener('click', () => {
         if (music) music.play();
@@ -495,7 +585,7 @@ if (pauseBtnMusic) {
 // Opening Status Checker functionality
 function checkOpenStatus() {
   const now = new Date();
-  const day = now.getDay(); 
+  const day = now.getDay();
   const hour = now.getHours();
   const minute = now.getMinutes();
   const totalMinutes = hour * 60 + minute;
@@ -521,7 +611,7 @@ function checkOpenStatus() {
   }
 
   const statusEl = document.getElementById("openStatus");
-  if (statusEl) { 
+  if (statusEl) {
     if (isOpen) {
       statusEl.textContent = "✅ We are OPEN!";
       statusEl.style.color = "green";
@@ -531,8 +621,8 @@ function checkOpenStatus() {
     }
   }
 }
-checkOpenStatus(); 
-setInterval(checkOpenStatus, 60000); 
+checkOpenStatus();
+setInterval(checkOpenStatus, 60000);
 
 // Logout button logic for index.html
 if (logoutBtn) {
