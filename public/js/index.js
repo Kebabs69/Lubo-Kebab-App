@@ -229,10 +229,10 @@ document.querySelectorAll('.add-to-cart-button').forEach(button => {
         // Reset quantity input to 0 after adding to cart
         quantityInput.value = 0; 
 
-        // Show a success message
-        if (quantity > 0) { // Only show success if something was actually added/updated
+        // Show a success message if something was actually added/updated
+        if (quantity > 0) {
             showMessageModal('Item Added!', `"${itemName}" (x${quantity}) added to your cart.`, 'success');
-        } else {
+        } else if (quantity === 0) { // If quantity was 0, means item was removed
             showMessageModal('Item Removed!', `"${itemName}" removed from your cart.`, 'info');
         }
     });
@@ -267,35 +267,16 @@ document.querySelectorAll('.item-quantity').forEach(input => {
             customizations = getKebabCustomizations(kebabItemDiv);
         }
 
+        // We call addItemToCart here, which handles adding/updating/removing based on quantity
         addItemToCart(itemName, itemPrice, quantity, customizations);
     });
 });
 
 
-// NEW: Add event listeners for customization changes (sauces, toppings, notes)
-// These should re-trigger updateCartDisplay to reflect customization changes for items ALREADY in cart.
-document.querySelectorAll('.kebab-item .customization-options input[type="checkbox"], .kebab-item .customization-options textarea').forEach(element => {
-    // For text areas, listen for 'input' event for real-time updates
-    if (element.tagName === 'TEXTAREA') {
-        element.addEventListener('input', () => {
-            // Re-evaluate existing items in cart with potentially new notes
-            // This is a more complex scenario. For simplicity, we'll suggest adding/removing them.
-            // A full implementation would find cart items with this kebab type and update their notes.
-            // For now, we'll prompt the user to re-add items if notes/customizations change.
-            showMessageModal('Customization Changed', 'To apply new notes/customizations to items already in your cart, please remove and re-add them.', 'info');
-            // Or, more advanced: find all items of this kebab type in the cart and update their customization object
-            // This would require iterating through the `cart` array and calling `addItemToCart` on them with updated customizations.
-        });
-    } else { // Checkboxes
-        element.addEventListener('change', () => {
-             // Re-evaluate existing items in cart with potentially new customizations
-             showMessageModal('Customization Changed', 'To apply new customizations (sauces/toppings) to items already in your cart, please remove and re-add them.', 'info');
-             // Similar to notes, for a simpler implementation, we advise re-adding.
-             // More advanced: iterate cart, find items whose `name` matches this kebab,
-             // then remove old item and add new one with updated customizations.
-        });
-    }
-});
+// REMOVED: Previous event listeners for customization changes that showed alerts.
+// Customization changes (sauces, toppings, notes) will now apply to the *next* time an item
+// is added to the cart via its 'Add' button or when its quantity is changed.
+// Existing items in the cart will retain the customizations they had when they were first added.
 
 
 // Toggle payment buttons visibility based on selection
