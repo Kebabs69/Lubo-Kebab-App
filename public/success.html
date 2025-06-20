@@ -4,18 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Order Confirmed! - Lubo's Kebab</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Use consistent Inter font, and Oswald for headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for the checkmark icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
+        /* Define consistent color variables */
         :root {
-            --primary-color: #d2691e; /* Earthy orange/brown for branding */
-            --text-color: #333;
-            --light-bg: #fdf5e6; /* Light cream background */
+            --primary-color: #A32A29; /* Deep Red/Maroon for Kebab theme - professional */
+            --secondary-color: #262626; /* Dark Grey for text and accents */
+            --accent-color: #FFD700; /* Gold/Yellow for highlights */
+            --light-bg: #F8F8F8; /* Very light grey for main backgrounds */
+            --dark-bg: #1A1A1A; /* Dark background for footer/navbar contrast */
+            --text-color-light: #F0F0F0; /* Light text for dark backgrounds */
+            --text-color-dark: #333333; /* Dark text for light backgrounds */
+            --border-color: #E0E0E0; /* Subtle light border */
+            --shadow-light: 0 4px 15px rgba(0,0,0,0.08); /* Light, soft shadow */
+            --shadow-strong: 0 8px 25px rgba(0,0,0,0.2); /* Stronger shadow for emphasis */
+            --border-radius-card: 12px;
+            --border-radius-button: 8px;
+            --transition-speed: 0.3s ease;
         }
 
         body {
             font-family: 'Inter', sans-serif;
             background: var(--light-bg);
-            color: var(--text-color);
+            color: var(--text-color-dark);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,105 +41,121 @@
             flex-direction: column;
         }
 
-        .content-container { /* Renamed from content-overlay for clarity */
+        .content-container { 
             background-color: #ffffff; /* Solid white background */
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-radius: var(--border-radius-card);
+            box-shadow: var(--shadow-strong);
             max-width: 600px;
             width: 100%;
-            z-index: 10;
-            position: relative;
-            transform: translateY(-50%) scale(0.95); /* Initial state for animation */
-            animation: fadeInScale 0.8s ease-out forwards; /* Animation on load */
-            border: 1px solid #eee; /* Subtle border */
+            border: 1px solid var(--border-color);
+            animation: fadeInScaleUp var(--transition-speed);
         }
 
-        @keyframes fadeInScale {
-            from { opacity: 0; transform: translateY(-50%) scale(0.95); }
-            to { opacity: 1; transform: translateY(0%) scale(1); }
+        @keyframes fadeInScaleUp {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .logo-small {
-            width: 120px; /* Adjust size of the logo */
-            height: auto;
-            margin-bottom: 25px; /* Space below the logo */
-            border-radius: 8px; /* If your logo is square/rectangular */
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Subtle shadow for the logo */
+            width: 120px; /* Slightly larger logo */
+            margin-bottom: 25px; /* More space below logo */
+            animation: bounceIn 0.8s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 1; }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
         }
 
         h1 {
+            font-family: 'Oswald', sans-serif;
+            font-size: 2.8em; /* Larger, more impactful heading */
+            margin-bottom: 25px;
             color: var(--primary-color);
-            font-size: 2.8em;
-            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-wrap: wrap; /* Allow icon/text to wrap on small screens */
+            gap: 15px; /* Space between icon and text */
+        }
+        h1 .icon {
+            color: #28A745; /* Green for success icon */
+            font-size: 1.2em; /* Make icon a bit larger than text */
+            animation: checkmarkScale 0.6s ease-out forwards;
+        }
+        @keyframes checkmarkScale {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
 
-        h1 .icon {
-            margin-right: 15px;
-            font-size: 1.2em;
-            color: #28a745; /* Green for success */
-        }
 
         p {
-            font-size: 1.1em;
-            line-height: 1.6;
-            margin-bottom: 15px;
+            font-size: 1.05em; /* Slightly larger paragraph text */
+            line-height: 1.7; /* Improved readability */
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        p:last-of-type {
+            margin-bottom: 30px; /* More space before button */
         }
 
         .back-to-home {
             display: inline-block;
+            margin-top: 20px;
+            padding: 14px 30px; /* More generous padding for button */
+            font-size: 1.1em;
+            font-weight: 600;
+            text-decoration: none;
             background-color: var(--primary-color);
             color: white;
-            padding: 12px 25px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 25px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            border-radius: var(--border-radius-button);
+            transition: background-color var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
+            box-shadow: var(--shadow-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .back-to-home:hover {
-            background-color: #a04000;
+            background-color: #8D2524; /* Darker shade on hover */
             transform: translateY(-2px);
+            box-shadow: var(--shadow-strong);
+        }
+        .back-to-home:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Responsive adjustments */
+        /* Responsive Adjustments */
         @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
             .content-container {
-                padding: 25px;
-                transform: translateY(0) scale(1); /* No initial transform for mobile */
-                animation: fadeIn 0.8s ease-out forwards; /* Simpler animation for mobile */
+                padding: 30px;
+                margin: 0 15px;
             }
-            @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
+            .logo-small {
+                width: 100px;
+                margin-bottom: 20px;
             }
             h1 {
                 font-size: 2em;
-                flex-direction: column; /* Stack icon and text */
+                gap: 10px;
             }
             h1 .icon {
-                margin-right: 0;
-                margin-bottom: 10px;
+                font-size: 1.1em;
             }
             p {
-                font-size: 1em;
-            }
-            .logo-small {
-                width: 100px; /* Smaller logo on very small screens */
+                font-size: 0.95em;
                 margin-bottom: 15px;
+            }
+            p:last-of-type {
+                margin-bottom: 25px;
+            }
+            .back-to-home {
+                padding: 12px 25px;
+                font-size: 1em;
             }
         }
     </style>
-    <!-- Font Awesome for the checkmark icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="content-container">
@@ -138,10 +169,18 @@
         <a href="/index.html" class="back-to-home">Back to Menu</a>
     </div>
 
-    <!-- Script to clear login status on success page if needed, though typically done on logout -->
+    <!-- Script to clear login status on payment success - this is for demonstration. Keep only if desired. -->
+    <!-- You might want to clear cart or other session data here if needed -->
     <script>
-        // This script is here to ensure the page renders before any potential redirect
-        // No localStorage clearing here, as user is likely still logged in for next order
+        // Example: Clear local storage cart here if you store it client-side
+        // localStorage.removeItem('cart'); 
+        // window.addEventListener('beforeunload', function() {
+        //     localStorage.removeItem('isLoggedIn'); 
+        // });
+        // NOTE: The previous script to clear isLoggedIn was here. 
+        // If you want to keep the user logged in after an order, remove the localStorage.removeItem('isLoggedIn'); line.
+        // If you want to log them out after an order, keep it.
+        // For now, I've commented it out as typically a user stays logged in after an order.
     </script>
 </body>
 </html>
