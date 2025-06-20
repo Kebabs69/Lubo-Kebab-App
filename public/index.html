@@ -662,6 +662,121 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     z-index: 9999;
     border: 1px solid var(--primary-color);
 }
+
+/* --- NEW MESSAGE MODAL STYLES --- */
+.message-modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10001; /* Higher than image modal */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.7); /* Darker overlay */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    backdrop-filter: blur(8px); /* More pronounced blur */
+}
+
+.message-modal-content {
+    background-color: #ffffff;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 15px; /* More rounded */
+    width: 90%;
+    max-width: 450px; /* Max width for message boxes */
+    box-shadow: var(--shadow-strong);
+    position: relative;
+    text-align: center;
+    animation: fadeInSlideDown 0.4s ease-out; /* Entry animation */
+}
+
+@keyframes fadeInSlideDown {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-modal-content h4 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.message-modal-content h4 .icon {
+    font-size: 1.1em;
+    color: var(--accent-color); /* Default icon color, can be overridden by type */
+}
+
+.message-modal-content p {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    color: var(--secondary-color);
+}
+
+.message-modal-close {
+    color: #888;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.message-modal-close:hover,
+.message-modal-close:focus {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.message-modal-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: var(--border-radius-button);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-light);
+}
+.message-modal-button:hover {
+    background-color: #8D2524;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+}
+
+/* Specific colors for modal types */
+.message-modal-content.success .icon { color: #28A745; } /* Green for success */
+.message-modal-content.error .icon { color: #E74C3C; }   /* Red for error */
+.message-modal-content.warning .icon { color: #FFC107; } /* Yellow for warning */
+
+/* Responsive for message modal */
+@media (max-width: 600px) {
+    .message-modal-content {
+        padding: 20px;
+    }
+    .message-modal-content h4 {
+        font-size: 1.5em;
+    }
+    .message-modal-content p {
+        font-size: 0.9em;
+    }
+    .message-modal-button {
+        padding: 10px 20px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -942,10 +1057,12 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             Mobile Number:
             <input name="Mobile Number" required="" type="tel"/>
       </label>
+      <!-- REMOVED QUANTITY INPUT:
       <label>
             Quantity:
             <input min="1" name="Quantity" required="" type="number" value="1"/>
       </label>
+      -->
       <label>
             Special Instructions:
             <textarea name="Instructions"></textarea>
@@ -1138,7 +1255,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       Thursday
      </td>
 <td style="text-align:right;">
-      11:00 AM – 23:00 PM
+      11:00 AM – 11:00 PM
      </td>
 </tr>
 <tr>
@@ -1162,14 +1279,13 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       Sunday
      </td>
 <td style="text-align:right;">
-      11:00 AM – 23:00 PM
+      11:00 AM – 11:00 PM
      </td>
 </tr>
 </table>
 </div>
 <footer>
-   © 2025 Lubo's Kebab. All rights reserved.
-  </footer>
+   © 2025 Lubo's Kebab. All rights reserved.\n  </footer>
 
 <!-- NEW: Image Modal Structure -->
 <div id="imageModalOverlay" class="image-modal-overlay">
@@ -1177,6 +1293,16 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
         <span class="image-modal-close">&times;</span>
         <h4 id="modalImageTitle"></h4>
         <img id="modalImage" src="" alt="Kebab Preview" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';"/>
+    </div>
+</div>
+
+<!-- NEW: Generic Message Modal Structure -->
+<div id="messageModalOverlay" class="message-modal-overlay">
+    <div class="message-modal-content">
+        <span class="message-modal-close">&times;</span>
+        <h4 id="messageModalTitle"><i class="fas fa-info-circle icon"></i> Message</h4>
+        <p id="messageModalText">This is a generic message.</p>
+        <button id="messageModalButton" class="message-modal-button">OK</button>
     </div>
 </div>
 
