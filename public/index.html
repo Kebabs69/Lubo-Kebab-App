@@ -891,27 +891,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Kebab</h4>
             <button type="button" class="preview-btn" data-image-title="Chicken Kebab" data-image-url="/assets/chicken-preview.png">Preview</button>
 
-            <!-- Customization Options for Chicken Kebab -->
-            <div class="customization-options">
-                <h5>Customize your Chicken Kebab:</h5>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" data-custom-type="sauce" value="Garlic Sauce"> Garlic Sauce</label>
-                    <label><input type="checkbox" data-custom-type="sauce" value="Chili Sauce"> Chili Sauce</label>
-                    <label><input type="checkbox" data-custom-type="sauce" value="Mayonnaise"> Mayonnaise</label>
-                    <label><input type="checkbox" data-custom-type="sauce" value="Ketchup"> Ketchup</label>
-                    <label><input type="checkbox" data-custom-type="topping" value="Cabbage"> Cabbage</label>
-                    <label><input type="checkbox" data-custom-type="topping" value="Lettuce"> Lettuce</label>
-                    <label><input type="checkbox" data-custom-type="topping" value="Cucumber"> Cucumber</label>
-                    <label><input type="checkbox" data-custom-type="topping" value="Tomato"> Tomato</label>
-                    <label><input type="checkbox" data-custom-type="topping" value="Onion"> Onion</label>
-                </div>
-                <label>
-                    Specific notes for this Kebab:
-                    <textarea class="item-notes" placeholder="e.g., 'No pickles', 'Extra spicy'"></textarea>
-                </label>
-            </div>
-
-            <!-- Size and Quantity selection for Chicken Kebab -->
+            <!-- Size and Quantity selection for Chicken Kebab - MOVED TO TOP -->
             <div class="item-selection-row" data-item-id="chicken-kebab-small">
                 <span class="item-name-price">Small <span class="price">£5.00</span></span>
                 <div class="item-quantity-control">
@@ -933,14 +913,10 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
                     <button type="button" class="add-to-cart-button" data-item-name="Chicken Kebab - Large" data-item-price="7">Add</button>
                 </div>
             </div>
-        </div>
 
-        <!-- Lamb Kebab -->
-        <div class="kebab-item">
-            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
-            <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
+            <!-- Customization Options for Chicken Kebab - MOVED TO BOTTOM -->
             <div class="customization-options">
-                <h5>Customize your Lamb Kebab:</h5>
+                <h5>Customize your Chicken Kebab:</h5>
                 <div class="checkbox-group">
                     <label><input type="checkbox" data-custom-type="sauce" value="Garlic Sauce"> Garlic Sauce</label>
                     <label><input type="checkbox" data-custom-type="sauce" value="Chili Sauce"> Chili Sauce</label>
@@ -957,6 +933,14 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
                     <textarea class="item-notes" placeholder="e.g., 'No pickles', 'Extra spicy'"></textarea>
                 </label>
             </div>
+        </div>
+
+        <!-- Lamb Kebab -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
+            <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
+            
+            <!-- Size and Quantity selection for Lamb Kebab - MOVED TO TOP -->
             <div class="item-selection-row" data-item-id="lamb-kebab-small">
                 <span class="item-name-price">Small <span class="price">£6.00</span></span>
                 <div class="item-quantity-control">
@@ -978,25 +962,34 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
                     <button type="button" class="add-to-cart-button" data-item-name="Lamb Kebab - Large" data-item-price="8">Add</button>
                 </div>
             </div>
+
+            <!-- Customization Options for Lamb Kebab - MOVED TO BOTTOM -->
+            <div class="customization-options">
+                <h5>Customize your Lamb Kebab:</h5>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" data-custom-type="sauce" value="Garlic Sauce"> Garlic Sauce</label>
+                    <label><input type="checkbox" data-custom-type="sauce" value="Chili Sauce"> Chili Sauce</label>
+                    <label><input type="checkbox" data-custom-type="sauce" value="Mayonnaise"> Mayonnaise</label>
+                    <label><input type="checkbox" data-custom-type="sauce" value="Ketchup"> Ketchup</label>
+                    <label><input type="checkbox" data-custom-type="topping" value="Cabbage"> Cabbage</label>
+                    <label><input type="checkbox" data-custom-type="topping" value="Lettuce"> Lettuce</label>
+                    <label><input type="checkbox" data-custom-type="topping" value="Cucumber"> Cucumber</label>
+                    <label><input type="checkbox" data-custom-type="topping" value="Tomato"> Tomato</label>
+                    <label><input type="checkbox" data-custom-type="topping" value="Onion"> Onion</label>
+                </div>
+                <label>
+                    Specific notes for this Kebab:
+                    <textarea class="item-notes" placeholder="e.g., 'No pickles', 'Extra spicy'"></textarea>
+                </label>
+            </div>
         </div>
       
         <!-- Veggie Wrap -->
         <div class="kebab-item">
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
             <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
-            <div class="customization-options">
-                <h5>Customize your Veggie Wrap:</h5>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" data-custom-type="sauce" value="Garlic Sauce"> Garlic Sauce</label>
-                    <label><input type="checkbox" data-custom-type="sauce" value="Chili Sauce"> Chili Sauce</label>
-                    <label><input type="checkbox" data-custom-type="sauce" value="Mayonnaise"> Mayonnaise</label>
-                    <label><input type="checkbox" data-custom-type="sauce" value="Ketchup"> Ketchup</label>
-                </div>
-                <label>
-                    Specific notes for this Wrap:
-                    <textarea class="item-notes" placeholder="e.g., 'Vegan', 'Extra salad'"></textarea>
-                </label>
-            </div>
+            
+            <!-- Size and Quantity selection for Veggie Wrap - MOVED TO TOP -->
             <div class="item-selection-row" data-item-id="veggie-wrap-small">
                 <span class="item-name-price">Small <span class="price">£4.00</span></span>
                 <div class="item-quantity-control">
@@ -1018,27 +1011,29 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
                     <button type="button" class="add-to-cart-button" data-item-name="Veggie Wrap - Large" data-item-price="6">Add</button>
                 </div>
             </div>
+
+            <!-- Customization Options for Veggie Wrap - MOVED TO BOTTOM -->
+            <div class="customization-options">
+                <h5>Customize your Veggie Wrap:</h5>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" data-custom-type="sauce" value="Garlic Sauce"> Garlic Sauce</label>
+                    <label><input type="checkbox" data-custom-type="sauce" value="Chili Sauce"> Chili Sauce</label>
+                    <label><input type="checkbox" data-custom-type="sauce" value="Mayonnaise"> Mayonnaise</label>
+                    <label><input type="checkbox" data-custom-type="sauce" value="Ketchup"> Ketchup</label>
+                </div>
+                <label>
+                    Specific notes for this Wrap:
+                    <textarea class="item-notes" placeholder="e.g., 'Vegan', 'Extra salad'"></textarea>
+                </label>
+            </div>
         </div>
 
         <!-- Mixed Grill -->
         <div class="kebab-item">
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
             <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
-            <div class="customization-options">
-                <h5>Customize your Mixed Grill:</h5>
-                <div class="checkbox-group">
-                    <label><input type="checkbox" data-custom-type="sauce" value="Garlic Sauce"> Garlic Sauce</label>
-                    <label><input type="checkbox" data-custom-type="sauce" value="Chili Sauce"> Chili Sauce</label>
-                    <label><input type="checkbox" data-custom-type="sauce" value="Mayonnaise"> Mayonnaise</label>
-                    <label><input type="checkbox" data-custom-type="sauce" value="Ketchup"> Ketchup</label>
-                    <label><input type="checkbox" data-custom-type="topping" value="Grilled Pepper"> Grilled Pepper</label>
-                    <label><input type="checkbox" data-custom-type="topping" value="Grilled Tomato"> Grilled Tomato</label>
-                </div>
-                <label>
-                    Specific notes for this Grill:
-                    <textarea class="item-notes" placeholder="e.g., 'Well done meat', 'Less rice'"></textarea>
-                </label>
-            </div>
+            
+            <!-- Size and Quantity selection for Mixed Grill - MOVED TO TOP -->
             <div class="item-selection-row" data-item-id="mixed-grill-small">
                 <span class="item-name-price">Small <span class="price">£8.00</span></span>
                 <div class="item-quantity-control">
@@ -1059,6 +1054,23 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
                     <input type="number" class="item-quantity" value="0" min="0">
                     <button type="button" class="add-to-cart-button" data-item-name="Mixed Grill - Large" data-item-price="11">Add</button>
                 </div>
+            </div>
+
+            <!-- Customization Options for Mixed Grill - MOVED TO BOTTOM -->
+            <div class="customization-options">
+                <h5>Customize your Mixed Grill:</h5>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" data-custom-type="sauce" value="Garlic Sauce"> Garlic Sauce</label>
+                    <label><input type="checkbox" data-custom-type="sauce" value="Chili Sauce"> Chili Sauce</label>
+                    <label><input type="checkbox" data-custom-type="sauce" value="Mayonnaise"> Mayonnaise</label>
+                    <label><input type="checkbox" data-custom-type="sauce" value="Ketchup"> Ketchup</label>
+                    <label><input type="checkbox" data-custom-type="topping" value="Grilled Pepper"> Grilled Pepper</label>
+                    <label><input type="checkbox" data-custom-type="topping" value="Grilled Tomato"> Grilled Tomato</label>
+                </div>
+                <label>
+                    Specific notes for this Grill:
+                    <textarea class="item-notes" placeholder="e.g., 'Well done meat', 'Less rice'"></textarea>
+                </label>
             </div>
         </div>
    </div>
@@ -1257,7 +1269,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
    ! 🎉
   </div>
 <p style="color: white; font-size: 24px; background-color: #c0392b; padding: 10px; border-radius: 10px;">
-   Our phone number 👉1234567890
+   Our phone number �1234567890
   </p>
 <p style="color: white; font-size: 24px; background: #c0392b; padding: 10px; border-radius: 10px;">
 <img alt="Kebab" src="/assets/Kebab2.png" style="vertical-align: middle; border-radius: 8px;" width="100"/> <!-- Absolute path -->
@@ -1427,3 +1439,4 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 <script src="/js/index.js?v=202406161400"></script> <!-- Absolute path and cache buster -->
 </body>
 </html>
+�
