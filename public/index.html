@@ -514,6 +514,30 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     transform: translateY(0);
 }
 
+/* NEW: Clear Cart Button Styling */
+#clearCartBtn {
+    display: block; /* Make it a block element */
+    width: 100%; /* Full width */
+    margin-top: 15px; /* Space above */
+    padding: 12px 20px;
+    background-color: #e74c3c; /* Red color for a clear/delete action */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+#clearCartBtn:hover {
+    background-color: #c0392b; /* Darker red on hover */
+    transform: translateY(-2px);
+}
+#clearCartBtn:active {
+    transform: translateY(0);
+}
+
 
 @media (max-width: 768px) {
   .wrapper {
@@ -1168,6 +1192,11 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       </p>
       <input id="orderSummary" name="Order Summary" type="hidden"/>
 
+      <!-- NEW: Clear Cart Button -->
+      <button type="button" id="clearCartBtn">
+          <i class="fas fa-trash-alt"></i> Clear Cart
+      </button>
+
       <h4>
             Your Details
          </h4>
@@ -1232,7 +1261,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       </button>
       <div style="margin-top: 20px; padding: 15px; border: 2px solid #c0392b; border-radius: 12px; background-color: #fff4e6; text-align: center;">
          <p style="font-size: 22px; font-weight: bold; color: #c0392b;">
-               💵💰 CASH PAYMENTS ONLY 💰💵
+               �💰 CASH PAYMENTS ONLY 💰💵
             </p>
          <p style="font-size: 17px; color: #333;">
                At this time, we are accepting
@@ -1269,7 +1298,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
    ! 🎉
   </div>
 <p style="color: white; font-size: 24px; background-color: #c0392b; padding: 10px; border-radius: 10px;">
-   Our phone number �1234567890
+   Our phone number 👉1234567890
   </p>
 <p style="color: white; font-size: 24px; background: #c0392b; padding: 10px; border-radius: 10px;">
 <img alt="Kebab" src="/assets/Kebab2.png" style="vertical-align: middle; border-radius: 8px;" width="100"/> <!-- Absolute path -->
