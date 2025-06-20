@@ -320,13 +320,79 @@
       z-index: 9999;
     }
 
-    @media (max-width: 640px) {
-      .wrapper {
-        flex-direction: column;
-        align-items: center;
-      }
+    /* --- NEW TESTIMONIALS SECTION STYLES --- */
+    #testimonials-section {
+        background-color: var(--light-bg); /* Light background for the section */
+        padding: 50px 20px;
+        margin: 40px auto;
+        max-width: 1000px; /* Max width for content */
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        text-align: center;
+        border: 1px solid var(--border-color);
     }
-  
+
+    #testimonials-section h2 {
+        font-family: 'Roboto', sans-serif; /* A bold, clean font for titles */
+        font-size: 2.5em;
+        color: var(--primary-color);
+        margin-bottom: 40px;
+        position: relative;
+        display: inline-block; /* For the pseudo-element underline */
+    }
+
+    #testimonials-section h2::after {
+        content: '';
+        display: block;
+        width: 80px; /* Short underline */
+        height: 4px;
+        background-color: var(--accent-color); /* Yellow underline */
+        margin: 10px auto 0;
+        border-radius: 2px;
+    }
+
+    .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+        gap: 30px; /* Space between testimonial cards */
+        padding-top: 20px;
+    }
+
+    .testimonial-card {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Softer shadow */
+        text-align: left; /* Align text within card */
+        border: 1px solid #f0f0f0; /* Very light border */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-8px); /* Lift effect on hover */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* More pronounced shadow on hover */
+    }
+
+    .testimonial-card .stars {
+        color: var(--accent-color); /* Yellow stars */
+        margin-bottom: 15px;
+        font-size: 1.2em; /* Slightly larger stars */
+    }
+
+    .testimonial-card p {
+        font-style: italic;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .testimonial-card .reviewer-name {
+        font-weight: 600;
+        color: var(--primary-color); /* Red/orange name */
+        font-size: 1.1em;
+    }
+    /* --- END NEW TESTIMONIALS SECTION STYLES --- */
+    
 input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select {
   padding: 10px;
   border: 1px solid #ccc;
@@ -392,13 +458,6 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   .container {
     min-width: 100% !important;
   }
-  /* Adjusted for modal, not inline images now */
-  /* .container img {
-      width: 80%; 
-      max-width: 300px; 
-      margin-left: auto; 
-      margin-right: auto; 
-  } */
   
   .image-modal-content {
       width: 90%; /* Larger on mobile */
@@ -457,6 +516,23 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       top: 10px;
       left: 10px;
   }
+
+  /* Testimonials Responsive */
+  #testimonials-section {
+      padding: 30px 15px;
+      margin: 20px auto;
+  }
+  #testimonials-section h2 {
+      font-size: 2em;
+      margin-bottom: 30px;
+  }
+  .testimonials-grid {
+      grid-template-columns: 1fr; /* Stack reviews on mobile */
+  }
+  .testimonial-card {
+      padding: 20px;
+  }
+
 }
 
 /* Hero Section - Adapted for Register Page (carried over from your original, might not be fully used now) */
@@ -530,7 +606,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     font-size: 0.95em;
 }
 
-.register-btn {
+.register-btn { /* Specific style for register button, keeping it separate for clarity */
     background-color: var(--primary-color);
     color: white;
     font-size: 20px;
@@ -616,6 +692,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 <ul id="navcontent">
   <li><a href="/index.html#menu"><i class="fas fa-utensils"></i> Menu</a></li>
   <li><a href="/index.html#orderForm"><i class="fas fa-shopping-cart"></i> Order</a></li>
+  <li><a href="/index.html#testimonials-section"><i class="fas fa-star"></i> Reviews</a></li>
   <li><a href="/index.html#hours-card"><i class="fas fa-clock"></i> Hours</a></li>
   <!-- REPLACED: Register and Login links with Logout button -->
   <li><button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
@@ -961,6 +1038,43 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 <img alt="Kebab" src="/assets/Kebab2.png" style="vertical-align: middle; border-radius: 8px;" width="100"/> <!-- Absolute path -->
    Lubo's Kebab unique QR code — share it with your friends! 😋
   </p>
+
+<!-- NEW: Testimonials Section -->
+<section id="testimonials-section">
+    <h2>What Our Customers Say</h2>
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p>"Absolutely delicious kebabs! The meat is always tender, and the sauces are just perfect. My go-to place!"</p>
+            <div class="reviewer-name">- Sarah M.</div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            </div>
+            <p>"Great service and even better food. The veggie wrap is surprisingly flavorful. Highly recommend!"</p>
+            <div class="reviewer-name">- David L.</div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+            </div>
+            <p>"Fast delivery and hot food. The mixed grill is fantastic value for money. Will order again!"</p>
+            <div class="reviewer-name">- Emily P.</div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p>"Lubo's Kebab never disappoints! Fresh ingredients, generous portions, and truly authentic taste."</p>
+            <div class="reviewer-name">- Omar K.</div>
+        </div>
+    </div>
+</section>
+<!-- END NEW: Testimonials Section -->
+
 <section id="container4">
 <div id="row4">
 <button class="btn">
