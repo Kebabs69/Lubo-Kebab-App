@@ -11,7 +11,7 @@ const orderForm = document.getElementById('orderForm');
 const cartItemsList = document.getElementById('cartItems');
 const totalPriceSpan = document.getElementById('totalPrice');
 const logoutBtn = document.getElementById('logoutBtn');
-// NEW: Get the Clear Cart button
+// Get the Clear Cart button
 const clearCartBtn = document.getElementById('clearCartBtn');
 
 
@@ -38,7 +38,7 @@ if (localStorage.getItem('isLoggedIn') !== 'true') {
 }
 
 
-// NEW: Function to display the custom message modal
+// Function to display the custom message modal
 function showMessageModal(title, message, type = 'info') {
     if (!messageModalOverlay || !messageModalTitle || !messageModalText || !messageModalButton || !messageModalContent) {
         console.error("Message modal elements not found, falling back to alert:", title, message);
@@ -91,7 +91,7 @@ function showMessageModal(title, message, type = 'info') {
 }
 
 
-// NEW: Function to get customizations for a given kebab item block
+// Function to get customizations for a given kebab item block
 function getKebabCustomizations(kebabItemDiv) {
     const selectedSauces = [];
     kebabItemDiv.querySelectorAll('input[type="checkbox"][data-custom-type="sauce"]:checked').forEach(sauceCheckbox => {
@@ -113,7 +113,7 @@ function getKebabCustomizations(kebabItemDiv) {
     };
 }
 
-// NEW: Function to generate a unique ID for a cart item, including customizations
+// Function to generate a unique ID for a cart item, including customizations
 // This is crucial to distinguish "Small Kebab with Garlic" from "Small Kebab with Chili"
 function generateCartItemId(name, customizations) {
     let id = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase(); // Sanitize name for ID
@@ -125,7 +125,7 @@ function generateCartItemId(name, customizations) {
 }
 
 
-// NEW: Function to add an item to the global cart array
+// Function to add an item to the global cart array
 function addItemToCart(itemName, itemPrice, quantity, customizations = null) {
     // If quantity is 0, do nothing or remove from cart if exists
     if (quantity <= 0) {
@@ -205,7 +205,7 @@ function updateCartDisplay() {
 }
 
 
-// NEW: Event listeners for "Add" buttons
+// Event listeners for "Add" buttons (This is the SOLE trigger for adding items)
 document.querySelectorAll('.add-to-cart-button').forEach(button => {
     button.addEventListener('click', () => {
         const itemName = button.dataset.itemName;
@@ -241,8 +241,10 @@ document.querySelectorAll('.add-to-cart-button').forEach(button => {
     });
 });
 
-// NEW: Add event listeners for quantity input changes
-// If a user types directly into the quantity box, update the cart immediately
+// 🔥🔥🔥 CRITICAL FIX: REMOVING THE EVENT LISTENER FROM QUANTITY INPUTS 🔥🔥🔥
+// This listener caused items to be added/updated automatically without clicking "Add".
+// Now, changing the quantity input will *not* trigger a cart update until the "Add" button is clicked.
+/*
 document.querySelectorAll('.item-quantity').forEach(input => {
     input.addEventListener('change', (event) => {
         const quantityInput = event.target;
@@ -253,7 +255,6 @@ document.querySelectorAll('.item-quantity').forEach(input => {
             quantityInput.value = 0; // Ensure invalid input resets to 0
         }
 
-        // Find associated item details from parent 'item-selection-row'
         const itemSelectionRow = quantityInput.closest('.item-selection-row');
         if (!itemSelectionRow) {
             console.error("Could not find parent .item-selection-row for quantity input.");
@@ -264,25 +265,18 @@ document.querySelectorAll('.item-quantity').forEach(input => {
         const itemPrice = parseFloat(itemSelectionRow.querySelector('.add-to-cart-button').dataset.itemPrice);
 
         let customizations = null;
-        // Check if this is a kebab item to get customizations (from its main kebab-item parent)
         const kebabItemDiv = quantityInput.closest('.kebab-item');
         if (kebabItemDiv) {
             customizations = getKebabCustomizations(kebabItemDiv);
         }
 
-        // We call addItemToCart here, which handles adding/updating/removing based on quantity
         addItemToCart(itemName, itemPrice, quantity, customizations);
     });
 });
+*/
 
 
-// REMOVED: Previous event listeners for customization changes that showed unwanted modals.
-// Customization changes (sauces, toppings, notes) will now apply to the *next* time an item
-// is added to the cart via its 'Add' button or when its quantity is changed.
-// Existing items in the cart will retain the customizations they had when they were first added.
-
-
-// NEW: Event listener for the "Clear Cart" button
+// Event listener for the "Clear Cart" button
 if (clearCartBtn) {
     clearCartBtn.addEventListener('click', () => {
         cart = []; // Clear the global cart array
@@ -505,7 +499,7 @@ if (orderForm) {
       showMessageModal('Network Error', "🚨 An error occurred while placing the cash order. Please check your internet connection and try again.", 'error');
       console.error("Cash order fetch error:", error);
     } finally {
-        // ✅ NEW: Re-enable the button if for some reason redirection didn't happen
+        // Re-enable the button if for some reason redirection didn't happen
         if (placeOrderBtn && !window.location.href.includes('success.html')) {
             placeOrderBtn.disabled = false;
             placeOrderBtn.textContent = '🧾 Place Order';
@@ -531,7 +525,7 @@ document.querySelectorAll('.preview-btn').forEach(button => {
                 // Set a fallback image if the primary one fails
                 modalImage.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';
                 modalImageTitle.textContent = 'Image Unavailable'; // Update title for fallback
-                showMessageModal('Image Error', 'Image for "' + imageTitle + '" could not be loaded. Showing placeholder.', 'error'); // Use custom modal
+                showMessageModal('Image Error', 'Image for "' + imageTitle + '" could retain not be loaded. Showing placeholder.', 'error'); // Use custom modal
             };
 
         } else {
