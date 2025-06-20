@@ -273,10 +273,24 @@ document.querySelectorAll('.item-quantity').forEach(input => {
 });
 
 
-// REMOVED: Previous event listeners for customization changes that showed alerts.
-// Customization changes (sauces, toppings, notes) will now apply to the *next* time an item
-// is added to the cart via its 'Add' button or when its quantity is changed.
-// Existing items in the cart will retain the customizations they had when they were first added.
+// 🔥🔥🔥 CRITICAL FIX: REMOVING THE EVENT LISTENERS THAT CAUSED THE UNWANTED MODAL 🔥🔥🔥
+// These event listeners were incorrectly re-added in the previous step after a miscommunication.
+// By removing them, the modal will no longer appear when customization checkboxes/textareas are interacted with.
+// The customizations will only be captured when an item is *added* via its 'Add' button.
+// This is the desired behavior for a simpler flow.
+/*
+document.querySelectorAll('.kebab-item .customization-options input[type="checkbox"], .kebab-item .customization-options textarea').forEach(element => {
+    if (element.tagName === 'TEXTAREA') {
+        element.addEventListener('input', () => {
+            showMessageModal('Customization Changed', 'To apply new notes/customizations to items already in your cart, please remove and re-add them.', 'info');
+        });
+    } else { // Checkboxes
+        element.addEventListener('change', () => {
+             showMessageModal('Customization Changed', 'To apply new customizations (sauces/toppings) to items already in your cart, please remove and re-add them.', 'info');
+        });
+    }
+});
+*/
 
 
 // Toggle payment buttons visibility based on selection
