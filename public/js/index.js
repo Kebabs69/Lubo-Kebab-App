@@ -331,17 +331,37 @@ if (orderForm) {
   });
 }
 
-// NEW: Preview Button Logic
-// Add event listeners to all preview buttons
+// NEW: Preview Button Logic (with enhanced debugging)
 document.querySelectorAll('.preview-btn').forEach(button => {
     button.addEventListener('click', () => {
         const imageUrl = button.dataset.imageUrl;
         const imageTitle = button.dataset.imageTitle;
 
+        console.log('Preview button clicked!');
+        console.log('Image URL from dataset:', imageUrl);
+        console.log('Image Title from dataset:', imageTitle);
+
         if (modalImage && imageModalOverlay && modalImageTitle) {
             modalImage.src = imageUrl;
             modalImageTitle.textContent = imageTitle;
             imageModalOverlay.style.display = 'flex'; // Use flex to center content
+
+            // Add an onerror handler to the modal image itself for better debugging
+            modalImage.onerror = () => {
+                console.error('Failed to load image:', imageUrl);
+                // Set a fallback image if the primary one fails
+                modalImage.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';
+                modalImageTitle.textContent = 'Image Unavailable'; // Update title for fallback
+                alert('Image could not be loaded. Showing placeholder.'); // Alert user
+            };
+
+            // Optional: Add an onload handler to confirm successful loading
+            modalImage.onload = () => {
+                console.log('Image loaded successfully:', imageUrl);
+            };
+
+        } else {
+            console.error('Modal elements not found for image preview.');
         }
     });
 });
@@ -351,6 +371,12 @@ if (imageModalCloseBtn) {
     imageModalCloseBtn.addEventListener('click', () => {
         if (imageModalOverlay) {
             imageModalOverlay.style.display = 'none';
+            // Clear image source and title when closing
+            modalImage.src = '';
+            modalImageTitle.textContent = '';
+            // Remove onerror/onload handlers to prevent memory leaks/unexpected behavior
+            modalImage.onerror = null;
+            modalImage.onload = null;
         }
     });
 }
@@ -361,6 +387,12 @@ if (imageModalOverlay) {
         // Check if the click occurred directly on the overlay, not on the content
         if (event.target === imageModalOverlay) {
             imageModalOverlay.style.display = 'none';
+            // Clear image source and title when closing
+            modalImage.src = '';
+            modalImageTitle.textContent = '';
+            // Remove onerror/onload handlers
+            modalImage.onerror = null;
+            modalImage.onload = null;
         }
     });
 }
