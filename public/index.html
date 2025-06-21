@@ -151,16 +151,17 @@
       flex-wrap: wrap;
       gap: 30px;
       justify-content: center;
+      align-items: flex-start; /* CRITICAL FIX: Align items to the top, preventing vertical stretching */
     }
 
     .container {
       flex: 1;
       min-width: 280px;
-      /* REMOVED: Specific border and background from .container to allow inner kebab-item borders to stand out */
-      /* border: 2px solid #d2691e; */
-      border-radius: 10px;
-      padding: 20px;
-      /* background-color: #fdf5e6; */
+      border: 1px solid #e3e3e3; /* RE-ADDED: Base border for containers */
+      border-radius: 16px; /* RE-ADDED: Border radius for containers */
+      padding: 25px; /* RE-ADDED: Padding for containers */
+      background-color: #ffffff; /* RE-ADDED: Background for containers */
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07); /* RE-ADDED: Shadow for containers */
     }
 
     /* Styles for images integrated directly into containers */
@@ -558,7 +559,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 @media (max-width: 768px) {
   .wrapper {
     flex-direction: column;
-    align-items: stretch;
+    align-items: stretch; /* Keep stretch for mobile as columns will naturally fill */
   }
 
   .container {
@@ -922,7 +923,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 <form id="orderForm">
 <div class="wrapper">
-   <div class="container" id="menu" style="background: #fdf5e6;border-radius: 16px;box-shadow: 0 4px 20px rgba(0,0,0,0.07);padding: 25px;">
+   <div class="container" id="menu"> <!-- Removed inline styles, now handled by .container CSS -->
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🥙 Menu
          </h3>
@@ -1114,7 +1115,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             </div>
         </div>
    </div>
-   <div class="container" id="drinks" style="background: #ffffff;border-radius: 16px;box-shadow: 0 4px 20px rgba(0,0,0,0.07);padding: 25px;border: 1px solid #e3e3e3;">
+   <div class="container" id="drinks"> <!-- Removed inline styles, now handled by .container CSS -->
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🥤 Drinks
          </h3>
@@ -1154,7 +1155,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
          </div>
       </div>
    </div>
-   <div class="container" id="sides" style="background: #ffffff;border-radius: 16px;box-shadow: 0 4px 20px rgba(0,0,0,0.07);padding: 25px;border: 1px solid #e3e3e3;">
+   <div class="container" id="sides"> <!-- Removed inline styles, now handled by .container CSS -->
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🥗 Sides
          </h3>
@@ -1194,7 +1195,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
          </div>
       </div>
    </div>
-   <div class="container" id="cart" style="background: #ffffff;border-radius: 16px;box-shadow: 0 4px 20px rgba(0,0,0,0.07);padding: 25px;border: 1px solid #e3e3e3;">
+   <div class="container" id="cart"> <!-- Removed inline styles, now handled by .container CSS -->
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🛒 Your Cart
          </h3>
