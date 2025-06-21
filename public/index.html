@@ -466,22 +466,22 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   margin: 0;
 }
 
-.kebab-order-controls .add-selected-kebab-to-cart-button {
+.add-selected-kebab-to-cart-button {
     background-color: #28a745; /* Green add button */
     color: white;
-    padding: 10px 15px;
+    padding: 10px 15px; /* Consistent padding */
     border: none;
-    border-radius: 8px;
+    border-radius: 8px; /* Consistent border radius */
     cursor: pointer;
-    font-size: 1em;
+    font-size: 1em; /* Consistent font size */
     font-weight: 600;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
-.kebab-order-controls .add-selected-kebab-to-cart-button:hover {
+.add-selected-kebab-to-cart-button:hover {
     background-color: #218838;
     transform: translateY(-1px);
 }
-.kebab-order-controls .add-selected-kebab-to-cart-button:active {
+.add-selected-kebab-to-cart-button:active {
     transform: translateY(0);
 }
 
@@ -534,11 +534,71 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     border-radius: 6px;
 }
 
-/* Remove old item-selection-row styles as they are replaced */
-/* .item-selection-row { ... } */
-/* .item-name-price { ... } */
-/* .item-quantity-control { ... } */
-/* .add-to-cart-button { ... } */
+
+/* Styles for the old item-selection-row structure (Drinks & Sides) */
+.item-selection-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-top: 1px dashed #eee;
+}
+.item-selection-row:first-of-type {
+    border-top: none; /* No top border for the first item in the list */
+}
+
+.item-name-price {
+    flex-grow: 1; /* Allows name and price to take available space */
+    font-size: 1.05em;
+    font-weight: 500;
+    color: var(--text-color);
+}
+.item-name-price span.price {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-left: 8px;
+}
+
+.item-quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* UNIFIED: Changed from 5px to 10px to match kebab controls */
+}
+.item-quantity-control input[type="number"] {
+    width: 60px; /* Fixed width for quantity input */
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95em;
+    text-align: center;
+    background-color: var(--light-bg);
+    -moz-appearance: textfield; /* Hide Firefox stepper arrows */
+}
+/* Hide Chrome, Safari, Edge, Opera stepper arrows */
+.item-quantity-control input[type="number"]::-webkit-outer-spin-button,
+.item-quantity-control input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.add-to-cart-button {
+    background-color: #28a745; /* Green add button */
+    color: white;
+    padding: 10px 15px; /* UNIFIED: Changed from 6px 12px to 10px 15px */
+    border: none;
+    border-radius: 8px; /* UNIFIED: Changed from 6px to 8px */
+    cursor: pointer;
+    font-size: 1em; /* UNIFIED: Changed from 0.9em to 1em */
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.add-to-cart-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+.add-to-cart-button:active {
+    transform: translateY(0);
+}
 
 
 /* Clear Cart Button Styling */
@@ -565,7 +625,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     transform: translateY(0);
 }
 
-/* NEW: Styles for cart items and remove button */
+/* Styles for cart items and remove button */
 .cart-item-row {
     display: flex;
     justify-content: space-between;
@@ -605,6 +665,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     cursor: pointer;
     padding: 5px;
     transition: color 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
 }
 
 .remove-item-button:hover {
@@ -709,6 +770,20 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       margin-bottom: 10px; /* Add some spacing when stacked */
   }
   .kebab-order-controls .add-selected-kebab-to-cart-button:last-child {
+      margin-bottom: 0;
+  }
+
+  /* Responsive for Drinks/Sides quantity control */
+  .item-quantity-control {
+      flex-direction: column; /* Stack quantity input and button */
+      align-items: stretch; /* Make them full width */
+  }
+  .item-quantity-control input[type="number"],
+  .item-quantity-control .add-to-cart-button {
+      width: 100%; /* Make them full width */
+      margin-bottom: 10px; /* Add spacing when stacked */
+  }
+  .item-quantity-control .add-to-cart-button:last-child {
       margin-bottom: 0;
   }
 
