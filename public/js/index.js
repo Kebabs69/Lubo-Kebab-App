@@ -1,7 +1,7 @@
 // This script contains logic specific to the index.html (main order page).
 
 // Removed Stripe initialization from here, it's now handled in index.html to ensure load order.
-// The 'stripe' variable is now globally available because it was defined in index.html.
+// The 'stripe' variable is now globally accessible because it was defined in index.html.
 
 // Get elements from the order form and cart display
 const payBtn = document.getElementById('payWithCardBtn');
@@ -140,6 +140,8 @@ function addItemToCart(itemName, itemPrice, quantity, customizations = null) {
         return;
     }
 
+    // Generate unique ID for the item (name + size + customizations)
+    // For Drinks/Sides, customizations will be null/empty, so ID relies on name
     const itemId = generateCartItemId(itemName, customizations);
 
     const existingItemIndex = cart.findIndex(item => item.id === itemId);
@@ -150,7 +152,7 @@ function addItemToCart(itemName, itemPrice, quantity, customizations = null) {
     } else {
         // Item is new to the cart, add it
         cart.push({
-            id: itemId,
+            id: itemId, // Use the unique ID here
             name: itemName,
             price: itemPrice,
             quantity: quantity,
@@ -158,6 +160,18 @@ function addItemToCart(itemName, itemPrice, quantity, customizations = null) {
         });
     }
     updateCartDisplay();
+}
+
+// Function to remove an item from the cart by its unique ID
+function removeItemFromCart(itemIdToRemove) {
+    const initialCartLength = cart.length;
+    cart = cart.filter(item => item.id !== itemIdToRemove); // Filter out the item with the matching ID
+    if (cart.length < initialCartLength) {
+        showMessageModal('Item Removed', 'The item has been removed from your cart.', 'info');
+        updateCartDisplay(); // Re-render the cart if an item was actually removed
+    } else {
+        console.warn('Attempted to remove item with ID that does not exist:', itemIdToRemove);
+    }
 }
 
 
@@ -174,27 +188,63 @@ function updateCartDisplay() {
                 // Only display items with quantity > 0
                 if (item.quantity > 0) {
                     const listItem = document.createElement('li');
+                    listItem.classList.add('cart-item-row'); // Add the new class for styling
+
+                    const itemInfoDiv = document.createElement('div');
+                    itemInfoDiv.classList.add('cart-item-info');
+
                     const itemSubtotal = item.price * item.quantity;
-                    let itemText = `${item.name} (x${item.quantity}) - £${itemSubtotal.toFixed(2)}`;
+                    let itemText = `<span class="item-name">${item.name}</span> (x${item.quantity}) - £${itemSubtotal.toFixed(2)}`;
 
                     // Append customization details if available and not empty
+                    let customizationDetails = [];
                     if (item.customizations) {
                         if (item.customizations.sauces && item.customizations.sauces.length > 0) {
-                            itemText += `<br>&nbsp;&nbsp;&nbsp;Sauces: ${item.customizations.sauces.join(', ')}`;
+                            customizationDetails.push(`Sauces: ${item.customizations.sauces.join(', ')}`);
                         }
                         if (item.customizations.toppings && item.customizations.toppings.length > 0) {
-                            itemText += `<br>&nbsp;&nbsp;&nbsp;Toppings: ${item.customizations.toppings.join(', ')}`;
+                            customizationDetails.push(`Toppings: ${item.customizations.toppings.join(', ')}`);
                         }
                         if (item.customizations.notes) {
-                            itemText += `<br>&nbsp;&nbsp;&nbsp;Notes: ${item.customizations.notes}`;
+                            customizationDetails.push(`Notes: ${item.customizations.notes}`);
                         }
                     }
+
+                    itemInfoDiv.innerHTML = itemText;
+                    if (customizationDetails.length > 0) {
+                        const customDiv = document.createElement('div');
+                        customDiv.classList.add('item-customizations');
+                        customDiv.innerHTML = customizationDetails.join('<br>');
+                        itemInfoDiv.appendChild(customDiv);
+                    }
                     
-                    listItem.innerHTML = itemText;
-                    cartItemsList.appendChild(listItem);
+                    listItem.appendChild(itemInfoDiv);
                     total += itemSubtotal;
+
+                    // Create the remove button
+                    const removeButton = document.createElement('button');
+                    removeButton.classList.add('remove-item-button');
+                    removeButton.innerHTML = '<i class="fas fa-times-circle"></i>';
+                    removeButton.title = `Remove ${item.name}`;
+                    // Attach the unique item ID to the button for easy identification
+                    removeButton.dataset.itemId = item.id; 
+                    listItem.appendChild(removeButton);
+
+                    cartItemsList.appendChild(listItem);
                 }
             });
+
+            // Re-attach event listeners to the new remove buttons after they are rendered
+            // Using event delegation on the parent cartItemsList is more efficient
+            cartItemsList.addEventListener('click', (event) => {
+                if (event.target.closest('.remove-item-button')) {
+                    const button = event.target.closest('.remove-item-button');
+                    const itemId = button.dataset.itemId;
+                    if (itemId) {
+                        removeItemFromCart(itemId);
+                    }
+                }
+            }, { once: true }); // Use once: true to avoid multiple listeners if updateCartDisplay is called often
         }
     }
 
@@ -204,7 +254,7 @@ function updateCartDisplay() {
 }
 
 
-// ✅ NEW: Event listener for "Add" buttons specifically for Kebab items (with dropdowns)
+// Event listener for "Add" buttons specifically for Kebab items (with dropdowns)
 document.querySelectorAll('.add-selected-kebab-to-cart-button').forEach(button => {
     button.addEventListener('click', () => {
         const kebabItemDiv = button.closest('.kebab-item');
@@ -249,7 +299,7 @@ document.querySelectorAll('.add-selected-kebab-to-cart-button').forEach(button =
 });
 
 
-// ✅ EXISTING: Event listeners for "Add" buttons for Drinks and Sides (using direct item-quantity)
+// EXISTING: Event listeners for "Add" buttons for Drinks and Sides (using direct item-quantity)
 document.querySelectorAll('.item-selection-row .add-to-cart-button').forEach(button => {
     button.addEventListener('click', () => {
         const itemName = button.dataset.itemName;
