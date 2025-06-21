@@ -29,10 +29,10 @@ const messageModalText = document.getElementById('messageModalText');
 const messageModalButton = document.getElementById('messageModalButton');
 const messageModalCloseBtn = document.querySelector('#messageModalOverlay .message-modal-close');
 
-// NEW: Global array to store the cart state
+// Global array to store the cart state
 let cart = [];
 
-// ✅ Login Check for index.html - Ensures user is logged in
+// Login Check for index.html - Ensures user is logged in
 if (localStorage.getItem('isLoggedIn') !== 'true') {
     window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html'; // Absolute path for redirection
 }
@@ -127,9 +127,8 @@ function generateCartItemId(name, customizations) {
 
 // Function to add an item to the global cart array
 function addItemToCart(itemName, itemPrice, quantity, customizations = null) {
-    // If quantity is 0, do nothing or remove from cart if exists
+    // If quantity is 0, remove from cart if exists
     if (quantity <= 0) {
-        // Remove item from cart if its quantity is set to 0 directly
         const existingItemIndex = cart.findIndex(item =>
             item.name === itemName &&
             JSON.stringify(item.customizations) === JSON.stringify(customizations)
@@ -205,8 +204,53 @@ function updateCartDisplay() {
 }
 
 
-// Event listeners for "Add" buttons (This is the SOLE trigger for adding items)
-document.querySelectorAll('.add-to-cart-button').forEach(button => {
+// ✅ NEW: Event listener for "Add" buttons specifically for Kebab items (with dropdowns)
+document.querySelectorAll('.add-selected-kebab-to-cart-button').forEach(button => {
+    button.addEventListener('click', () => {
+        const kebabItemDiv = button.closest('.kebab-item');
+        const kebabName = button.dataset.kebabName; // e.g., "Chicken Kebab"
+
+        const sizeSelect = kebabItemDiv.querySelector('.kebab-size-select');
+        const quantityInput = kebabItemDiv.querySelector('.selected-item-quantity');
+
+        const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+        const selectedSize = selectedOption.value;
+        const selectedPrice = parseFloat(selectedOption.dataset.price);
+        let quantity = parseInt(quantityInput.value, 10);
+
+        // Validation
+        if (!selectedSize || selectedPrice === 0) {
+            showMessageModal('Selection Required', `Please select a size for the ${kebabName}.`, 'warning');
+            return;
+        }
+        if (isNaN(quantity) || quantity <= 0) {
+            showMessageModal('Invalid Quantity', 'Please enter a valid quantity (at least 1).', 'warning');
+            quantityInput.value = 1; // Reset to 1 for convenience
+            return;
+        }
+
+        const fullItemName = `${kebabName} - ${selectedSize}`;
+        const customizations = getKebabCustomizations(kebabItemDiv);
+
+        addItemToCart(fullItemName, selectedPrice, quantity, customizations);
+        
+        // Reset inputs after adding to cart
+        sizeSelect.value = ""; // Reset dropdown to default "Select Size"
+        quantityInput.value = 1; // Reset quantity to 1
+
+        // Clear customization options for the added item (optional, but good UX)
+        kebabItemDiv.querySelectorAll('.customization-options input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        kebabItemDiv.querySelector('textarea.item-notes').value = '';
+
+        showMessageModal('Item Added!', `"${fullItemName}" (x${quantity}) added to your cart.`, 'success');
+    });
+});
+
+
+// ✅ EXISTING: Event listeners for "Add" buttons for Drinks and Sides (using direct item-quantity)
+document.querySelectorAll('.item-selection-row .add-to-cart-button').forEach(button => {
     button.addEventListener('click', () => {
         const itemName = button.dataset.itemName;
         const itemPrice = parseFloat(button.dataset.itemPrice);
@@ -220,14 +264,8 @@ document.querySelectorAll('.add-to-cart-button').forEach(button => {
             quantity = 0; // Default to 0 or handle as an error
         }
 
-        let customizations = null;
-        // Check if this is a kebab item to get customizations
-        const kebabItemDiv = button.closest('.kebab-item');
-        if (kebabItemDiv) {
-            customizations = getKebabCustomizations(kebabItemDiv);
-        }
-
-        addItemToCart(itemName, itemPrice, quantity, customizations);
+        // For drinks/sides, customizations are not applicable, so pass null or empty object
+        addItemToCart(itemName, itemPrice, quantity, null);
         
         // Reset quantity input to 0 after adding to cart
         quantityInput.value = 0; 
@@ -241,40 +279,6 @@ document.querySelectorAll('.add-to-cart-button').forEach(button => {
     });
 });
 
-// 🔥🔥🔥 CRITICAL FIX: REMOVING THE EVENT LISTENER FROM QUANTITY INPUTS 🔥🔥🔥
-// This listener caused items to be added/updated automatically without clicking "Add".
-// Now, changing the quantity input will *not* trigger a cart update until the "Add" button is clicked.
-/*
-document.querySelectorAll('.item-quantity').forEach(input => {
-    input.addEventListener('change', (event) => {
-        const quantityInput = event.target;
-        let quantity = parseInt(quantityInput.value, 10);
-        
-        if (isNaN(quantity) || quantity < 0) {
-            quantity = 0;
-            quantityInput.value = 0; // Ensure invalid input resets to 0
-        }
-
-        const itemSelectionRow = quantityInput.closest('.item-selection-row');
-        if (!itemSelectionRow) {
-            console.error("Could not find parent .item-selection-row for quantity input.");
-            return;
-        }
-
-        const itemName = itemSelectionRow.querySelector('.add-to-cart-button').dataset.itemName;
-        const itemPrice = parseFloat(itemSelectionRow.querySelector('.add-to-cart-button').dataset.itemPrice);
-
-        let customizations = null;
-        const kebabItemDiv = quantityInput.closest('.kebab-item');
-        if (kebabItemDiv) {
-            customizations = getKebabCustomizations(kebabItemDiv);
-        }
-
-        addItemToCart(itemName, itemPrice, quantity, customizations);
-    });
-});
-*/
-
 
 // Event listener for the "Clear Cart" button
 if (clearCartBtn) {
@@ -282,10 +286,19 @@ if (clearCartBtn) {
         cart = []; // Clear the global cart array
         updateCartDisplay(); // Update the display to show an empty cart
 
-        // Reset all quantity inputs back to 0 on the menu
+        // Reset all quantity inputs back to 0 on the menu (for Drinks/Sides)
         document.querySelectorAll('.item-quantity').forEach(input => {
             input.value = 0;
         });
+        
+        // Reset all dropdowns to default and quantity inputs to 1 (for Kebabs)
+        document.querySelectorAll('.kebab-size-select').forEach(select => {
+            select.value = ""; // Set to the empty option's value
+        });
+        document.querySelectorAll('.selected-item-quantity').forEach(input => {
+            input.value = 1; // Default quantity for next selection
+        });
+
 
         // Clear all customization checkboxes
         document.querySelectorAll('.customization-options input[type="checkbox"]').forEach(checkbox => {
@@ -401,7 +414,7 @@ if (orderForm) {
   placeOrderBtn.addEventListener('click', async e => { // Changed to click listener for placeOrderBtn
     e.preventDefault();
 
-    // ✅ NEW: Disable the place order button immediately
+    // Disable the place order button immediately
     if (placeOrderBtn) {
         placeOrderBtn.disabled = true;
         placeOrderBtn.textContent = 'Placing Order...';
@@ -477,9 +490,15 @@ if (orderForm) {
       if (response.ok) {
         cart = []; // Clear cart on successful order
         updateCartDisplay(); // Update display to show empty cart
-        // Also clear quantities and customizations from the menu after successful order
+        // Also clear inputs on successful order, for both types of items
         document.querySelectorAll('.item-quantity').forEach(input => {
-            input.value = 0;
+            input.value = 0; // For Drinks/Sides
+        });
+        document.querySelectorAll('.kebab-size-select').forEach(select => {
+            select.value = ""; // For Kebabs
+        });
+        document.querySelectorAll('.selected-item-quantity').forEach(input => {
+            input.value = 1; // For Kebabs
         });
         document.querySelectorAll('.customization-options input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
@@ -525,7 +544,7 @@ document.querySelectorAll('.preview-btn').forEach(button => {
                 // Set a fallback image if the primary one fails
                 modalImage.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';
                 modalImageTitle.textContent = 'Image Unavailable'; // Update title for fallback
-                showMessageModal('Image Error', 'Image for "' + imageTitle + '" could retain not be loaded. Showing placeholder.', 'error'); // Use custom modal
+                showMessageModal('Image Error', 'Image for "' + imageTitle + '" could not be loaded. Showing placeholder.', 'error'); // Use custom modal
             };
 
         } else {
