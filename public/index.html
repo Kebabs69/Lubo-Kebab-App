@@ -418,6 +418,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     margin-bottom: 0;
 }
 
+
 /* New styles for the dropdown, quantity and add button wrapper */
 .kebab-order-controls {
     display: flex;
@@ -562,6 +563,53 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 #clearCartBtn:active {
     transform: translateY(0);
+}
+
+/* NEW: Styles for cart items and remove button */
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align text and button to the top if item text wraps */
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee; /* Subtle separator between cart items */
+}
+
+.cart-item-row:last-of-type {
+    border-bottom: none; /* No border after the last item */
+}
+
+.cart-item-info {
+    flex-grow: 1; /* Allows item info to take most space */
+    margin-right: 10px; /* Space between text and button */
+    font-size: 0.95em;
+    color: var(--text-color);
+}
+
+.cart-item-info .item-name {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.cart-item-info .item-customizations {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+.remove-item-button {
+    background: none;
+    border: none;
+    color: #e74c3c; /* Red for remove action */
+    font-size: 1.2em; /* Slightly larger icon */
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.remove-item-button:hover {
+    color: #c0392b; /* Darker red on hover */
+    transform: scale(1.1);
 }
 
 
@@ -956,7 +1004,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Kebab</h4>
             <button type="button" class="preview-btn" data-image-title="Chicken Kebab" data-image-url="/assets/chicken-preview.png">Preview</button>
 
-            <!-- NEW: Dropdown, Quantity Input, and Add Button -->
+            <!-- Dropdown, Quantity Input, and Add Button -->
             <div class="kebab-order-controls">
                 <label for="chicken-kebab-select" style="display: none;">Select Chicken Kebab Size:</label>
                 <select id="chicken-kebab-select" class="kebab-size-select">
@@ -995,7 +1043,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
             <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
             
-            <!-- NEW: Dropdown, Quantity Input, and Add Button -->
+            <!-- Dropdown, Quantity Input, and Add Button -->
             <div class="kebab-order-controls">
                 <label for="lamb-kebab-select" style="display: none;">Select Lamb Kebab Size:</label>
                 <select id="lamb-kebab-select" class="kebab-size-select">
@@ -1034,7 +1082,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
             <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
             
-            <!-- NEW: Dropdown, Quantity Input, and Add Button -->
+            <!-- Dropdown, Quantity Input, and Add Button -->
             <div class="kebab-order-controls">
                 <label for="veggie-wrap-select" style="display: none;">Select Veggie Wrap Size:</label>
                 <select id="veggie-wrap-select" class="kebab-size-select">
@@ -1068,7 +1116,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
             <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
             
-            <!-- NEW: Dropdown, Quantity Input, and Add Button -->
+            <!-- Dropdown, Quantity Input, and Add Button -->
             <div class="kebab-order-controls">
                 <label for="mixed-grill-select" style="display: none;">Select Mixed Grill Size:</label>
                 <select id="mixed-grill-select" class="kebab-size-select">
@@ -1184,6 +1232,8 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             🛒 Your Cart
          </h3>
       <ul id="cartItems">
+          <!-- Cart items will be dynamically added here by JavaScript -->
+          <li style="color: #666; text-align: center; padding: 10px;">Your cart is empty.</li>
       </ul>
       <p class="total">
             Total: £
