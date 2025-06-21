@@ -403,7 +403,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   background: #f9f9f9;
 }
 
-/* NEW STYLES FOR EACH KEBAB ITEM (INCLUDING TOPPINGS/CUSTOMIZATION) */
+/* Kebab Item Styling (Outer Border) */
 .kebab-item {
     background-color: #ffffff; /* Explicit white background for clarity */
     border: 1px solid black; /* SOLID BLACK BORDER */
@@ -418,7 +418,74 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     margin-bottom: 0;
 }
 
+/* New styles for the dropdown, quantity and add button wrapper */
+.kebab-order-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between dropdown, quantity, button */
+    margin-top: 15px; /* Space below kebab name/preview */
+    margin-bottom: 15px; /* Space above customizations */
+}
 
+.kebab-order-controls .kebab-size-select {
+    flex-grow: 1; /* Allow dropdown to take available space */
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--light-bg);
+    font-size: 1em;
+    cursor: pointer;
+    -webkit-appearance: none; /* Remove default dropdown arrow for custom styling */
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23444%22%20d%3D%22M7%209.5L4%206.5L7%203.5Z%22%20transform%3D%22rotate(90%206%206.5)%22%2F%3E%3C%2Fsvg%3E'); /* Custom dropdown arrow */
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.kebab-order-controls .kebab-size-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.2);
+}
+
+.kebab-order-controls .selected-item-quantity {
+    width: 70px; /* Fixed width for quantity input */
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1em;
+    text-align: center;
+    background-color: var(--light-bg);
+    -moz-appearance: textfield; /* Hide Firefox stepper arrows */
+}
+.kebab-order-controls .selected-item-quantity::-webkit-outer-spin-button,
+.kebab-order-controls .selected-item-quantity::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.kebab-order-controls .add-selected-kebab-to-cart-button {
+    background-color: #28a745; /* Green add button */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.kebab-order-controls .add-selected-kebab-to-cart-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+.kebab-order-controls .add-selected-kebab-to-cart-button:active {
+    transform: translateY(0);
+}
+
+
+/* Customization Options for each kebab */
 .kebab-item .customization-options {
     background-color: #fff; /* Keep white for inner options */
     border: 1px solid #ddd;
@@ -466,70 +533,12 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     border-radius: 6px;
 }
 
-/* New styling for item-level quantity input */
-.item-selection-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-top: 1px dashed #eee;
-}
-.item-selection-row:first-of-type {
-    border-top: none; /* No top border for the first item in the list */
-}
+/* Remove old item-selection-row styles as they are replaced */
+/* .item-selection-row { ... } */
+/* .item-name-price { ... } */
+/* .item-quantity-control { ... } */
+/* .add-to-cart-button { ... } */
 
-.item-name-price {
-    flex-grow: 1; /* Allows name and price to take available space */
-    font-size: 1.05em;
-    font-weight: 500;
-    color: var(--text-color);
-}
-.item-name-price span.price {
-    font-weight: 600;
-    color: var(--primary-color);
-    margin-left: 8px;
-}
-
-.item-quantity-control {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.item-quantity-control input[type="number"] {
-    width: 60px; /* Fixed width for quantity input */
-    padding: 6px 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-size: 0.95em;
-    text-align: center;
-    background-color: var(--light-bg);
-    -moz-appearance: textfield; /* Hide Firefox stepper arrows */
-}
-/* Hide Chrome, Safari, Edge, Opera stepper arrows */
-.item-quantity-control input[type="number"]::-webkit-outer-spin-button,
-.item-quantity-control input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.add-to-cart-button {
-    background-color: #28a745; /* Green add button */
-    color: white;
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9em;
-    font-weight: 600;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-.add-to-cart-button:hover {
-    background-color: #218838;
-    transform: translateY(-1px);
-}
-.add-to-cart-button:active {
-    transform: translateY(0);
-}
 
 /* Clear Cart Button Styling */
 #clearCartBtn {
@@ -638,6 +647,21 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   }
   .testimonial-card {
       padding: 20px;
+  }
+  
+  /* Responsive for Kebab Order Controls */
+  .kebab-order-controls {
+      flex-direction: column; /* Stack dropdown, quantity, button on small screens */
+      align-items: stretch; /* Make them full width */
+  }
+  .kebab-order-controls .kebab-size-select,
+  .kebab-order-controls .selected-item-quantity,
+  .kebab-order-controls .add-selected-kebab-to-cart-button {
+      width: 100%; /* Full width */
+      margin-bottom: 10px; /* Add some spacing when stacked */
+  }
+  .kebab-order-controls .add-selected-kebab-to-cart-button:last-child {
+      margin-bottom: 0;
   }
 
 }
@@ -923,7 +947,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 <form id="orderForm">
 <div class="wrapper">
-   <div class="container" id="menu"> <!-- Removed inline styles, now handled by .container CSS -->
+   <div class="container" id="menu">
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🥙 Menu
          </h3>
@@ -932,30 +956,20 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Kebab</h4>
             <button type="button" class="preview-btn" data-image-title="Chicken Kebab" data-image-url="/assets/chicken-preview.png">Preview</button>
 
-            <!-- Size and Quantity selection for Chicken Kebab - MOVED TO TOP -->
-            <div class="item-selection-row" data-item-id="chicken-kebab-small">
-                <span class="item-name-price">Small <span class="price">£5.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Chicken Kebab - Small" data-item-price="5">Add</button>
-                </div>
-            </div>
-            <div class="item-selection-row" data-item-id="chicken-kebab-medium">
-                <span class="item-name-price">Medium <span class="price">£6.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Chicken Kebab - Medium" data-item-price="6">Add</button>
-                </div>
-            </div>
-            <div class="item-selection-row" data-item-id="chicken-kebab-large">
-                <span class="item-name-price">Large <span class="price">£7.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Chicken Kebab - Large" data-item-price="7">Add</button>
-                </div>
+            <!-- NEW: Dropdown, Quantity Input, and Add Button -->
+            <div class="kebab-order-controls">
+                <label for="chicken-kebab-select" style="display: none;">Select Chicken Kebab Size:</label>
+                <select id="chicken-kebab-select" class="kebab-size-select">
+                    <option value="" data-price="0">Select Size</option>
+                    <option value="Small" data-price="5.00">Small - £5.00</option>
+                    <option value="Medium" data-price="6.00">Medium - £6.00</option>
+                    <option value="Large" data-price="7.00">Large - £7.00</option>
+                </select>
+                <input type="number" class="selected-item-quantity" value="1" min="1" max="99">
+                <button type="button" class="add-selected-kebab-to-cart-button" data-kebab-name="Chicken Kebab">Add</button>
             </div>
 
-            <!-- Customization Options for Chicken Kebab - MOVED TO BOTTOM -->
+            <!-- Customization Options for Chicken Kebab - REMAINS AT BOTTOM -->
             <div class="customization-options">
                 <h5>Customize your Chicken Kebab:</h5>
                 <div class="checkbox-group">
@@ -981,30 +995,20 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
             <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
             
-            <!-- Size and Quantity selection for Lamb Kebab - MOVED TO TOP -->
-            <div class="item-selection-row" data-item-id="lamb-kebab-small">
-                <span class="item-name-price">Small <span class="price">£6.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Lamb Kebab - Small" data-item-price="6">Add</button>
-                </div>
-            </div>
-            <div class="item-selection-row" data-item-id="lamb-kebab-medium">
-                <span class="item-name-price">Medium <span class="price">£7.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Lamb Kebab - Medium" data-item-price="7">Add</button>
-                </div>
-            </div>
-            <div class="item-selection-row" data-item-id="lamb-kebab-large">
-                <span class="item-name-price">Large <span class="price">£8.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Lamb Kebab - Large" data-item-price="8">Add</button>
-                </div>
+            <!-- NEW: Dropdown, Quantity Input, and Add Button -->
+            <div class="kebab-order-controls">
+                <label for="lamb-kebab-select" style="display: none;">Select Lamb Kebab Size:</label>
+                <select id="lamb-kebab-select" class="kebab-size-select">
+                    <option value="" data-price="0">Select Size</option>
+                    <option value="Small" data-price="6.00">Small - £6.00</option>
+                    <option value="Medium" data-price="7.00">Medium - £7.00</option>
+                    <option value="Large" data-price="8.00">Large - £8.00</option>
+                </select>
+                <input type="number" class="selected-item-quantity" value="1" min="1" max="99">
+                <button type="button" class="add-selected-kebab-to-cart-button" data-kebab-name="Lamb Kebab">Add</button>
             </div>
 
-            <!-- Customization Options for Lamb Kebab - MOVED TO BOTTOM -->
+            <!-- Customization Options for Lamb Kebab - REMAINS AT BOTTOM -->
             <div class="customization-options">
                 <h5>Customize your Lamb Kebab:</h5>
                 <div class="checkbox-group">
@@ -1030,30 +1034,20 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
             <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
             
-            <!-- Size and Quantity selection for Veggie Wrap - MOVED TO TOP -->
-            <div class="item-selection-row" data-item-id="veggie-wrap-small">
-                <span class="item-name-price">Small <span class="price">£4.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Veggie Wrap - Small" data-item-price="4">Add</button>
-                </div>
-            </div>
-            <div class="item-selection-row" data-item-id="veggie-wrap-medium">
-                <span class="item-name-price">Medium <span class="price">£5.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Veggie Wrap - Medium" data-item-price="5">Add</button>
-                </div>
-            </div>
-            <div class="item-selection-row" data-item-id="veggie-wrap-large">
-                <span class="item-name-price">Large <span class="price">£6.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Veggie Wrap - Large" data-item-price="6">Add</button>
-                </div>
+            <!-- NEW: Dropdown, Quantity Input, and Add Button -->
+            <div class="kebab-order-controls">
+                <label for="veggie-wrap-select" style="display: none;">Select Veggie Wrap Size:</label>
+                <select id="veggie-wrap-select" class="kebab-size-select">
+                    <option value="" data-price="0">Select Size</option>
+                    <option value="Small" data-price="4.00">Small - £4.00</option>
+                    <option value="Medium" data-price="5.00">Medium - £5.00</option>
+                    <option value="Large" data-price="6.00">Large - £6.00</option>
+                </select>
+                <input type="number" class="selected-item-quantity" value="1" min="1" max="99">
+                <button type="button" class="add-selected-kebab-to-cart-button" data-kebab-name="Veggie Wrap">Add</button>
             </div>
 
-            <!-- Customization Options for Veggie Wrap - MOVED TO BOTTOM -->
+            <!-- Customization Options for Veggie Wrap - REMAINS AT BOTTOM -->
             <div class="customization-options">
                 <h5>Customize your Veggie Wrap:</h5>
                 <div class="checkbox-group">
@@ -1074,30 +1068,20 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
             <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
             
-            <!-- Size and Quantity selection for Mixed Grill - MOVED TO TOP -->
-            <div class="item-selection-row" data-item-id="mixed-grill-small">
-                <span class="item-name-price">Small <span class="price">£8.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Mixed Grill - Small" data-item-price="8">Add</button>
-                </div>
-            </div>
-            <div class="item-selection-row" data-item-id="mixed-grill-medium">
-                <span class="item-name-price">Medium <span class="price">£9.50</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Mixed Grill - Medium" data-item-price="9.5">Add</button>
-                </div>
-            </div>
-            <div class="item-selection-row" data-item-id="mixed-grill-large">
-                <span class="item-name-price">Large <span class="price">£11.00</span></span>
-                <div class="item-quantity-control">
-                    <input type="number" class="item-quantity" value="0" min="0">
-                    <button type="button" class="add-to-cart-button" data-item-name="Mixed Grill - Large" data-item-price="11">Add</button>
-                </div>
+            <!-- NEW: Dropdown, Quantity Input, and Add Button -->
+            <div class="kebab-order-controls">
+                <label for="mixed-grill-select" style="display: none;">Select Mixed Grill Size:</label>
+                <select id="mixed-grill-select" class="kebab-size-select">
+                    <option value="" data-price="0">Select Size</option>
+                    <option value="Small" data-price="8.00">Small - £8.00</option>
+                    <option value="Medium" data-price="9.50">Medium - £9.50</option>
+                    <option value="Large" data-price="11.00">Large - £11.00</option>
+                </select>
+                <input type="number" class="selected-item-quantity" value="1" min="1" max="99">
+                <button type="button" class="add-selected-kebab-to-cart-button" data-kebab-name="Mixed Grill">Add</button>
             </div>
 
-            <!-- Customization Options for Mixed Grill - MOVED TO BOTTOM -->
+            <!-- Customization Options for Mixed Grill - REMAINS AT BOTTOM -->
             <div class="customization-options">
                 <h5>Customize your Mixed Grill:</h5>
                 <div class="checkbox-group">
@@ -1115,7 +1099,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             </div>
         </div>
    </div>
-   <div class="container" id="drinks"> <!-- Removed inline styles, now handled by .container CSS -->
+   <div class="container" id="drinks">
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🥤 Drinks
          </h3>
@@ -1155,7 +1139,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
          </div>
       </div>
    </div>
-   <div class="container" id="sides"> <!-- Removed inline styles, now handled by .container CSS -->
+   <div class="container" id="sides">
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🥗 Sides
          </h3>
@@ -1195,7 +1179,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
          </div>
       </div>
    </div>
-   <div class="container" id="cart"> <!-- Removed inline styles, now handled by .container CSS -->
+   <div class="container" id="cart">
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🛒 Your Cart
          </h3>
@@ -1209,7 +1193,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       </p>
       <input id="orderSummary" name="Order Summary" type="hidden"/>
 
-      <!-- NEW: Clear Cart Button -->
+      <!-- Clear Cart Button -->
       <button type="button" id="clearCartBtn">
           <i class="fas fa-trash-alt"></i> Clear Cart
       </button>
