@@ -402,6 +402,18 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 
 /* NEW STYLES FOR CUSTOMIZATION */
+.kebab-item {
+    padding-bottom: 20px; /* Add padding for spacing before the border */
+    margin-bottom: 20px; /* Margin for spacing after the border */
+    border-bottom: 1px solid var(--border-color); /* Solid border at the bottom */
+}
+
+/* Remove border from the last kebab item */
+.kebab-item:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
 .kebab-item .customization-options {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -514,7 +526,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     transform: translateY(0);
 }
 
-/* NEW: Clear Cart Button Styling */
+/* Clear Cart Button Styling */
 #clearCartBtn {
     display: block; /* Make it a block element */
     width: 100%; /* Full width */
@@ -1261,7 +1273,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       </button>
       <div style="margin-top: 20px; padding: 15px; border: 2px solid #c0392b; border-radius: 12px; background-color: #fff4e6; text-align: center;">
          <p style="font-size: 22px; font-weight: bold; color: #c0392b;">
-               �💰 CASH PAYMENTS ONLY 💰💵
+               💵💰 CASH PAYMENTS ONLY 💰💵
             </p>
          <p style="font-size: 17px; color: #333;">
                At this time, we are accepting
@@ -1468,4 +1480,3 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 <script src="/js/index.js?v=202406161400"></script> <!-- Absolute path and cache buster -->
 </body>
 </html>
-�
