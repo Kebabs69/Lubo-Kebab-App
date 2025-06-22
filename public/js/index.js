@@ -24,10 +24,10 @@ const imageModalCloseBtn = document.querySelector('.image-modal-close');
 // Elements for the generic message modal
 const messageModalOverlay = document.getElementById('messageModalOverlay');
 const messageModalContent = document.querySelector('#messageModalOverlay .message-modal-content'); // Get content for class toggling
-const messageModalTitle = document.getElementById('messageModalTitle');
-const messageModalText = document.getElementById('messageModalText');
-const messageModalButton = document.getElementById('messageModalButton');
-const messageModalCloseBtn = document.querySelector('#messageModalOverlay .message-modal-close');
+const messageModalTitle = document.getElementById('modalMessageTitle'); // Corrected ID to match HTML
+const messageModalText = document.getElementById('modalMessageText'); // Corrected ID to match HTML
+const messageModalButton = document.getElementById('modalMessageButton'); // Corrected ID to match HTML
+const messageModalCloseBtn = document.querySelector('#messageModalOverlay .message-modal-close'); // Corrected selector
 
 // Elements for the Kebab Customization Modal
 const kebabCustomizationModal = document.getElementById('kebabCustomizationModal');
@@ -137,7 +137,12 @@ if (localStorage.getItem('isLoggedIn') !== 'true') {
 // Function to display the custom message modal
 function showMessageModal(title, message, type = 'info') {
     console.log(`showMessageModal called: ${title}, ${message}, type: ${type}`); // Debugging
-    if (!messageModalOverlay || !messageModalTitle || !messageModalText || !messageModalButton || !messageModalContent) {
+    // Corrected variable names to match HTML element IDs
+    const messageTitleElement = document.getElementById('modalMessageTitle');
+    const messageTextElement = document.getElementById('modalMessageText');
+    const messageButtonElement = document.getElementById('modalMessageButton');
+
+    if (!messageModalOverlay || !messageTitleElement || !messageTextElement || !messageButtonElement || !messageModalContent) {
         console.error("Message modal elements not found, falling back to alert:", title, message);
         alert(title + "\n" + message);
         return;
@@ -146,27 +151,27 @@ function showMessageModal(title, message, type = 'info') {
     // Reset classes to ensure only one type is applied
     messageModalContent.classList.remove('success', 'error', 'warning');
 
-    // Set title and text
-    messageModalTitle.innerHTML = `<i class="fas fa-info-circle icon"></i> ${title}`; // Default info icon
-    messageModalText.textContent = message;
+    // Set title and text using the corrected elements
+    messageTitleElement.innerHTML = `<i class="fas fa-info-circle icon"></i> ${title}`; // Default info icon
+    messageTextElement.textContent = message;
 
     // Apply specific classes and icons based on type
     if (type === 'success') {
         messageModalContent.classList.add('success');
-        messageModalTitle.innerHTML = `<i class="fas fa-check-circle icon"></i> ${title}`;
+        messageTitleElement.innerHTML = `<i class="fas fa-check-circle icon"></i> ${title}`;
     } else if (type === 'error') {
         messageModalContent.classList.add('error');
-        messageModalTitle.innerHTML = `<i class="fas fa-times-circle icon"></i> ${title}`;
+        messageTitleElement.innerHTML = `<i class="fas fa-times-circle icon"></i> ${title}`;
     } else if (type === 'warning') {
         messageModalContent.classList.add('warning');
-        messageModalTitle.innerHTML = `<i class="fas fa-exclamation-triangle icon"></i> ${title}`;
+        messageTitleElement.innerHTML = `<i class="fas fa-exclamation-triangle icon"></i> ${title}`;
     }
 
     messageModalOverlay.style.display = 'flex'; // Use flex to center content
 
     // Ensure only one click listener for the OK button
-    messageModalButton.onclick = null; // Clear previous listeners
-    messageModalButton.addEventListener('click', () => {
+    messageButtonElement.onclick = null; // Clear previous listeners
+    messageButtonElement.addEventListener('click', () => {
         messageModalOverlay.style.display = 'none';
     }, { once: true }); // Use {once: true} to automatically remove listener after first click
 
@@ -564,8 +569,9 @@ function renderCategoryItems(categoryName) {
                 </div>
             `;
         }
+        // console.log(`Attempting to insert HTML for ${item.name}:`, itemHtml); // More detailed debugging
         menuDisplayArea.insertAdjacentHTML('beforeend', itemHtml);
-        console.log(`Rendered item: ${item.name} in category: ${categoryName}`); // Debugging each item
+        // console.log(`Rendered item: ${item.name} in category: ${categoryName}`); // Debugging each item
     });
 
     // Re-attach event listeners after new items are rendered
