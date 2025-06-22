@@ -29,8 +29,67 @@ const messageModalText = document.getElementById('messageModalText');
 const messageModalButton = document.getElementById('messageModalButton');
 const messageModalCloseBtn = document.querySelector('#messageModalOverlay .message-modal-close');
 
+// NEW: Elements for the Kebab Customization Modal
+const kebabCustomizationModal = document.getElementById('kebabCustomizationModal');
+const kebabModalCloseBtn = document.querySelector('#kebabCustomizationModal .kebab-modal-close');
+const modalKebabName = document.getElementById('modalKebabName');
+const modalKebabSizes = document.getElementById('modalKebabSizes');
+const modalKebabToppings = document.getElementById('modalKebabToppings'); // Pre-filled in HTML, but can be dynamic later
+const modalKebabSauces = document.getElementById('modalKebabSauces');     // Pre-filled in HTML, but can be dynamic later
+const modalKebabNotes = document.getElementById('modalKebabNotes');
+const modalQuantityMinus = document.getElementById('modalQuantityMinus');
+const modalQuantityInput = document.getElementById('modalQuantityInput');
+const modalQuantityPlus = document.getElementById('modalQuantityPlus');
+const modalAddToCartButton = document.getElementById('modalAddToCartButton');
+const modalCurrentPriceSpan = document.getElementById('modalCurrentPrice');
+
 // Global array to store the cart state
 let cart = [];
+
+// NEW: Data structure for Kebabs (to dynamically populate the modal)
+const kebabMenuData = {
+    'chicken-kebab': {
+        name: 'Chicken Kebab',
+        sizes: [
+            { label: 'Small', price: 5.00 },
+            { label: 'Medium', price: 6.00 },
+            { label: 'Large', price: 7.00 }
+        ],
+        // Note: Toppings and sauces are currently generic for all kebabs in HTML
+        // If they need to be specific per kebab, define them here as arrays,
+        // and modify populateKebabCustomizationModal to use them.
+    },
+    'lamb-kebab': {
+        name: 'Lamb Kebab',
+        sizes: [
+            { label: 'Small', price: 6.00 },
+            { label: 'Medium', price: '7.00' },
+            { label: 'Large', price: '8.00' }
+        ]
+    },
+    'veggie-wrap': {
+        name: 'Veggie Wrap',
+        sizes: [
+            { label: 'Small', price: 4.00 },
+            { label: 'Medium', price: 5.00 },
+            { label: 'Large', price: 6.00 }
+        ]
+    },
+    'mixed-grill': {
+        name: 'Mixed Grill',
+        sizes: [
+            { label: 'Small', price: 8.00 },
+            { label: 'Medium', price: 9.50 },
+            { label: 'Large', price: 11.00 }
+        ]
+    }
+    // Add other kebabs here as needed
+};
+
+// Variables to store current modal selection state
+let currentKebabId = null;
+let currentKebabBasePrice = 0; // Price based on selected size only
+let currentKebabQuantity = 1;
 
 // Login Check for index.html - Ensures user is logged in
 if (localStorage.getItem('isLoggedIn') !== 'true') {
@@ -90,28 +149,6 @@ function showMessageModal(title, message, type = 'info') {
     };
 }
 
-
-// Function to get customizations for a given kebab item block
-function getKebabCustomizations(kebabItemDiv) {
-    const selectedSauces = [];
-    kebabItemDiv.querySelectorAll('input[type="checkbox"][data-custom-type="sauce"]:checked').forEach(sauceCheckbox => {
-        selectedSauces.push(sauceCheckbox.value);
-    });
-
-    const selectedToppings = [];
-    kebabItemDiv.querySelectorAll('input[type="checkbox"][data-custom-type="topping"]:checked').forEach(toppingCheckbox => {
-        selectedToppings.push(toppingCheckbox.value);
-    });
-
-    const notesTextArea = kebabItemDiv.querySelector('textarea.item-notes');
-    const itemNotes = notesTextArea ? notesTextArea.value.trim() : '';
-
-    return {
-        sauces: selectedSauces,
-        toppings: selectedToppings,
-        notes: itemNotes
-    };
-}
 
 // Function to generate a unique ID for a cart item, including customizations
 // This is crucial to distinguish "Small Kebab with Garlic" from "Small Kebab with Chili"
@@ -236,15 +273,9 @@ function updateCartDisplay() {
 
             // Re-attach event listeners to the new remove buttons after they are rendered
             // Using event delegation on the parent cartItemsList is more efficient
-            cartItemsList.addEventListener('click', (event) => {
-                if (event.target.closest('.remove-item-button')) {
-                    const button = event.target.closest('.remove-item-button');
-                    const itemId = button.dataset.itemId;
-                    if (itemId) {
-                        removeItemFromCart(itemId);
-                    }
-                }
-            }, { once: true }); // Use once: true to avoid multiple listeners if updateCartDisplay is called often
+            // Remove previous listener to avoid duplicates
+            cartItemsList.removeEventListener('click', handleRemoveButtonClick);
+            cartItemsList.addEventListener('click', handleRemoveButtonClick);
         }
     }
 
@@ -253,8 +284,189 @@ function updateCartDisplay() {
     }
 }
 
+// Event handler for individual item removal using event delegation
+function handleRemoveButtonClick(event) {
+    if (event.target.closest('.remove-item-button')) {
+        const button = event.target.closest('.remove-item-button');
+        const itemId = button.dataset.itemId;
+        if (itemId) {
+            removeItemFromCart(itemId);
+        }
+    }
+}
 
-// Event listener for "Add" buttons specifically for Kebab items (with dropdowns)
+
+// NEW: Function to open the kebab customization modal
+function openKebabCustomizationModal(kebabId) {
+    currentKebabId = kebabId;
+    const kebab = kebabMenuData[kebabId];
+
+    if (!kebab) {
+        console.error('Kebab data not found for ID:', kebabId);
+        showMessageModal('Error', 'Could not load kebab details.', 'error');
+        return;
+    }
+
+    // Reset modal state
+    modalKebabName.textContent = kebab.name;
+    modalKebabSizes.innerHTML = ''; // Clear previous size options
+    modalKebabNotes.value = '';
+    modalQuantityInput.value = 1;
+    currentKebabQuantity = 1; // Reset internal quantity tracker
+    currentKebabBasePrice = 0; // Reset base price
+
+    // Reset all checkboxes in the modal (sauces and toppings)
+    // Assuming they are within modalKebabToppings and modalKebabSauces
+    const allModalCheckboxes = kebabCustomizationModal.querySelectorAll('.modal-checkbox-group input[type="checkbox"]');
+    allModalCheckboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+
+    // Populate sizes
+    kebab.sizes.forEach(size => {
+        const radioHtml = `
+            <label>
+                <input type="radio" name="kebabSize" value="${size.label}" data-price="${size.price}">
+                <span>${size.label} - £${size.price.toFixed(2)}</span>
+            </label>
+        `;
+        modalKebabSizes.insertAdjacentHTML('beforeend', radioHtml);
+    });
+
+    // Add event listeners for changes within the modal to update price
+    // Using event delegation for radio buttons (sizes)
+    modalKebabSizes.removeEventListener('change', updateModalTotalPrice); // Remove old listener
+    modalKebabSizes.addEventListener('change', updateModalTotalPrice);
+
+    // Using event delegation for checkboxes (sauces/toppings)
+    modalKebabToppings.removeEventListener('change', updateModalTotalPrice); // Remove old listener
+    modalKebabToppings.addEventListener('change', updateModalTotalPrice);
+    modalKebabSauces.removeEventListener('change', updateModalTotalPrice); // Remove old listener
+    modalKebabSauces.addEventListener('change', updateModalTotalPrice);
+
+    // Quantity input listener
+    modalQuantityInput.removeEventListener('input', updateModalTotalPrice); // Remove old listener
+    modalQuantityInput.addEventListener('input', updateModalTotalPrice);
+
+    // Initial price update (sets to 0.00 until a size is chosen)
+    updateModalTotalPrice();
+
+    kebabCustomizationModal.style.display = 'flex'; // Show the modal
+}
+
+// NEW: Function to close the kebab customization modal
+function closeKebabCustomizationModal() {
+    kebabCustomizationModal.style.display = 'none';
+    currentKebabId = null;
+    currentKebabBasePrice = 0;
+    currentKebabQuantity = 1; // Reset to default
+    // Also reset form fields within modal if necessary, though openKebabCustomizationModal resets them on open
+}
+
+// NEW: Function to update total price display in the modal
+function updateModalTotalPrice() {
+    // Get selected size price
+    const selectedSizeRadio = modalKebabSizes.querySelector('input[name="kebabSize"]:checked');
+    if (selectedSizeRadio) {
+        currentKebabBasePrice = parseFloat(selectedSizeRadio.dataset.price);
+    } else {
+        currentKebabBasePrice = 0; // No size selected yet
+    }
+
+    // Get quantity
+    let quantity = parseInt(modalQuantityInput.value, 10);
+    if (isNaN(quantity) || quantity < 1) {
+        quantity = 1;
+        modalQuantityInput.value = 1; // Correct the input if invalid
+    }
+    currentKebabQuantity = quantity;
+
+    // Calculate total
+    const total = currentKebabBasePrice * currentKebabQuantity;
+    modalCurrentPriceSpan.textContent = total.toFixed(2);
+}
+
+// NEW: Event listener for "plus" buttons on kebab items to open the modal
+document.querySelectorAll('.add-to-cart-modal-trigger-button').forEach(button => {
+    button.addEventListener('click', () => {
+        const kebabId = button.dataset.kebabId;
+        openKebabCustomizationModal(kebabId);
+    });
+});
+
+// NEW: Event listener for quantity plus/minus buttons in modal
+if (modalQuantityMinus) {
+    modalQuantityMinus.addEventListener('click', () => {
+        let currentVal = parseInt(modalQuantityInput.value, 10);
+        if (isNaN(currentVal)) currentVal = 1;
+        if (currentVal > 1) {
+            modalQuantityInput.value = currentVal - 1;
+            updateModalTotalPrice();
+        }
+    });
+}
+
+if (modalQuantityPlus) {
+    modalQuantityPlus.addEventListener('click', () => {
+        let currentVal = parseInt(modalQuantityInput.value, 10);
+        if (isNaN(currentVal)) currentVal = 0; // If somehow NaN, treat as 0 to add 1
+        modalQuantityInput.value = currentVal + 1;
+        updateModalTotalPrice();
+    });
+}
+
+
+// NEW: Event listener for "Add to Cart" button inside the modal
+if (modalAddToCartButton) {
+    modalAddToCartButton.addEventListener('click', () => {
+        const selectedSizeRadio = modalKebabSizes.querySelector('input[name="kebabSize"]:checked');
+        if (!selectedSizeRadio) {
+            showMessageModal('Selection Required', 'Please select a size for your kebab.', 'warning');
+            return;
+        }
+
+        const selectedSize = selectedSizeRadio.value;
+        const selectedPrice = parseFloat(selectedSizeRadio.dataset.price);
+        const quantity = parseInt(modalQuantityInput.value, 10);
+
+        if (isNaN(quantity) || quantity < 1) {
+            showMessageModal('Invalid Quantity', 'Please enter a valid quantity (at least 1).', 'warning');
+            return;
+        }
+
+        const selectedSauces = Array.from(modalKebabSauces.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+        const selectedToppings = Array.from(modalKebabToppings.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+        const notes = modalKebabNotes.value.trim();
+
+        const fullItemName = `${kebabMenuData[currentKebabId].name} - ${selectedSize}`;
+        const customizations = {
+            sauces: selectedSauces,
+            toppings: selectedToppings,
+            notes: notes
+        };
+
+        addItemToCart(fullItemName, selectedPrice, quantity, customizations);
+        closeKebabCustomizationModal();
+        showMessageModal('Item Added!', `"${fullItemName}" (x${quantity}) added to your cart.`, 'success');
+    });
+}
+
+// Close Kebab Customization Modal listeners
+if (kebabModalCloseBtn) {
+    kebabModalCloseBtn.addEventListener('click', closeKebabCustomizationModal);
+}
+if (kebabCustomizationModal) {
+    kebabCustomizationModal.addEventListener('click', (event) => {
+        if (event.target === kebabCustomizationModal) { // Only close if clicking on the overlay, not the content
+            closeKebabCustomizationModal();
+        }
+    });
+}
+
+
+// OLD: Event listener for "Add" buttons specifically for Kebab items (with dropdowns) - REMOVED!
+// This logic has been replaced by the modal trigger buttons and modal "Add to Cart" button.
+/*
 document.querySelectorAll('.add-selected-kebab-to-cart-button').forEach(button => {
     button.addEventListener('click', () => {
         const kebabItemDiv = button.closest('.kebab-item');
@@ -297,6 +509,7 @@ document.querySelectorAll('.add-selected-kebab-to-cart-button').forEach(button =
         showMessageModal('Item Added!', `"${fullItemName}" (x${quantity}) added to your cart.`, 'success');
     });
 });
+*/
 
 
 // EXISTING: Event listeners for "Add" buttons for Drinks and Sides (using direct item-quantity)
@@ -341,24 +554,24 @@ if (clearCartBtn) {
             input.value = 0;
         });
         
-        // Reset all dropdowns to default and quantity inputs to 1 (for Kebabs)
+        // OLD: Reset kebab dropdowns and quantity inputs (now handled by modal close/reset)
+        /*
         document.querySelectorAll('.kebab-size-select').forEach(select => {
             select.value = ""; // Set to the empty option's value
         });
         document.querySelectorAll('.selected-item-quantity').forEach(input => {
             input.value = 1; // Default quantity for next selection
         });
-
-
-        // Clear all customization checkboxes
         document.querySelectorAll('.customization-options input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
-
-        // Clear all customization notes textareas
         document.querySelectorAll('.customization-options textarea.item-notes').forEach(textarea => {
             textarea.value = '';
         });
+        */
+        // Instead, the modal will reset its state when opened again.
+        // For general clearing, we just clear the cart and let the modal handle its own reset when it's opened.
+
 
         showMessageModal('Cart Cleared!', '🛒 Your cart has been emptied.', 'info');
     });
@@ -544,6 +757,8 @@ if (orderForm) {
         document.querySelectorAll('.item-quantity').forEach(input => {
             input.value = 0; // For Drinks/Sides
         });
+        // OLD: Kebab resets from here are removed as they are now handled by modal state on open
+        /*
         document.querySelectorAll('.kebab-size-select').forEach(select => {
             select.value = ""; // For Kebabs
         });
@@ -556,7 +771,7 @@ if (orderForm) {
         document.querySelectorAll('.customization-options textarea.item-notes').forEach(textarea => {
             textarea.value = '';
         });
-
+        */
 
         window.location.href = 'https://Lubo-Kebab-App.onrender.com/success.html'; // Redirect to success page on successful cash order (Absolute path)
       } else {
