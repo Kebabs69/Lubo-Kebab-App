@@ -21,13 +21,24 @@ const modalImage = document.getElementById('modalImage');
 const modalImageTitle = document.getElementById('modalImageTitle');
 const imageModalCloseBtn = document.querySelector('.image-modal-close');
 
-// Elements for the generic message modal
+// Get elements for the generic message modal - REFINED SELECTION & IMMEDIATE DEBUG
 const messageModalOverlay = document.getElementById('messageModalOverlay');
-const messageModalContent = document.querySelector('#messageModalOverlay .message-modal-content'); // Get content for class toggling
-const messageModalTitle = document.getElementById('modalMessageTitle'); // Corrected ID to match HTML
-const messageModalText = document.getElementById('modalMessageText'); // Corrected ID to match HTML
-const messageModalButton = document.getElementById('modalMessageButton'); // Corrected ID to match HTML
-const messageModalCloseBtn = document.querySelector('#messageModalOverlay .message-modal-close'); // Corrected selector
+const messageModalContent = document.querySelector('#messageModalOverlay .message-modal-content');
+const modalMessageTitle = document.getElementById('modalMessageTitle'); // Using the correct ID from HTML
+const modalMessageText = document.getElementById('modalMessageText');   // Using the correct ID from HTML
+const modalMessageButton = document.getElementById('modalMessageButton'); // Using the correct ID from HTML
+const messageModalCloseBtn = document.querySelector('#messageModalOverlay .message-modal-close');
+
+// IMMEDIATE DEBUGGING for message modal elements at script start
+console.log('JS Initial Load: Checking Message Modal Elements...');
+console.log('Message Modal Overlay:', messageModalOverlay);
+console.log('Message Modal Content:', messageModalContent);
+console.log('Modal Message Title Element (modalMessageTitle):', modalMessageTitle);
+console.log('Modal Message Text Element (modalMessageText):', modalMessageText);
+console.log('Modal Message Button Element (modalMessageButton):', modalMessageButton);
+console.log('Message Modal Close Button:', messageModalCloseBtn);
+// If any of these are null, it confirms HTML ID mismatch or timing issue.
+
 
 // Elements for the Kebab Customization Modal
 const kebabCustomizationModal = document.getElementById('kebabCustomizationModal');
@@ -137,13 +148,10 @@ if (localStorage.getItem('isLoggedIn') !== 'true') {
 // Function to display the custom message modal
 function showMessageModal(title, message, type = 'info') {
     console.log(`showMessageModal called: ${title}, ${message}, type: ${type}`); // Debugging
-    // Corrected variable names to match HTML element IDs
-    const messageTitleElement = document.getElementById('modalMessageTitle');
-    const messageTextElement = document.getElementById('modalMessageText');
-    const messageButtonElement = document.getElementById('modalMessageButton');
-
-    if (!messageModalOverlay || !messageTitleElement || !messageTextElement || !messageButtonElement || !messageModalContent) {
-        console.error("Message modal elements not found, falling back to alert:", title, message);
+    
+    // Use the correctly identified elements (from top of script)
+    if (!messageModalOverlay || !modalMessageTitle || !modalMessageText || !modalMessageButton || !messageModalContent) {
+        console.error("Message modal elements NOT FOUND when showMessageModal was called. Falling back to alert:", title, message);
         alert(title + "\n" + message);
         return;
     }
@@ -151,27 +159,27 @@ function showMessageModal(title, message, type = 'info') {
     // Reset classes to ensure only one type is applied
     messageModalContent.classList.remove('success', 'error', 'warning');
 
-    // Set title and text using the corrected elements
-    messageTitleElement.innerHTML = `<i class="fas fa-info-circle icon"></i> ${title}`; // Default info icon
-    messageTextElement.textContent = message;
+    // Set title and text
+    modalMessageTitle.innerHTML = `<i class="fas fa-info-circle icon"></i> ${title}`; // Default info icon
+    modalMessageText.textContent = message;
 
     // Apply specific classes and icons based on type
     if (type === 'success') {
         messageModalContent.classList.add('success');
-        messageTitleElement.innerHTML = `<i class="fas fa-check-circle icon"></i> ${title}`;
+        modalMessageTitle.innerHTML = `<i class="fas fa-check-circle icon"></i> ${title}`;
     } else if (type === 'error') {
         messageModalContent.classList.add('error');
-        messageTitleElement.innerHTML = `<i class="fas fa-times-circle icon"></i> ${title}`;
+        modalMessageTitle.innerHTML = `<i class="fas fa-times-circle icon"></i> ${title}`;
     } else if (type === 'warning') {
         messageModalContent.classList.add('warning');
-        messageTitleElement.innerHTML = `<i class="fas fa-exclamation-triangle icon"></i> ${title}`;
+        modalMessageTitle.innerHTML = `<i class="fas fa-exclamation-triangle icon"></i> ${title}`;
     }
 
     messageModalOverlay.style.display = 'flex'; // Use flex to center content
 
     // Ensure only one click listener for the OK button
-    messageButtonElement.onclick = null; // Clear previous listeners
-    messageButtonElement.addEventListener('click', () => {
+    modalMessageButton.onclick = null; // Clear previous listeners
+    modalMessageButton.addEventListener('click', () => {
         messageModalOverlay.style.display = 'none';
     }, { once: true }); // Use {once: true} to automatically remove listener after first click
 
@@ -521,8 +529,8 @@ function renderCategoryItems(categoryName) {
 
     const categoryData = menuData[categoryName];
 
-    if (!categoryData) {
-        console.error('Category data not found for:', categoryName); // Debugging
+    if (!categoryData || !categoryData.items || categoryData.items.length === 0) {
+        console.error('Category data not found or is empty for:', categoryName); // Debugging
         menuDisplayArea.innerHTML = '<p style="text-align: center; color: #555; width: 100%;">Category not found or empty.</p>';
         return;
     }
@@ -543,35 +551,35 @@ function renderCategoryItems(categoryName) {
 
 
     categoryData.items.forEach(item => {
-        let itemHtml = '';
+        const itemDiv = document.createElement('div');
+        itemDiv.classList.add('container'); // Add base container class
+        
+        let innerHtml = '';
+
         if (categoryName === 'kebabs') {
-            // Kebab item HTML with modal trigger
-            itemHtml = `
-                <div class="container kebab-item">
-                    <h4 style="margin-bottom: 10px; color: var(--primary-color);">${item.name}</h4>
-                    <button type="button" class="preview-btn" data-image-title="${item.name}" data-image-url="${item.imageUrl}">Preview</button>
-                    <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="${item.id}" data-kebab-name="${item.name}">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
+            itemDiv.classList.add('kebab-item'); // Add kebab-specific class for styling
+            innerHtml = `
+                <h4 style="margin-bottom: 10px; color: var(--primary-color);">${item.name}</h4>
+                <button type="button" class="preview-btn" data-image-title="${item.name}" data-image-url="${item.imageUrl}">Preview</button>
+                <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="${item.id}" data-kebab-name="${item.name}">
+                    <i class="fas fa-plus"></i>
+                </button>
             `;
         } else {
-            // Drinks and Sides item HTML with inline quantity control
-            itemHtml = `
-                <div class="container">
-                    <div class="item-selection-row" data-item-id="${item.id}">
-                        <span class="item-name-price">${item.name} <span class="price">£${item.price.toFixed(2)}</span></span>
-                        <div class="item-quantity-control">
-                            <input type="number" class="item-quantity" value="0" min="0">
-                            <button type="button" class="add-to-cart-button" data-item-name="${item.name}" data-item-price="${item.price}">Add</button>
-                        </div>
+            innerHtml = `
+                <div class="item-selection-row" data-item-id="${item.id}">
+                    <span class="item-name-price">${item.name} <span class="price">£${item.price.toFixed(2)}</span></span>
+                    <div class="item-quantity-control">
+                        <input type="number" class="item-quantity" value="0" min="0">
+                        <button type="button" class="add-to-cart-button" data-item-name="${item.name}" data-item-price="${item.price}">Add</button>
                     </div>
                 </div>
             `;
         }
-        // console.log(`Attempting to insert HTML for ${item.name}:`, itemHtml); // More detailed debugging
-        menuDisplayArea.insertAdjacentHTML('beforeend', itemHtml);
-        // console.log(`Rendered item: ${item.name} in category: ${categoryName}`); // Debugging each item
+        
+        itemDiv.innerHTML = innerHtml; // Set innerHTML of the created div
+        menuDisplayArea.appendChild(itemDiv); // Append the fully constructed element to the DOM
+        console.log(`Appended element for: ${item.name}. Parent children count: ${menuDisplayArea.children.length}`); // Debugging element count
     });
 
     // Re-attach event listeners after new items are rendered
