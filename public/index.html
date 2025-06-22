@@ -200,19 +200,15 @@
         display: flex; /* Flex container for items inside */
         flex-wrap: wrap; /* Allow items to wrap */
         gap: 20px; /* Gap between menu item cards */
-        justify-content: center; /* Center items if they don't fill the row */
+        justify-content: flex-start; /* Align items to the start for left-to-right flow */
         align-content: flex-start; /* Align content to the start of the cross axis */
     }
 
-    /* .category-section is removed as we are dynamically rendering items directly in #menuDisplayArea */
-    /* .category-section.active is also removed. */
-
     /* ORIGINAL .container styles - MODIFIED FOR 3-COLUMN LAYOUT */
     .container {
-      /* Removed flex: 1; */
-      width: calc((100% - 40px) / 3); /* (100% of parent width - 2*gap) / 3 items */
+      /* Use flex-basis for proper wrapping with gaps */
+      flex-basis: calc(33.333% - 13.333px); /* 100%/3 - (20px * 2)/3 for two gaps */
       min-width: 280px; /* Ensures minimum item size before wrapping */
-      /* Removed max-width: 300px; for flexibility with calc() */
       border: 1px solid #e3e3e3;
       border-radius: 16px;
       padding: 25px;
@@ -1070,7 +1066,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       white-space: nowrap; /* Prevent wrapping category names */
   }
   #categoryNav .category-link.active {
-      border-bottom: 33px solid var(--accent-color); /* Highlight active link with bottom border */
+      border-bottom: 3px solid var(--accent-color); /* Highlight active link with bottom border */
       border-left: none; /* Ensure no left border */
   }
 
@@ -1381,6 +1377,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
         <!-- NEW: Menu Items Display Area - This will be dynamically populated by JavaScript -->
         <div id="menuDisplayArea">
             <!-- Items for the active category will be rendered here by JavaScript -->
+            <!-- The title for the current category will also be dynamically added here -->
         </div> 
    </div> <!-- End menu-page-content -->
 
