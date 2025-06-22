@@ -197,33 +197,15 @@
     #menuDisplayArea {
         flex-grow: 1; /* Take remaining space */
         padding: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 30px; /* Space between different category sections */
-    }
-
-    /* NEW: Individual category sections */
-    .category-section {
-        display: none; /* Hidden by default, JavaScript will show the active one */
-        /* Flex properties for the items within each section */
-        display: flex; /* Override 'none' for active section */
-        flex-wrap: wrap;
+        display: flex; /* Flex container for items inside */
+        flex-wrap: wrap; /* Allow items to wrap */
         gap: 20px; /* Gap between menu item cards */
         justify-content: center; /* Center items if they don't fill the row */
+        align-content: flex-start; /* Align content to the start of the cross axis */
     }
 
-    .category-section.active {
-        display: flex; /* Show the active section */
-    }
-
-    .wrapper { /* This was used for the main menu layout before, now reused for specific category sections */
-      /* These styles are now largely superseded by .category-section's flex properties */
-      /* display: flex; */
-      /* flex-wrap: wrap; */
-      gap: 30px; /* Replaced by .category-section gap */
-      justify-content: center;
-      align-items: flex-start;
-    }
+    /* .category-section is removed as we are dynamically rendering items directly in #menuDisplayArea */
+    /* .category-section.active is also removed. */
 
     /* Original container styles, now applied to individual menu item cards */
     .container {
@@ -478,12 +460,12 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 
 /* Kebab Item Styling (Outer Border) */
-.kebab-item {
+.kebab-item { /* This class is now applied to the individual 'container' divs for kebabs */
     background-color: #ffffff; /* Explicit white background for clarity */
     border: 1px solid black; /* SOLID BLACK BORDER */
     border-radius: 12px; /* Rounded corners for the item block */
     padding: 20px; /* Internal spacing */
-    margin-bottom: 25px; /* Space between kebab items - this will be less relevant inside .category-section */
+    /* margin-bottom: 25px; Removed, gap handles spacing */
     box-shadow: 0 4px 10px rgba(0,0,0,0.07); /* Consistent shadow */
     position: relative; /* Needed for positioning the add button */
 }
@@ -536,7 +518,8 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 
 /* Customization Options for each kebab (within the modal) */
-.kebab-item .customization-options { /* This refers to the original customization options, now inside the modal. */
+/* These styles still apply to the content *inside* the kebab customization modal */
+.kebab-item .customization-options { 
     background-color: #fff; /* Keep white for inner options */
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -659,7 +642,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     background-color: #e74c3c; /* Red color for a clear/delete action */
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 8鸣;
     font-size: 1em;
     font-weight: bold;
     cursor: pointer;
@@ -1090,11 +1073,13 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
   #menuDisplayArea {
       padding: 15px;
+      /* Ensure this area can flex-wrap its children */
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px; /* Adjust gap for mobile as needed */
   }
 
-  .category-section {
-      gap: 15px; /* Smaller gap for mobile item cards */
-  }
   .container {
       min-width: 100%; /* Full width cards on mobile */
       max-width: 100%;
@@ -1395,143 +1380,10 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <!-- <a href="#" class="category-link" data-category="burgers">Burgers</a> -->
         </div>
 
-        <!-- NEW: Menu Items Display Area -->
+        <!-- NEW: Menu Items Display Area - This will be dynamically populated by JavaScript -->
         <div id="menuDisplayArea">
-            <!-- Kebabs Section -->
-            <div id="kebabs-section" class="category-section active" data-category="kebabs">
-                <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px; width: 100%; text-align: center;">
-                    🥙 Kebabs
-                </h3>
-                <!-- Chicken Kebab -->
-                <div class="container kebab-item">
-                    <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Kebab</h4>
-                    <button type="button" class="preview-btn" data-image-title="Chicken Kebab" data-image-url="/assets/chicken-preview.png">Preview</button>
-                    <!-- NEW: Button to open modal -->
-                    <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="chicken-kebab" data-kebab-name="Chicken Kebab">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-
-                <!-- Lamb Kebab -->
-                <div class="container kebab-item">
-                    <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
-                    <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
-                    <!-- NEW: Button to open modal -->
-                    <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="lamb-kebab" data-kebab-name="Lamb Kebab">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            
-                <!-- Veggie Wrap -->
-                <div class="container kebab-item">
-                    <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
-                    <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
-                    <!-- NEW: Button to open modal -->
-                    <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="veggie-wrap" data-kebab-name="Veggie Wrap">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-
-                <!-- Mixed Grill -->
-                <div class="container kebab-item">
-                    <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
-                    <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
-                    <!-- NEW: Button to open modal -->
-                    <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="mixed-grill" data-kebab-name="Mixed Grill">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div> <!-- End kebabs-section -->
-
-            <!-- Drinks Section -->
-            <div id="drinks-section" class="category-section" data-category="drinks">
-                <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px; width: 100%; text-align: center;">
-                    🥤 Drinks
-                </h3>
-                <div class="container"> <!-- Wrap drink item in a container for consistent styling -->
-                    <div class="item-selection-row" data-item-id="coca-cola">
-                    <span class="item-name-price">Coca Cola <span class="price">£1.50</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Coca Cola" data-item-price="1.5">Add</button>
-                    </div>
-                    </div>
-                    <div class="item-selection-row" data-item-id="pepsi">
-                    <span class="item-name-price">Pepsi <span class="price">£1.50</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Pepsi" data-item-price="1.5">Add</button>
-                    </div>
-                    </div>
-                    <div class="item-selection-row" data-item-id="orange-juice">
-                    <span class="item-name-price">Orange Juice <span class="price">£2.00</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Orange Juice" data-item-price="2">Add</button>
-                    </div>
-                    </div>
-                    <div class="item-selection-row" data-item-id="apple-juice">
-                    <span class="item-name-price">Apple Juice <span class="price">£2.00</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Apple Juice" data-item-price="2">Add</button>
-                    </div>
-                    </div>
-                    <div class="item-selection-row" data-item-id="water">
-                    <span class="item-name-price">Water <span class="price">£1.00</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Water" data-item-price="1">Add</button>
-                    </div>
-                    </div>
-                </div>
-            </div> <!-- End drinks-section -->
-
-            <!-- Sides Section -->
-            <div id="sides-section" class="category-section" data-category="sides">
-                <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px; width: 100%; text-align: center;">
-                    🥗 Sides
-                </h3>
-                <div class="container"> <!-- Wrap side item in a container for consistent styling -->
-                    <div class="item-selection-row" data-item-id="fries">
-                    <span class="item-name-price">Fries <span class="price">£2.00</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Fries" data-item-price="2">Add</button>
-                    </div>
-                    </div>
-                    <div class="item-selection-row" data-item-id="cheesy-chips">
-                    <span class="item-name-price">Cheesy Chips <span class="price">£2.50</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Cheesy Chips" data-item-price="2.5">Add</button>
-                    </div>
-                    </div>
-                    <div class="item-selection-row" data-item-id="onion-rings">
-                    <span class="item-name-price">Onion Rings <span class="price">£2.00</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Onion Rings" data-item-price="2">Add</button>
-                    </div>
-                    </div>
-                    <div class="item-selection-row" data-item-id="side-salad">
-                    <span class="item-name-price">Side Salad <span class="price">£2.00</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Side Salad" data-item-price="2">Add</button>
-                    </div>
-                    </div>
-                    <div class="item-selection-row" data-item-id="garlic-bread">
-                    <span class="item-name-price">Garlic Bread <span class="price">£1.50</span></span>
-                    <div class="item-quantity-control">
-                        <input type="number" class="item-quantity" value="0" min="0">
-                        <button type="button" class="add-to-cart-button" data-item-name="Garlic Bread" data-item-price="1.5">Add</button>
-                    </div>
-                    </div>
-                </div>
-            </div> <!-- End sides-section -->
-
-        </div> <!-- End menuDisplayArea -->
+            <!-- Items for the active category will be rendered here by JavaScript -->
+        </div> 
    </div> <!-- End menu-page-content -->
 
    <div class="container" id="cart">
