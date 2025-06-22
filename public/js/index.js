@@ -63,8 +63,9 @@ const kebabMenuData = {
         name: 'Lamb Kebab',
         sizes: [
             { label: 'Small', price: 6.00 },
-            { label: 'Medium', price: '7.00' },
-            { label: 'Large', price: '8.00' }
+            // FIX: Changed '7.00' to 7.00 and '8.00' to 8.00
+            { label: 'Medium', price: 7.00 }, 
+            { label: 'Large', price: 8.00 }
         ]
     },
     'veggie-wrap': {
@@ -368,6 +369,7 @@ function updateModalTotalPrice() {
     // Get selected size price
     const selectedSizeRadio = modalKebabSizes.querySelector('input[name="kebabSize"]:checked');
     if (selectedSizeRadio) {
+        // Ensure price is parsed as a float
         currentKebabBasePrice = parseFloat(selectedSizeRadio.dataset.price);
     } else {
         currentKebabBasePrice = 0; // No size selected yet
@@ -553,14 +555,13 @@ if (clearCartBtn) {
         document.querySelectorAll('.item-quantity').forEach(input => {
             input.value = 0;
         });
-        
-        // OLD: Reset kebab dropdowns and quantity inputs (now handled by modal close/reset)
+        // OLD: Kebab resets from here are removed as they are now handled by modal state on open
         /*
         document.querySelectorAll('.kebab-size-select').forEach(select => {
-            select.value = ""; // Set to the empty option's value
+            select.value = ""; // For Kebabs
         });
         document.querySelectorAll('.selected-item-quantity').forEach(input => {
-            input.value = 1; // Default quantity for next selection
+            input.value = 1; // For Kebabs
         });
         document.querySelectorAll('.customization-options input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
