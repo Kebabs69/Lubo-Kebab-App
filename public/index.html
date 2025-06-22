@@ -146,74 +146,22 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    /* NEW: Main content wrapper for category view */
-    .menu-page-content {
-        display: flex;
-        max-width: 1200px; /* Wider container for menu + sidebar */
-        margin: 40px auto; /* Center the main content */
-        background: #fff;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        min-height: 700px; /* Ensure it has some height */
+    .wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      align-items: flex-start; /* CRITICAL FIX: Align items to the top, preventing vertical stretching */
     }
 
-    /* NEW: Category Navigation Sidebar */
-    #categoryNav {
-        width: 250px; /* Fixed width for sidebar */
-        background-color: var(--dark-bg); /* Dark background for distinction */
-        border-top-left-radius: 10px;
-        border-bottom-left-radius: 10px;
-        padding: 20px 0;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        flex-shrink: 0; /* Prevent it from shrinking */
-    }
-
-    #categoryNav .category-link {
-        display: block;
-        padding: 15px 25px;
-        color: #fff;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1.1em;
-        transition: background-color 0.2s ease, color 0.2s ease;
-        border-left: 5px solid transparent; /* Highlight active link */
-    }
-
-    #categoryNav .category-link:hover {
-        background-color: rgba(255, 255, 255, 0.1); /* Light hover effect */
-        color: var(--accent-color);
-    }
-
-    #categoryNav .category-link.active {
-        background-color: var(--primary-color); /* Active background color */
-        color: white;
-        border-left: 5px solid var(--accent-color); /* Stronger highlight */
-    }
-
-
-    /* NEW: Main menu items display area */
-    #menuDisplayArea {
-        flex-grow: 1; /* Take remaining space */
-        padding: 20px;
-        display: flex; /* Flex container for items inside */
-        flex-wrap: wrap; /* Allow items to wrap */
-        gap: 20px; /* Gap between menu item cards */
-        justify-content: flex-start; /* Align items to the start for left-to-right flow */
-        align-content: flex-start; /* Align content to the start of the cross axis */
-    }
-
-    /* Styles for individual menu item cards */
     .container {
-      /* Use flex-basis for proper wrapping with gaps */
-      flex-basis: calc(33.333% - 13.333px); /* 100%/3 - (20px * 2)/3 for two gaps (20px gap between items) */
-      min-width: 280px; /* Ensures minimum item size before wrapping */
-      border: 1px solid #e3e3e3;
-      border-radius: 16px;
-      padding: 25px;
-      background-color: #ffffff;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      flex: 1;
+      min-width: 280px;
+      border: 1px solid #e3e3e3; /* RE-ADDED: Base border for containers */
+      border-radius: 16px; /* RE-ADDED: Border radius for containers */
+      padding: 25px; /* RE-ADDED: Padding for containers */
+      background-color: #ffffff; /* RE-ADDED: Background for containers */
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07); /* RE-ADDED: Shadow for containers */
     }
 
     /* Styles for images integrated directly into containers */
@@ -255,7 +203,6 @@
         font-size: 14px;
         margin-left: 10px;
         transition: background-color 0.3s ease;
-        margin-top: 5px; /* Add some space from kebab name */
     }
     .preview-btn:hover {
         background-color: #45a049;
@@ -457,12 +404,12 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 
 /* Kebab Item Styling (Outer Border) */
-.kebab-item { /* This class is now applied to the individual 'container' divs for kebabs */
+.kebab-item {
     background-color: #ffffff; /* Explicit white background for clarity */
     border: 1px solid black; /* SOLID BLACK BORDER */
     border-radius: 12px; /* Rounded corners for the item block */
     padding: 20px; /* Internal spacing */
-    /* margin-bottom: 25px; Removed, gap handles spacing */
+    margin-bottom: 25px; /* Space between kebab items */
     box-shadow: 0 4px 10px rgba(0,0,0,0.07); /* Consistent shadow */
     position: relative; /* Needed for positioning the add button */
 }
@@ -515,8 +462,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 
 /* Customization Options for each kebab (within the modal) */
-/* These styles still apply to the content *inside* the kebab customization modal */
-.kebab-item .customization-options { 
+.kebab-item .customization-options { /* This refers to the original customization options, now inside the modal. */
     background-color: #fff; /* Keep white for inner options */
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -895,10 +841,8 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     align-items: stretch; /* Keep stretch for mobile as columns will naturally fill */
   }
 
-  /* The .container media query is now moved here for better organization */
   .container {
-      width: 100% !important; /* Force full width on small screens */
-      min-width: unset !important; /* Remove min-width restriction */
+    min-width: 100% !important;
   }
   
   .image-modal-content {
@@ -1044,41 +988,6 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       padding: 12px;
   }
 
-  /* New: Responsive adjustments for category navigation */
-  .menu-page-content {
-      flex-direction: column; /* Stack sidebar and content on mobile */
-      min-height: auto;
-  }
-  #categoryNav {
-      width: 100%; /* Full width for mobile sidebar */
-      border-radius: 10px 10px 0 0; /* Rounded top corners */
-      flex-direction: row; /* Make categories horizontal on mobile */
-      overflow-x: auto; /* Allow horizontal scrolling if many categories */
-      justify-content: flex-start; /* Align categories to start */
-      padding: 15px 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  #categoryNav .category-link {
-      padding: 10px 15px;
-      font-size: 0.9em;
-      border-left: none; /* Remove left border */
-      border-bottom: 3px solid transparent; /* Use bottom border for active indicator */
-      white-space: nowrap; /* Prevent wrapping category names */
-  }
-  #categoryNav .category-link.active {
-      border-bottom: 3px solid var(--accent-color); /* Highlight active link with bottom border */
-      border-left: none; /* Ensure no left border */
-  }
-
-  #menuDisplayArea {
-      padding: 15px;
-      /* Ensure this area can flex-wrap its children */
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px; /* Adjust gap for mobile as needed */
-  }
-
 }
 
 /* Hero Section - Adapted for Register Page (carried over from your original, might not be fully used now) */
@@ -1138,7 +1047,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 
 .form-container input[type="email"]:focus,
-.form-container input[type="password"] :focus {
+.form-container input[type="password"]:focus {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.2); /* Focus shadow */
@@ -1210,12 +1119,558 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 
 /* --- NEW MESSAGE MODAL STYLES --- */
+.message-modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10001; /* Higher than image modal */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.7); /* Darker overlay */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    backdrop-filter: blur(8px); /* More pronounced blur */
+}
+
+.message-modal-content {
+    background-color: #ffffff;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 15px; /* More rounded */
+    width: 90%;
+    max-width: 450px; /* Max width for message boxes */
+    box-shadow: var(--shadow-strong);
+    position: relative;
+    text-align: center;
+    animation: fadeInSlideDown 0.4s ease-out; /* Entry animation */
+}
+
+@keyframes fadeInSlideDown {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-modal-content h4 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.message-modal-content h4 .icon {
+    font-size: 1.1em;
+    color: var(--accent-color); /* Default icon color, can be overridden by type */
+}
+
+.message-modal-content p {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    color: var(--secondary-color);
+}
+
+.message-modal-close {
+    color: #888;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.message-modal-close:hover,
+.message-modal-close:focus {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.message-modal-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: var(--border-radius-button);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-light);
+}
+.message-modal-button:hover {
+    background-color: #8D2524;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+}
+
+/* Specific colors for modal types */
+.message-modal-content.success .icon { color: #28A745; } /* Green for success */
+.message-modal-content.error .icon { color: #E74C3C; }   /* Red for error */
+.message-modal-content.warning .icon { color: #FFC107; } /* Yellow for warning */
+
+/* Responsive for message modal */
+@media (max-width: 600px) {
+    .message-modal-content {
+        padding: 20px;
+    }
+    .message-modal-content h4 {
+        font-size: 1.5em;
+    }
+    .message-modal-content p {
+        font-size: 0.9em;
+    }
+    .message-modal-button {
+        padding: 10px 20px;
+    }
+}
+
+</style>
+</head>
+<body>
+<!-- ✅ ADDED: Login Check Script - MUST BE AT THE TOP OF BODY -->
+<!-- RE-ENABLED LOGIN CHECK -->
+<script>
+    // This script runs immediately when the body loads
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+        // If not logged in, redirect to the login page
+        window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html';
+    }
+</script>
+
+<div id="liveClock">
+</div>
+<audio id="bg-music" loop="" src="/assets/music.mp3"> <!-- Absolute path -->
+</audio>
+<div class="music-controls">
+<button id="playBtn" style="padding: 5px 10px; font-size: 14px; border-radius: 8px;">
+    ▶ Play
+   </button>
+<button id="pauseBtn" style="padding: 5px 10px; font-size: 14px; border-radius: 8px; display: none;">
+    ⏸ Pause
+   </button>
+</div>
+<nav id="navbar">
+<img alt="Lubo's Kebab Logo" src="/assets/logo.png"/> <!-- Absolute path -->
+<ul id="navcontent">
+  <li><a href="/index.html#menu"><i class="fas fa-utensils"></i> Menu</a></li>
+  <li><a href="/index.html#orderForm"><i class="fas fa-shopping-cart"></i> Order</a></li>
+  <li><a href="/index.html#testimonials-section"><i class="fas fa-star"></i> Reviews</a></li>
+  <li><a href="/index.html#hours-card"><i class="fas fa-clock"></i> Hours</a></li>
+  <!-- REPLACED: Register and Login links with Logout button -->
+  <li><button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+</ul>
+</nav>
+
+<form id="orderForm">
+<div class="wrapper">
+   <div class="container" id="menu">
+      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+            🥙 Menu
+         </h3>
+        <!-- Chicken Kebab -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Kebab</h4>
+            <button type="button" class="preview-btn" data-image-title="Chicken Kebab" data-image-url="/assets/chicken-preview.png">Preview</button>
+            <!-- NEW: Button to open modal -->
+            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="chicken-kebab" data-kebab-name="Chicken Kebab">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- Lamb Kebab -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
+            <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
+            <!-- NEW: Button to open modal -->
+            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="lamb-kebab" data-kebab-name="Lamb Kebab">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+      
+        <!-- Veggie Wrap -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
+            <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
+            <!-- NEW: Button to open modal -->
+            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="veggie-wrap" data-kebab-name="Veggie Wrap">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- Mixed Grill -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
+            <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
+            <!-- NEW: Button to open modal -->
+            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="mixed-grill" data-kebab-name="Mixed Grill">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+   </div>
+   <div class="container" id="drinks">
+      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+            🥤 Drinks
+         </h3>
+      <div class="item-selection-row" data-item-id="coca-cola">
+         <span class="item-name-price">Coca Cola <span class="price">£1.50</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Coca Cola" data-item-price="1.5">Add</button>
+         </div>
+      </div>
+      <div class="item-selection-row" data-item-id="pepsi">
+         <span class="item-name-price">Pepsi <span class="price">£1.50</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Pepsi" data-item-price="1.5">Add</button>
+         </div>
+      </div>
+      <div class="item-selection-row" data-item-id="orange-juice">
+         <span class="item-name-price">Orange Juice <span class="price">£2.00</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Orange Juice" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="item-selection-row" data-item-id="apple-juice">
+         <span class="item-name-price">Apple Juice <span class="price">£2.00</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Apple Juice" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="item-selection-row" data-item-id="water">
+         <span class="item-name-price">Water <span class="price">£1.00</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Water" data-item-price="1">Add</button>
+         </div>
+      </div>
+   </div>
+   <div class="container" id="sides">
+      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+            🥗 Sides
+         </h3>
+      <div class="item-selection-row" data-item-id="fries">
+         <span class="item-name-price">Fries <span class="price">£2.00</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Fries" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="item-selection-row" data-item-id="cheesy-chips">
+         <span class="item-name-price">Cheesy Chips <span class="price">£2.50</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Cheesy Chips" data-item-price="2.5">Add</button>
+         </div>
+      </div>
+      <div class="item-selection-row" data-item-id="onion-rings">
+         <span class="item-name-price">Onion Rings <span class="price">£2.00</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Onion Rings" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="item-selection-row" data-item-id="side-salad">
+         <span class="item-name-price">Side Salad <span class="price">£2.00</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Side Salad" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="item-selection-row" data-item-id="garlic-bread">
+         <span class="item-name-price">Garlic Bread <span class="price">£1.50</span></span>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Garlic Bread" data-item-price="1.5">Add</button>
+         </div>
+      </div>
+   </div>
+   <div class="container" id="cart">
+      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+            🛒 Your Cart
+         </h3>
+      <ul id="cartItems">
+          <!-- Cart items will be dynamically added here by JavaScript -->
+          <li style="color: #666; text-align: center; padding: 10px;">Your cart is empty.</li>
+      </ul>
+      <p class="total">
+            Total: £
+            <span id="totalPrice">
+            0.00
+            </span>
+      </p>
+      <input id="orderSummary" name="Order Summary" type="hidden"/>
+
+      <!-- Clear Cart Button -->
+      <button type="button" id="clearCartBtn">
+          <i class="fas fa-trash-alt"></i> Clear Cart
+      </button>
+
+      <h4>
+            Your Details
+         </h4>
+      <label>
+            Full Name:
+            <input name="Full Name" required="" type="text"/>
+      </label>
+      <label>
+            Email:
+            <input name="Email" required="" type="email"/>
+      </label>
+      <label>
+            Mobile Number:
+            <input name="Mobile Number" required="" type="tel"/>
+      </label>
+      <label>
+            Special Instructions:
+            <textarea name="Instructions"></textarea>
+      </label>
+      <label>
+            Delivery Address:
+            <textarea name="Delivery Address" required=""></textarea>
+      </label>
+      <label>
+         Payment Method:
+         <select id="paymentToggle" name="Payment Method" required>
+            <option value="cash">💵 Cash on Delivery</option>
+            <option value="card" selected>💳 Card (Stripe)</option>
+         </select>
+      </label>
+
+      <button id="payWithCardBtn" type="button" style="
+      display: none;
+      margin: 10px 0;
+      background-color: #27ae60;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      ">
+         💳 Pay with Card
+      </button>
+      <button type="submit" style="
+      display: block;
+      width: 100%;
+      background-color: #c0392b;
+      color: white;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      margin-top: 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      ">
+         🧾 Place Order
+      </button>
+      <div style="margin-top: 20px; padding: 15px; border: 2px solid #c0392b; border-radius: 12px; background-color: #fff4e6; text-align: center;">
+         <p style="font-size: 22px; font-weight: bold; color: #c0392b;">
+               💵💰 CASH PAYMENTS ONLY 💰💵
+            </p>
+         <p style="font-size: 17px; color: #333;">
+               At this time, we are accepting
+               <strong>
+                  Cash on Delivery
+               </strong>
+               only.
+               <br/>
+               .
+               <br/>
+               Card and online payments will be available soon.We appreciate your understanding and support! 🙏
+            </p>
+      </div>
+   </div>
+</div>
+</form>
+<div id="confirmationMessage" style="display:none; margin: 40px auto; max-width: 600px; background-color: #d4edda; color: #155724; padding: 20px; border-radius: 12px; border: 2px solid #c3e6cb; text-align: center; font-size: 18px;">
+   ✅
+   <strong>
+    Thank you for your order!
+   </strong>
+<br/>
+   Your order has been received and will be processed shortly. We'll contact you if needed.
+  </div>
+<div id="freebie-banner">
+   🎁
+   <strong>
+    FREE Drink
+   </strong>
+   with orders over
+   <strong>
+    £30
+   </strong>
+   ! 🎉
+  </div>
+<p style="color: white; font-size: 24px; background-color: #c0392b; padding: 10px; border-radius: 10px;">
+   Our phone number 👉1234567890
+  </p>
+<p style="color: white; font-size: 24px; background: #c0392b; padding: 10px; border-radius: 10px;">
+<img alt="Kebab" src="/assets/Kebab2.png" style="vertical-align: middle; border-radius: 8px;" width="100"/> <!-- Absolute path -->
+   Lubo's Kebab unique QR code — share it with your friends! 😋
+  </p>
+
+<!-- NEW: Testimonials Section -->
+<section id="testimonials-section">
+    <h2>What Our Customers Say</h2>
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p>"Absolutely delicious kebabs! The meat is always tender, and the sauces are just perfect. My go-to place!"</p>
+            <div class="reviewer-name">- Samuel L.</div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            </div>
+            <p>"Great service and even better food. The veggie wrap is surprisingly flavorful. Highly recommend!"</p>
+            <div class="reviewer-name">- Julius B.</div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+            </div>
+            <p>"Fast delivery and hot food. The mixed grill is fantastic value for money. Will order again!"</p>
+            <div class="reviewer-name">- Alin S.</div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p>"Lubo's Kebab never disappoints! Fresh ingredients, generous portions, and truly authentic taste."</p>
+            <div class="reviewer-name">- Humza K.</div>
+        </div>
+    </div>
+</section>
+<!-- END NEW: Testimonials Section -->
+
+<section id="container4">
+<div id="row4">
+<button class="btn">
+     We are
+    </button>
+</div>
+<div id="row5">
+<button class="btn">
+     Happy to be here
+    </button>
+</div>
+<div id="row6">
+<button class="btn">
+     For you!!!
+    </button>
+</div>
+</section>
+<div id="hours-card" style="
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 15px;
+  background: #fff8f0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+">
+<h2 style="margin-bottom: 10px;">
+    Opening Hours
+   </h2>
+<p id="openStatus" style="font-weight: bold; font-size: 18px;">
+    Checking...
+   </p>
+<table style="margin: 20px auto 0; border-collapse: collapse; width: 100%; font-size: 16px;">
+<tr>
+<td>
+      Monday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 23:00 PM
+     </td>
+</tr>
+<tr>
+<td>
+      Tuesday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 23:00 PM
+     </td>
+</tr>
+<tr>
+<td>
+      Wednesday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 23:00 PM
+     </td>
+</tr>
+<tr>
+<td>
+      Thursday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 11:00 PM
+     </td>
+</tr>
+<tr>
+<td>
+      Friday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 02:00 AM
+     </td>
+</tr>
+<tr>
+<td>
+      Saturday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 02:00 AM
+     </td>
+</tr>
+<tr>
+<td>
+      Sunday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 11:00 PM
+     </td>
+</tr>
+</table>
+</div>
+<footer>
+   © 2025 Lubo's Kebab. All rights reserved.\n  </footer>
+
+<!-- NEW: Image Modal Structure -->
+<div id="imageModalOverlay" class="image-modal-overlay">
+    <div class="image-modal-content">
+        <span class="image-modal-close">&times;</span>
+        <h4 id="modalImageTitle"></h4>
+        <img id="modalImage" src="" alt="Kebab Preview" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';"/>
+    </div>
+</div>
+
+<!-- NEW: Generic Message Modal Structure -->
 <div id="messageModalOverlay" class="message-modal-overlay">
     <div class="message-modal-content">
         <span class="message-modal-close">&times;</span>
-        <h4 id="modalMessageTitle"><i class="fas fa-info-circle icon"></i> Message</h4>
-        <p id="modalMessageText">This is a generic message.</p>
-        <button id="modalMessageButton" class="message-modal-button">OK</button>
+        <h4 id="messageModalTitle"><i class="fas fa-info-circle icon"></i> Message</h4>
+        <p id="messageModalText">This is a generic message.</p>
+        <button id="messageModalButton" class="message-modal-button">OK</button>
     </div>
 </div>
 
@@ -1288,10 +1743,10 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 <script>
     // IMPORTANT: PASTE YOUR ABSOLUTELY CORRECT pk_test_ KEY HERE!
     // This uses 'var' to ensure the 'stripe' object is globally accessible to index.js
-    var stripe = Stripe('pk_test_51RUy79GgUCD1xOEWjVwuJ0g8JsDt1npUR5JVj1HRaIBgLLKPZAHFkmYQSPbObEeYFqpInDUYiOUA043Tj2krv52004zHbr5wj'); // <-- Replace this with your actual pk_test_ key!
+    var stripe = Stripe('pk_test_51RUy79GgUCD1xOEWjVwuJ0g8JsDt1npUR5JVj1HRaIBgLLKPZAHFkmYQSPbHObEeYFqpInDUYiOUA043Tj2krv52004zHbr5wj'); // <-- Replace this with your actual pk_test_ key!
 </script>
 
 <!-- IMPORTANT: Link to the specific index.js file (load AFTER Stripe is initialized) -->
-<script src="/js/index.js?v=202406161401"></script> <!-- Absolute path and UPDATED cache buster -->
+<script src="/js/index.js?v=202406161400"></script> <!-- Absolute path and cache buster -->
 </body>
 </html>
