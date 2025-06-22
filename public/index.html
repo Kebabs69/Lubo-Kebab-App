@@ -207,11 +207,12 @@
     /* .category-section is removed as we are dynamically rendering items directly in #menuDisplayArea */
     /* .category-section.active is also removed. */
 
-    /* Original container styles, now applied to individual menu item cards */
+    /* ORIGINAL .container styles - MODIFIED FOR 3-COLUMN LAYOUT */
     .container {
-      flex: 1;
-      min-width: 280px;
-      max-width: 300px; /* Max width for individual menu items */
+      /* Removed flex: 1; */
+      width: calc((100% - 40px) / 3); /* (100% of parent width - 2*gap) / 3 items */
+      min-width: 280px; /* Ensures minimum item size before wrapping */
+      /* Removed max-width: 300px; for flexibility with calc() */
       border: 1px solid #e3e3e3;
       border-radius: 16px;
       padding: 25px;
@@ -642,7 +643,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     background-color: #e74c3c; /* Red color for a clear/delete action */
     color: white;
     border: none;
-    border-radius: 8鸣;
+    border-radius: 8px;
     font-size: 1em;
     font-weight: bold;
     cursor: pointer;
@@ -898,8 +899,10 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     align-items: stretch; /* Keep stretch for mobile as columns will naturally fill */
   }
 
+  /* The .container media query is now moved here for better organization */
   .container {
-    min-width: 100% !important;
+      width: 100% !important; /* Force full width on small screens */
+      min-width: unset !important; /* Remove min-width restriction */
   }
   
   .image-modal-content {
@@ -1067,7 +1070,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       white-space: nowrap; /* Prevent wrapping category names */
   }
   #categoryNav .category-link.active {
-      border-bottom: 3px solid var(--accent-color); /* Highlight active link with bottom border */
+      border-bottom: 33px solid var(--accent-color); /* Highlight active link with bottom border */
       border-left: none; /* Ensure no left border */
   }
 
@@ -1078,11 +1081,6 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       flex-wrap: wrap;
       justify-content: center;
       gap: 15px; /* Adjust gap for mobile as needed */
-  }
-
-  .container {
-      min-width: 100%; /* Full width cards on mobile */
-      max-width: 100%;
   }
 
 }
@@ -1734,7 +1732,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 <script>
     // IMPORTANT: PASTE YOUR ABSOLUTELY CORRECT pk_test_ KEY HERE!
     // This uses 'var' to ensure the 'stripe' object is globally accessible to index.js
-    var stripe = Stripe('pk_test_51RUy79GgUCD1xOEWjVwuJ0g8JsDt1npUR5JVj1HRaIBgLLKPZAHFkmYQSPbHObEeYFqpInDUYiOUA043Tj2krv52004zHbr5wj'); // <-- Replace this with your actual pk_test_ key!
+    var stripe = Stripe('pk_test_51RUy79GgUCD1xOEWjVwuJ0g8JsDt1npUR5JVj1HRaIBgLLKPZAHFkmYQSPbObEeYFqpInDUYiOUA043Tj2krv52004zHbr5wj'); // <-- Replace this with your actual pk_test_ key!
 </script>
 
 <!-- IMPORTANT: Link to the specific index.js file (load AFTER Stripe is initialized) -->
