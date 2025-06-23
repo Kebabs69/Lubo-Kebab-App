@@ -15,10 +15,16 @@ const logoutBtn = document.getElementById('logoutBtn');
 const clearCartBtn = document.getElementById('clearCartBtn');
 
 
+<<<<<<< HEAD
 // Elements for the image preview modal (NOW USING CANVAS)
 const imageModalOverlay = document.getElementById('imageModalOverlay');
 const modalCanvas = document.getElementById('modalCanvas'); // Reference to the canvas element
 const modalCtx = modalCanvas ? modalCanvas.getContext('2d') : null; // Get 2D rendering context
+=======
+// Elements for the image preview modal
+const imageModalOverlay = document.getElementById('imageModalOverlay');
+const modalImage = document.getElementById('modalImage');
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
 const modalImageTitle = document.getElementById('modalImageTitle');
 const imageModalCloseBtn = document.querySelector('.image-modal-close');
 
@@ -65,7 +71,11 @@ const kebabMenuData = {
         sizes: [
             { label: 'Small', price: 6.00 },
             // FIX: Changed '7.00' to 7.00 and '8.00' to 8.00
+<<<<<<< HEAD
             { label: 'Medium', price: 7.00 }, 
+=======
+            { label: 'Medium', price: 7.00 },
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
             { label: 'Large', price: 8.00 }
         ]
     },
@@ -112,7 +122,10 @@ function showMessageModal(title, message, type = 'info') {
 
     // Set title and text
     messageModalTitle.innerHTML = `<i class="fas fa-info-circle icon"></i> ${title}`; // Default info icon
+<<<<<<< HEAD
     messageModalText.textContent = message;
+=======
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
 
     // Apply specific classes and icons based on type
     if (type === 'success') {
@@ -126,6 +139,10 @@ function showMessageModal(title, message, type = 'info') {
         messageModalTitle.innerHTML = `<i class="fas fa-exclamation-triangle icon"></i> ${title}`;
     }
 
+<<<<<<< HEAD
+=======
+    messageModalText.textContent = message;
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
     messageModalOverlay.style.display = 'flex'; // Use flex to center content
 
     // Ensure only one click listener for the OK button
@@ -156,7 +173,11 @@ function showMessageModal(title, message, type = 'info') {
 // This is crucial to distinguish "Small Kebab with Garlic" from "Small Kebab with Chili"
 function generateCartItemId(name, customizations) {
     let id = name.replace(/[^a-zA-Z0-9]/g, '').toLowerCase(); // Sanitize name for ID
+<<<<<<< HEAD
     if (customizations && (customizations.sauces.length > 0 || customizations.toppings.length > 0 || customizations.notes)) {
+=======
+    if (customizations && (customizations.sauces?.length > 0 || customizations.toppings?.length > 0 || customizations.notes)) {
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
         const customString = JSON.stringify(customizations).replace(/[^a-zA-Z0-9]/g, '');
         id += '_' + customString;
     }
@@ -168,6 +189,10 @@ function generateCartItemId(name, customizations) {
 function addItemToCart(itemName, itemPrice, quantity, customizations = null) {
     // If quantity is 0, remove from cart if exists
     if (quantity <= 0) {
+<<<<<<< HEAD
+=======
+        // Find by name and customizations to ensure we remove the correct one
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
         const existingItemIndex = cart.findIndex(item =>
             item.name === itemName &&
             JSON.stringify(item.customizations) === JSON.stringify(customizations)
@@ -256,7 +281,11 @@ function updateCartDisplay() {
                         customDiv.innerHTML = customizationDetails.join('<br>');
                         itemInfoDiv.appendChild(customDiv);
                     }
+<<<<<<< HEAD
                     
+=======
+
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
                     listItem.appendChild(itemInfoDiv);
                     total += itemSubtotal;
 
@@ -266,7 +295,11 @@ function updateCartDisplay() {
                     removeButton.innerHTML = '<i class="fas fa-times-circle"></i>';
                     removeButton.title = `Remove ${item.name}`;
                     // Attach the unique item ID to the button for easy identification
+<<<<<<< HEAD
                     removeButton.dataset.itemId = item.id; 
+=======
+                    removeButton.dataset.itemId = item.id;
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
                     listItem.appendChild(removeButton);
 
                     cartItemsList.appendChild(listItem);
@@ -337,6 +370,7 @@ function openKebabCustomizationModal(kebabId) {
 
     // Add event listeners for changes within the modal to update price
     // Using event delegation for radio buttons (sizes)
+<<<<<<< HEAD
     modalKebabSizes.removeEventListener('change', updateModalTotalPrice); // Remove old listener
     modalKebabSizes.addEventListener('change', updateModalTotalPrice);
 
@@ -348,6 +382,20 @@ function openKebabCustomizationModal(kebabId) {
 
     // Quantity input listener
     modalQuantityInput.removeEventListener('input', updateModalTotalPrice); // Remove old listener
+=======
+    // Ensure existing listeners are removed before adding new ones
+    modalKebabSizes.removeEventListener('change', updateModalTotalPrice);
+    modalKebabSizes.addEventListener('change', updateModalTotalPrice);
+
+    // Using event delegation for checkboxes (sauces/toppings)
+    modalKebabToppings.removeEventListener('change', updateModalTotalPrice);
+    modalKebabToppings.addEventListener('change', updateModalTotalPrice);
+    modalKebabSauces.removeEventListener('change', updateModalTotalPrice);
+    modalKebabSauces.addEventListener('change', updateModalTotalPrice);
+
+    // Quantity input listener
+    modalQuantityInput.removeEventListener('input', updateModalTotalPrice);
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
     modalQuantityInput.addEventListener('input', updateModalTotalPrice);
 
     // Initial price update (sets to 0.00 until a size is chosen)
@@ -467,6 +515,7 @@ if (kebabCustomizationModal) {
 }
 
 
+<<<<<<< HEAD
 // OLD: Event listener for "Add" buttons specifically for Kebab items (with dropdowns) - REMOVED!
 // This logic has been replaced by the modal trigger buttons and modal "Add to Cart" button.
 /*
@@ -542,6 +591,39 @@ document.querySelectorAll('.item-selection-row .add-to-cart-button').forEach(but
         } else if (quantity === 0) { // If quantity was 0, means item was removed
             showMessageModal('Item Removed!', `"${itemName}" removed from your cart.`, 'info');
         }
+=======
+// REMOVED OLD KEBAB ADD TO CART LOGIC:
+// The previous logic for '.add-selected-kebab-to-cart-button' which handled kebabs without a modal
+// has been removed as it is now replaced by the kebab customization modal flow.
+
+
+// EXISTING: Event listeners for "Add to Cart" buttons for Drinks and Sides (using direct item-quantity)
+// MODIFIED: Selector updated to target .menu-item instead of .item-selection-row
+document.querySelectorAll('#drinks .menu-item .add-to-cart-button, #sides .menu-item .add-to-cart-button').forEach(button => {
+    button.addEventListener('click', () => {
+        const itemName = button.dataset.itemName;
+        const itemPrice = parseFloat(button.dataset.itemPrice);
+
+        // For drinks/sides with the new HTML structure, clicking "Add to Cart" means adding 1 item.
+        // If the item is already in the cart, we'll increment its quantity.
+        let quantityToAdd = 1;
+        let currentQuantityInCart = 0;
+
+        // Check if item already exists in cart to get its current quantity
+        const existingItemInCart = cart.find(item => item.name === itemName &&
+            !item.customizations.sauces.length && !item.customizations.toppings.length && !item.customizations.notes); // For simple items, check no customizations
+
+        if (existingItemInCart) {
+            currentQuantityInCart = existingItemInCart.quantity;
+        }
+
+        const newQuantity = currentQuantityInCart + quantityToAdd;
+
+        // For drinks/sides, customizations are not applicable, so pass empty object
+        addItemToCart(itemName, itemPrice, newQuantity, { sauces: [], toppings: [], notes: '' });
+
+        showMessageModal('Item Added!', `"${itemName}" (x${newQuantity}) added to your cart.`, 'success');
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
     });
 });
 
@@ -552,6 +634,7 @@ if (clearCartBtn) {
         cart = []; // Clear the global cart array
         updateCartDisplay(); // Update the display to show an empty cart
 
+<<<<<<< HEAD
         // Reset all quantity inputs back to 0 on the menu (for Drinks/Sides)
         document.querySelectorAll('.item-quantity').forEach(input => {
             input.value = 0;
@@ -574,6 +657,11 @@ if (clearCartBtn) {
         // Instead, the modal will reset its state when opened again.
         // For general clearing, we just clear the cart and let the modal handle its own reset when it's opened.
 
+=======
+        // No need to reset individual quantity inputs on the menu for drinks/sides
+        // as they no longer have them in the new HTML structure.
+        // Kebab modal state is reset on its `openKebabCustomizationModal` call.
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
 
         showMessageModal('Cart Cleared!', '🛒 Your cart has been emptied.', 'info');
     });
@@ -596,6 +684,10 @@ if (paymentToggle) {
   paymentToggle.dispatchEvent(new Event('change'));
 }
 // Set initial display based on default select value
+<<<<<<< HEAD
+=======
+// This section might be redundant due to the event listener above, but kept for robustness.
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
 if (paymentToggle && payBtn) {
   if (paymentToggle.value === 'card') {
     payBtn.style.display = 'block';
@@ -755,6 +847,7 @@ if (orderForm) {
       if (response.ok) {
         cart = []; // Clear cart on successful order
         updateCartDisplay(); // Update display to show empty cart
+<<<<<<< HEAD
         // Also clear inputs on successful order, for both types of items
         document.querySelectorAll('.item-quantity').forEach(input => {
             input.value = 0; // For Drinks/Sides
@@ -774,6 +867,12 @@ if (orderForm) {
             textarea.value = '';
         });
         */
+=======
+        // No need to reset individual quantity inputs for drinks/sides
+        // as they no longer have them in the new HTML structure.
+        // Kebab modal state is reset on its `openKebabCustomizationModal` call.
+
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
 
         window.location.href = 'https://Lubo-Kebab-App.onrender.com/success.html'; // Redirect to success page on successful cash order (Absolute path)
       } else {
@@ -794,12 +893,17 @@ if (orderForm) {
   });
 }
 
+<<<<<<< HEAD
 // Preview Button Logic (NOW USING CANVAS)
+=======
+// Preview Button Logic
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
 document.querySelectorAll('.preview-btn').forEach(button => {
     button.addEventListener('click', () => {
         const imageUrl = button.dataset.imageUrl;
         const imageTitle = button.dataset.imageTitle;
 
+<<<<<<< HEAD
         if (!modalCanvas || !modalCtx || !imageModalOverlay || !modalImageTitle) {
             console.error('Modal canvas elements not found for image preview.');
             showMessageModal('Error', 'Image preview is not available.', 'error');
@@ -852,6 +956,25 @@ document.querySelectorAll('.preview-btn').forEach(button => {
         };
 
         img.src = imageUrl;
+=======
+        if (modalImage && imageModalOverlay && modalImageTitle) {
+            modalImage.src = imageUrl;
+            modalImageTitle.textContent = imageTitle;
+            imageModalOverlay.style.display = 'flex'; // Use flex to center content
+
+            // Add an onerror handler to the modal image itself for better debugging
+            modalImage.onerror = () => {
+                console.error('Failed to load image:', imageUrl);
+                // Set a fallback image if the primary one fails
+                modalImage.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';
+                modalImageTitle.textContent = 'Image Unavailable'; // Update title for fallback
+                showMessageModal('Image Error', 'Image for "' + imageTitle + '" could not be loaded. Showing placeholder.', 'error'); // Use custom modal
+            };
+
+        } else {
+            console.error('Modal elements not found for image preview.');
+        }
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
     });
 });
 
@@ -860,12 +983,21 @@ if (imageModalCloseBtn) {
     imageModalCloseBtn.addEventListener('click', () => {
         if (imageModalOverlay) {
             imageModalOverlay.style.display = 'none';
+<<<<<<< HEAD
             document.body.style.overflow = ''; // Restore scrolling
             // Clear canvas content when closing
             if (modalCtx) {
                 modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
             }
             modalImageTitle.textContent = ''; // Clear title
+=======
+            // Clear image source and title when closing
+            modalImage.src = '';
+            modalImageTitle.textContent = '';
+            // Remove onerror/onload handlers to prevent memory leaks/unexpected behavior
+            modalImage.onerror = null;
+            modalImage.onload = null;
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
         }
     });
 }
@@ -876,12 +1008,21 @@ if (imageModalOverlay) {
         // Check if the click occurred directly on the overlay, not on the content
         if (event.target === imageModalOverlay) {
             imageModalOverlay.style.display = 'none';
+<<<<<<< HEAD
             document.body.style.overflow = '';
             // Clear canvas content when closing
             if (modalCtx) {
                 modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
             }
             modalImageTitle.textContent = ''; // Clear title
+=======
+            // Clear image source and title when closing
+            modalImage.src = '';
+            modalImageTitle.textContent = '';
+            // Remove onerror/onload handlers
+            modalImage.onerror = null;
+            modalImage.onload = null;
+>>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
         }
     });
 }
