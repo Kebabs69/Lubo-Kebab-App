@@ -511,16 +511,17 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 
 /* Styles for the old item-selection-row structure (Drinks & Sides) */
-.item-selection-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-top: 1px dashed #eee;
-}
-.item-selection-row:first-of-type {
-    border-top: none; /* No top border for the first item in the list */
-}
+/* The .menu-item style will now apply to these */
+/* .item-selection-row { */
+/* display: flex; */
+/* align-items: center; */
+/* justify-content: space-between; */
+/* padding: 8px 0; */
+/* border-top: 1px dashed #eee; */
+/* } */
+/* .item-selection-row:first-of-type { */
+/* border-top: none; */
+/* } */
 
 .item-name-price {
     flex-grow: 1; /* Allows name and price to take available space */
@@ -1319,80 +1320,82 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🥤 Drinks
          </h3>
-      <div class="item-selection-row" data-item-id="coca-cola">
-         <span class="item-name-price">Coca Cola <span class="price">£1.50</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Coca Cola" data-item-price="1.5">Add</button>
-         </div>
+      <!-- Drinks Items - Updated to use .menu-item structure -->
+      <div class="menu-item" data-id="coca-cola">
+          <img src="https://placehold.co/300x200/FF00FF/FFFFFF?text=Coca-Cola" alt="Coca-Cola">
+          <h3>Coca-Cola</h3>
+          <p>A refreshing classic soda.</p>
+          <span class="price">£1.50</span>
+          <button class="add-to-cart-button" data-item-name="Coca Cola" data-item-price="1.5">Add to Cart</button>
       </div>
-      <div class="item-selection-row" data-item-id="pepsi">
-         <span class="item-name-price">Pepsi <span class="price">£1.50</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Pepsi" data-item-price="1.5">Add</button>
-         </div>
+      <div class="menu-item" data-id="pepsi">
+          <img src="https://placehold.co/300x200/FF00FF/FFFFFF?text=Pepsi" alt="Pepsi">
+          <h3>Pepsi</h3>
+          <p>A classic cola for refreshment.</p>
+          <span class="price">£1.50</span>
+          <button class="add-to-cart-button" data-item-name="Pepsi" data-item-price="1.5">Add to Cart</button>
       </div>
-      <div class="item-selection-row" data-item-id="orange-juice">
-         <span class="item-name-price">Orange Juice <span class="price">£2.00</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Orange Juice" data-item-price="2">Add</button>
-         </div>
+      <div class="menu-item" data-id="orange-juice">
+          <img src="https://placehold.co/300x200/FFA500/FFFFFF?text=Orange+Juice" alt="Orange Juice">
+          <h3>Orange Juice</h3>
+          <p>Freshly squeezed orange juice.</p>
+          <span class="price">£2.00</span>
+          <button class="add-to-cart-button" data-item-name="Orange Juice" data-item-price="2">Add to Cart</button>
       </div>
-      <div class="item-selection-row" data-item-id="apple-juice">
-         <span class="item-name-price">Apple Juice <span class="price">£2.00</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Apple Juice" data-item-price="2">Add</button>
-         </div>
+      <div class="menu-item" data-id="apple-juice">
+          <img src="https://placehold.co/300x200/8B0000/FFFFFF?text=Apple+Juice" alt="Apple Juice">
+          <h3>Apple Juice</h3>
+          <p>Crisp and sweet apple juice.</p>
+          <span class="price">£2.00</span>
+          <button class="add-to-cart-button" data-item-name="Apple Juice" data-item-price="2">Add to Cart</button>
       </div>
-      <div class="item-selection-row" data-item-id="water">
-         <span class="item-name-price">Water <span class="price">£1.00</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Water" data-item-price="1">Add</button>
-         </div>
+      <div class="menu-item" data-id="water">
+          <img src="https://placehold.co/300x200/007BFF/FFFFFF?text=Water" alt="Bottled Water">
+          <h3>Water</h3>
+          <p>Pure, refreshing bottled water.</p>
+          <span class="price">£1.00</span>
+          <button class="add-to-cart-button" data-item-name="Water" data-item-price="1">Add to Cart</button>
       </div>
    </div>
    <div class="container" id="sides">
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🥗 Sides
          </h3>
-      <div class="item-selection-row" data-item-id="fries">
-         <span class="item-name-price">Fries <span class="price">£2.00</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Fries" data-item-price="2">Add</button>
-         </div>
+      <!-- Sides Items - Updated to use .menu-item structure -->
+      <div class="menu-item" data-id="fries">
+          <img src="https://placehold.co/300x200/FFFF00/000000?text=Fries" alt="Fries">
+          <h3>Fries</h3>
+          <p>Golden crispy fries, perfectly salted.</p>
+          <span class="price">£2.00</span>
+          <button class="add-to-cart-button" data-item-name="Fries" data-item-price="2">Add to Cart</button>
       </div>
-      <div class="item-selection-row" data-item-id="cheesy-chips">
-         <span class="item-name-price">Cheesy Chips <span class="price">£2.50</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Cheesy Chips" data-item-price="2.5">Add</button>
-         </div>
+      <div class="menu-item" data-id="cheesy-chips">
+          <img src="https://placehold.co/300x200/FFC107/000000?text=Cheesy+Chips" alt="Cheesy Chips">
+          <h3>Cheesy Chips</h3>
+          <p>Crispy fries topped with melted cheese.</p>
+          <span class="price">£2.50</span>
+          <button class="add-to-cart-button" data-item-name="Cheesy Chips" data-item-price="2.5">Add to Cart</button>
       </div>
-      <div class="item-selection-row" data-item-id="onion-rings">
-         <span class="item-name-price">Onion Rings <span class="price">£2.00</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Onion Rings" data-item-price="2">Add</button>
-         </div>
+      <div class="menu-item" data-id="onion-rings">
+          <img src="https://placehold.co/300x200/C0C0C0/000000?text=Onion+Rings" alt="Onion Rings">
+          <h3>Onion Rings</h3>
+          <p>Golden fried onion rings, crispy and delicious.</p>
+          <span class="price">£2.00</span>
+          <button class="add-to-cart-button" data-item-name="Onion Rings" data-item-price="2">Add to Cart</button>
       </div>
-      <div class="item-selection-row" data-item-id="side-salad">
-         <span class="item-name-price">Side Salad <span class="price">£2.00</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Side Salad" data-item-price="2">Add</button>
-         </div>
+      <div class="menu-item" data-id="side-salad">
+          <img src="https://placehold.co/300x200/33FF57/000000?text=Side+Salad" alt="Side Salad">
+          <h3>Side Salad</h3>
+          <p>Fresh mixed green salad with a light dressing.</p>
+          <span class="price">£2.00</span>
+          <button class="add-to-cart-button" data-item-name="Side Salad" data-item-price="2">Add to Cart</button>
       </div>
-      <div class="item-selection-row" data-item-id="garlic-bread">
-         <span class="item-name-price">Garlic Bread <span class="price">£1.50</span></span>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Garlic Bread" data-item-price="1.5">Add</button>
-         </div>
+      <div class="menu-item" data-id="garlic-bread">
+          <img src="https://placehold.co/300x200/DAA520/000000?text=Garlic+Bread" alt="Garlic Bread">
+          <h3>Garlic Bread</h3>
+          <p>Warm garlic bread, perfect for dipping.</p>
+          <span class="price">£1.50</span>
+          <button class="add-to-cart-button" data-item-name="Garlic Bread" data-item-price="1.5">Add to Cart</button>
       </div>
    </div>
    <div class="container" id="cart">
