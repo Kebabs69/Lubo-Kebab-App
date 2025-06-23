@@ -235,15 +235,22 @@
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         position: relative;
         text-align: center;
+        display: flex; /* Use flexbox for vertical centering of canvas/title */
+        flex-direction: column;
+        align-items: center;
     }
 
-    .image-modal-content img {
+    /* Styles for the Canvas within the modal */
+    #modalCanvas {
         max-width: 100%;
-        height: auto;
-        display: block; /* Remove extra space below image */
-        margin: 0 auto 15px auto; /* Center image within modal */
+        max-height: 70vh; /* Limit height to prevent overflow on smaller screens */
+        display: block; /* Remove extra space below canvas */
+        margin: 0 auto 15px auto; /* Center canvas within modal */
         border-radius: 8px;
+        border: 1px solid #ddd;
+        background-color: #f0f0f0; /* Background for empty/loading canvas */
     }
+
 
     .image-modal-content h4 {
         margin-bottom: 10px;
@@ -517,6 +524,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     justify-content: space-between;
     padding: 8px 0;
     border-top: 1px dashed #eee;
+    position: relative; /* Needed for positioning the preview button */
 }
 .item-selection-row:first-of-type {
     border-top: none; /* No top border for the first item in the list */
@@ -1325,6 +1333,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Coca Cola" data-item-price="1.5">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Coca Cola" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Coca+Cola+Preview">Preview</button>
       </div>
       <div class="item-selection-row" data-item-id="pepsi">
          <span class="item-name-price">Pepsi <span class="price">£1.50</span></span>
@@ -1332,6 +1341,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Pepsi" data-item-price="1.5">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Pepsi" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Pepsi+Preview">Preview</button>
       </div>
       <div class="item-selection-row" data-item-id="orange-juice">
          <span class="item-name-price">Orange Juice <span class="price">£2.00</span></span>
@@ -1339,6 +1349,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Orange Juice" data-item-price="2">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Orange Juice" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Orange+Juice+Preview">Preview</button>
       </div>
       <div class="item-selection-row" data-item-id="apple-juice">
          <span class="item-name-price">Apple Juice <span class="price">£2.00</span></span>
@@ -1346,6 +1357,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Apple Juice" data-item-price="2">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Apple Juice" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Apple+Juice+Preview">Preview</button>
       </div>
       <div class="item-selection-row" data-item-id="water">
          <span class="item-name-price">Water <span class="price">£1.00</span></span>
@@ -1353,6 +1365,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Water" data-item-price="1">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Water" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Water+Preview">Preview</button>
       </div>
    </div>
    <div class="container" id="sides">
@@ -1365,6 +1378,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Fries" data-item-price="2">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Fries" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Fries+Preview">Preview</button>
       </div>
       <div class="item-selection-row" data-item-id="cheesy-chips">
          <span class="item-name-price">Cheesy Chips <span class="price">£2.50</span></span>
@@ -1372,6 +1386,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Cheesy Chips" data-item-price="2.5">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Cheesy Chips" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Cheesy+Chips+Preview">Preview</button>
       </div>
       <div class="item-selection-row" data-item-id="onion-rings">
          <span class="item-name-price">Onion Rings <span class="price">£2.00</span></span>
@@ -1379,6 +1394,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Onion Rings" data-item-price="2">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Onion Rings" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Onion+Rings+Preview">Preview</button>
       </div>
       <div class="item-selection-row" data-item-id="side-salad">
          <span class="item-name-price">Side Salad <span class="price">£2.00</span></span>
@@ -1386,6 +1402,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Side Salad" data-item-price="2">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Side Salad" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Side+Salad+Preview">Preview</button>
       </div>
       <div class="item-selection-row" data-item-id="garlic-bread">
          <span class="item-name-price">Garlic Bread <span class="price">£1.50</span></span>
@@ -1393,6 +1410,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Garlic Bread" data-item-price="1.5">Add</button>
          </div>
+         <button type="button" class="preview-btn" data-image-title="Garlic Bread" data-image-url="https://placehold.co/600x400/cccccc/333333?text=Garlic+Bread+Preview">Preview</button>
       </div>
    </div>
    <div class="container" id="cart">
@@ -1615,7 +1633,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       Wednesday
      </td>
 <td style="text-align:right;">
-      11:00 AM – 23:00 PM
+      11:00 AM – 11:00 PM
      </td>
 </tr>
 <tr>
@@ -1660,7 +1678,8 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     <div class="image-modal-content">
         <span class="image-modal-close">&times;</span>
         <h4 id="modalImageTitle"></h4>
-        <img id="modalImage" src="" alt="Kebab Preview" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';"/>
+        <!-- CHANGED: Now using a canvas instead of an image tag -->
+        <canvas id="modalCanvas" width="600" height="400" style="display: block; max-width: 100%; height: auto; border-radius: 8px; border: 1px solid #ddd;"></canvas>
     </div>
 </div>
 

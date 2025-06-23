@@ -15,9 +15,10 @@ const logoutBtn = document.getElementById('logoutBtn');
 const clearCartBtn = document.getElementById('clearCartBtn');
 
 
-// Elements for the image preview modal
+// Elements for the image preview modal (NOW USING CANVAS)
 const imageModalOverlay = document.getElementById('imageModalOverlay');
-const modalImage = document.getElementById('modalImage');
+const modalCanvas = document.getElementById('modalCanvas'); // Reference to the canvas element
+const modalCtx = modalCanvas ? modalCanvas.getContext('2d') : null; // Get 2D rendering context
 const modalImageTitle = document.getElementById('modalImageTitle');
 const imageModalCloseBtn = document.querySelector('.image-modal-close');
 
@@ -793,29 +794,64 @@ if (orderForm) {
   });
 }
 
-// Preview Button Logic
+// Preview Button Logic (NOW USING CANVAS)
 document.querySelectorAll('.preview-btn').forEach(button => {
     button.addEventListener('click', () => {
         const imageUrl = button.dataset.imageUrl;
         const imageTitle = button.dataset.imageTitle;
 
-        if (modalImage && imageModalOverlay && modalImageTitle) {
-            modalImage.src = imageUrl;
-            modalImageTitle.textContent = imageTitle;
-            imageModalOverlay.style.display = 'flex'; // Use flex to center content
-
-            // Add an onerror handler to the modal image itself for better debugging
-            modalImage.onerror = () => {
-                console.error('Failed to load image:', imageUrl);
-                // Set a fallback image if the primary one fails
-                modalImage.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';
-                modalImageTitle.textContent = 'Image Unavailable'; // Update title for fallback
-                showMessageModal('Image Error', 'Image for "' + imageTitle + '" could not be loaded. Showing placeholder.', 'error'); // Use custom modal
-            };
-
-        } else {
-            console.error('Modal elements not found for image preview.');
+        if (!modalCanvas || !modalCtx || !imageModalOverlay || !modalImageTitle) {
+            console.error('Modal canvas elements not found for image preview.');
+            showMessageModal('Error', 'Image preview is not available.', 'error');
+            return;
         }
+
+        modalImageTitle.textContent = imageTitle;
+        imageModalOverlay.style.display = 'flex'; // Use flex to center content
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+
+        // Clear previous drawing on canvas
+        modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous'; // Important for loading images from different origins
+
+        img.onload = () => {
+            // Calculate aspect ratios
+            const canvasAspectRatio = modalCanvas.width / modalCanvas.height;
+            const imageAspectRatio = img.width / img.height;
+
+            let drawWidth = modalCanvas.width;
+            let drawHeight = modalCanvas.height;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            if (imageAspectRatio > canvasAspectRatio) {
+                // Image is wider than canvas, scale to fit width
+                drawHeight = modalCanvas.width / imageAspectRatio;
+                offsetY = (modalCanvas.height - drawHeight) / 2;
+            } else {
+                // Image is taller than canvas, scale to fit height
+                drawWidth = modalCanvas.height * imageAspectRatio;
+                offsetX = (modalCanvas.width - drawWidth) / 2;
+            }
+
+            modalCtx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+        };
+
+        img.onerror = () => {
+            console.error('Failed to load image for canvas:', imageUrl);
+            // Draw a fallback message on the canvas
+            modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height); // Clear again
+            modalCtx.fillStyle = '#666'; // Text color
+            modalCtx.font = '20px Arial';
+            modalCtx.textAlign = 'center';
+            modalCtx.textBaseline = 'middle';
+            modalCtx.fillText('Image Unavailable', modalCanvas.width / 2, modalCanvas.height / 2);
+            showMessageModal('Image Error', 'Image for "' + imageTitle + '" could not be loaded. Showing placeholder.', 'error');
+        };
+
+        img.src = imageUrl;
     });
 });
 
@@ -824,12 +860,12 @@ if (imageModalCloseBtn) {
     imageModalCloseBtn.addEventListener('click', () => {
         if (imageModalOverlay) {
             imageModalOverlay.style.display = 'none';
-            // Clear image source and title when closing
-            modalImage.src = '';
-            modalImageTitle.textContent = '';
-            // Remove onerror/onload handlers to prevent memory leaks/unexpected behavior
-            modalImage.onerror = null;
-            modalImage.onload = null;
+            document.body.style.overflow = ''; // Restore scrolling
+            // Clear canvas content when closing
+            if (modalCtx) {
+                modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
+            }
+            modalImageTitle.textContent = ''; // Clear title
         }
     });
 }
@@ -840,12 +876,12 @@ if (imageModalOverlay) {
         // Check if the click occurred directly on the overlay, not on the content
         if (event.target === imageModalOverlay) {
             imageModalOverlay.style.display = 'none';
-            // Clear image source and title when closing
-            modalImage.src = '';
-            modalImageTitle.textContent = '';
-            // Remove onerror/onload handlers
-            modalImage.onerror = null;
-            modalImage.onload = null;
+            document.body.style.overflow = '';
+            // Clear canvas content when closing
+            if (modalCtx) {
+                modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
+            }
+            modalImageTitle.textContent = ''; // Clear title
         }
     });
 }
