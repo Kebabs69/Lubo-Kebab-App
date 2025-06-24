@@ -1,99 +1,172 @@
-// This script contains logic specific to the login.html page.
-// It will handle the form submission and redirection after successful login.
-
-// Get elements from the login form
-const loginEmailInput = document.getElementById('loginEmail');
-const loginPasswordInput = document.getElementById('loginPassword');
-const loginSubmitBtn = document.getElementById('loginSubmitBtn');
-const loginErrorMessage = document.getElementById('error-message'); // Assuming your error message element ID is 'error-message'
-// Optional: Add a success message element if you want one for login
-// const loginSuccessMessage = document.getElementById('success-message');
-
-// console.log('login.js loaded.'); // Debug log removed
-
-// Add event listener for the login button click
-if (loginSubmitBtn) {
-    // console.log('Login button element found. Attaching listener...'); // Debug log removed
-    loginSubmitBtn.addEventListener('click', async (e) => {
-        e.preventDefault(); // Prevent default form submission
-        // console.log('Login button clicked!'); // Debug log removed
-
-        const email = loginEmailInput.value;
-        const password = loginPasswordInput.value;
-
-        // Clear previous messages
-        if (loginErrorMessage) loginErrorMessage.textContent = '';
-        // if (loginSuccessMessage) loginSuccessMessage.textContent = '';
-
-        // console.log('Attempting login for email:', email); // Debug log removed
-
-        try {
-            // Send login credentials to the server
-            const response = await fetch('https://lubo-kebab-app-1.onrender.com/login', { // CORRECTED URL
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
-
-            // console.log('Fetch response received. Status:', response.status); // Debug log removed
-
-            const data = await response.json(); // Parse the JSON response from the server
-
-            if (response.ok) { // Server responded with a success status (200-299)
-                console.log('Login successful:', data.message); // Keep this one for general info
-                // Optional: Set a flag in localStorage or session storage to indicate login
-                localStorage.setItem('isLoggedIn', 'true'); // Set login flag
-                
-                // Redirect immediately after successful login
-                window.location.href = 'https://lubo-kebab-app-1.onrender.com/index.html'; // CORRECTED: Direct to absolute path
-            } else { // Server responded with an error status (e.g., 400, 401, 500)
-                console.error('Login failed:', data.message); // Keep this one for error info
-                if (loginErrorMessage) {
-                    loginErrorMessage.style.display = 'block';
-                    loginErrorMessage.textContent = data.message || 'Login failed. Please check your credentials.';
-                }
-            }
-        } catch (error) {
-            console.error('Error during login (frontend catch):', error); // Keep this one for error info
-            if (loginErrorMessage) {
-                loginErrorMessage.style.display = 'block';
-                loginErrorMessage.textContent = 'Network error or unable to connect. Please try again.';
-            }
-        }
-    });
-} else {
-    console.warn('Login button element not found in HTML. Check ID: loginSubmitBtn'); // Keep this warning
-}
-
-
-// === Live Clock and Music Controls ===
-function updateClock() {
-    const liveClockElement = document.getElementById('liveClock');
-    if (liveClockElement) {
-        liveClockElement.textContent = new Date().toLocaleTimeString();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Canceled - Lubo's Kebab</title>
+  <!-- Use consistent Inter font, and Oswald for headings -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome for the alert icon -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    /* Define consistent color variables */
+    :root {
+        --primary-color: #A32A29; /* Deep Red/Maroon for Kebab theme - professional */
+        --secondary-color: #262626; /* Dark Grey for text and accents */
+        --accent-color: #FFD700; /* Gold/Yellow for highlights */
+        --light-bg: #F8F8F8; /* Very light grey for main backgrounds */
+        --dark-bg: #1A1A1A; /* Dark background for footer/navbar contrast */
+        --text-color-light: #F0F0F0; /* Light text for dark backgrounds */
+        --text-color-dark: #333333; /* Dark text for light backgrounds */
+        --border-color: #E0E0E0; /* Subtle light border */
+        --shadow-light: 0 4px 15px rgba(0,0,0,0.08); /* Light, soft shadow */
+        --shadow-strong: 0 8px 25px rgba(0,0,0,0.2); /* Stronger shadow for emphasis */
+        --border-radius-card: 12px;
+        --border-radius-button: 8px;
+        --transition-speed: 0.3s ease;
     }
-}
-setInterval(updateClock, 1000); // Update every second
-updateClock(); // Initial call
 
-const music = document.getElementById('bg-music');
-const playBtnMusic = document.getElementById('playBtn');
-const pauseBtnMusic = document.getElementById('pauseBtn');
+    body {
+      font-family: 'Inter', sans-serif;
+      text-align: center;
+      background-color: #FFF2F2; /* Very light red background for a 'cancellation' feel */
+      color: var(--text-color-dark);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .cancel-container {
+      background-color: #ffffff; /* Solid white background for the card */
+      padding: 40px;
+      border-radius: var(--border-radius-card);
+      box-shadow: var(--shadow-strong);
+      max-width: 600px;
+      width: 100%;
+      border: 1px solid #E74C3C; /* Brighter red border to signify cancellation */
+      animation: fadeInScaleUp var(--transition-speed);
+    }
 
-if (playBtnMusic) {
-    playBtnMusic.addEventListener('click', () => {
-        music.play();
-        playBtnMusic.style.display = 'none';
-        pauseBtnMusic.style.display = 'inline-block';
-    });
-}
+    @keyframes fadeInScaleUp {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
 
-if (pauseBtnMusic) {
-    pauseBtnMusic.addEventListener('click', () => {
-        music.pause();
-        playBtnMusic.style.display = 'inline-block';
-        pauseBtnMusic.style.display = 'none';
-    });
-}
+    .logo-small {
+        width: 120px; /* Consistent logo size */
+        margin-bottom: 25px;
+        animation: bounceIn 0.8s ease-out; /* Optional animation */
+    }
+    @keyframes bounceIn {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.05); opacity: 1; }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); }
+    }
+
+
+    h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 2.8em;
+      margin-bottom: 25px;
+      color: var(--primary-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px; /* Space between icon and text */
+    }
+    h1 .icon {
+        color: #E74C3C; /* Bright red for cancellation icon */
+        font-size: 1.2em; /* Make icon a bit larger than text */
+        animation: alertPop 0.6s ease-out forwards;
+    }
+    @keyframes alertPop {
+        0% { transform: scale(0); opacity: 0; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(1); }
+    }
+
+    p {
+      font-size: 1.05em; /* Consistent paragraph size */
+      line-height: 1.7;
+      margin-bottom: 20px;
+      color: var(--secondary-color);
+    }
+    p:last-of-type {
+        margin-bottom: 30px; /* Space before button */
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 14px 30px; /* Consistent button padding */
+      font-size: 1.1em;
+      font-weight: 600;
+      text-decoration: none;
+      background-color: var(--primary-color);
+      color: white;
+      border-radius: var(--border-radius-button);
+      transition: background-color var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
+      box-shadow: var(--shadow-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    a:hover {
+      background-color: #8D2524; /* Darker shade on hover */
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-strong);
+    }
+    a:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .cancel-container {
+        padding: 30px;
+        margin: 0 15px;
+      }
+      .logo-small {
+        width: 100px;
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 2em;
+        gap: 10px;
+      }
+      h1 .icon {
+        font-size: 1.1em;
+      }
+      p {
+        font-size: 0.95em;
+        margin-bottom: 15px;
+      }
+      p:last-of-type {
+        margin-bottom: 25px;
+      }
+      a {
+        padding: 12px 25px;
+        font-size: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="cancel-container">
+    <img src="/assets/logo.png" alt="Lubo's Kebab Logo" class="logo-small">
+    <h1>
+      <span class="icon fas fa-times-circle"></span> Payment Canceled
+    </h1>
+    <p>Unfortunately, your payment could not be processed, or you decided to cancel the order.</p>
+    <p>No charges have been made. You can try placing your order again, or choose cash on delivery.</p>
+    <p>We apologize for any inconvenience!</p>
+    <a href="/index.html">Back to Menu</a>
+  </div>
+</body>
+</html>
