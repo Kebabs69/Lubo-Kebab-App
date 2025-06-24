@@ -94,7 +94,7 @@ let currentKebabQuantity = 1;
 
 // Login Check for index.html - Ensures user is logged in
 if (localStorage.getItem('isLoggedIn') !== 'true') {
-    window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html'; // Absolute path for redirection
+    window.location.href = 'https://Lubo-Kebab-App-1.onrender.com/login.html'; // Absolute path for redirection
 }
 
 
@@ -573,7 +573,8 @@ if (payBtn) {
       payBtn.disabled = true;
       payBtn.textContent = 'Processing...';
 
-      const response = await fetch('https://Lubo-Kebab-App.onrender.com/create-checkout-session', {
+      // *** CORRECTED URL HERE ***
+      const response = await fetch('https://Lubo-Kebab-App-1.onrender.com/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -676,7 +677,8 @@ if (orderForm) {
     }
 
     try {
-      const response = await fetch('https://Lubo-Kebab-App.onrender.com/cash-order', {
+      // *** CORRECTED URL HERE ***
+      const response = await fetch('https://Lubo-Kebab-App-1.onrender.com/cash-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -698,8 +700,8 @@ if (orderForm) {
         // as they no longer have them in the new HTML structure.
         // Kebab modal state is reset on its `openKebabCustomizationModal` call.
 
-
-        window.location.href = 'https://Lubo-Kebab-App.onrender.com/success.html'; // Redirect to success page on successful cash order (Absolute path)
+        // *** CORRECTED URL HERE ***
+        window.location.href = 'https://Lubo-Kebab-App-1.onrender.com/success.html'; // Redirect to success page on successful cash order (Absolute path)
       } else {
         const errorResult = await response.json();
         showMessageModal('Order Failed', "❌ Failed to send order: " + (errorResult.message || "Unknown error"), 'error');
@@ -854,6 +856,7 @@ setInterval(checkOpenStatus, 60000);
 if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
         localStorage.removeItem('isLoggedIn'); // Clear the login flag
-        window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html'; // Redirect to login page (Absolute path)
+        // *** CORRECTED URL HERE ***
+        window.location.href = 'https://Lubo-Kebab-App-1.onrender.com/login.html'; // Redirect to login page (Absolute path)
     });
 }
