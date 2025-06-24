@@ -170,25 +170,13 @@ app.use((req, res, next) => {
 // Requests like /css/style.css, /js/main.js, /login.html, /success.html will be served by this.
 app.use(express.static(path.join(__dirname, 'public')));
 
-// NEW FIX: Explicitly serve index.html for the root path
-// This is important for directly accessing the home page.
+// Explicitly serve index.html for the root path
 app.get('/', (req, res) => {
     logger.debug(`[STATIC] Serving index.html for root path: ${req.url}`);
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// NEW FIX (for SPAs): Catch-all for client-side routing.
-// This route will serve index.html for any path not matched by previous static files or API routes.
-// This is critical for client-side frameworks that handle routing (e.g., /login, /register as virtual paths).
-// This MUST be the last route definition before your error handling.
-app.get('*', (req, res) => {
-    logger.debug(`[STATIC] Serving index.html for unmatched path (client-side routing fallback): ${req.url}`);
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 // Nodemailer transporter setup
-// Moved this block to *after* the routes that need it are defined,
-// but it is important to define it before it is used in email sending functions.
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -196,8 +184,6 @@ const transporter = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS,
     },
     tls: {
-        // WARNING: This is for development/testing only and should be removed in production
-        // or configured securely with proper SSL certificates.
         rejectUnauthorized: false,
     },
 });
@@ -211,7 +197,7 @@ const transporter = nodemailer.createTransport({
  */
 app.get("/test-email", async (req, res) => {
     try {
-        if (transporter) { // Check if transporter is defined
+        if (transporter) {
             await transporter.sendMail({
                 from: process.env.EMAIL_USER,
                 to: process.env.EMAIL_USER,
@@ -298,7 +284,7 @@ app.post("/register", async (req, res, next) => {
             `,
         };
 
-        if (transporter) { // Check if transporter is defined before using it
+        if (transporter) {
             transporter.sendMail(mailOptions, (mailErr, info) => {
                 if (mailErr) {
                     logger.error("❌ [EMAIL] Error sending welcome email:", mailErr);
