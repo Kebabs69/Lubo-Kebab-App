@@ -15,7 +15,7 @@ const logger = {
 };
 
 logger.info("🧪 Starting up server.js...");
-logger.info("Current directory:", __dirname);
+logger.info("Current directory:", __dirname); // This will be /opt/render/project/src on Render
 
 const express = require("express");
 const cors = require("cors");
@@ -168,37 +168,78 @@ app.use((req, res, next) => {
 // This line tells Express to look for static files (like index.html, CSS, JS, images)
 // inside the 'public' folder when a request comes in.
 // Requests like /css/style.css, /js/main.js will be served by this.
-app.use(express.static(path.join(__dirname, 'public')));
+const publicPath = path.join(__dirname, 'public');
+logger.info(`[STATIC] Express will serve static files from: ${publicPath}`);
+app.use(express.static(publicPath));
 
 // Explicitly serve index.html for the root path
 app.get('/', (req, res) => {
     logger.debug(`[STATIC] Serving index.html for root path: ${req.url}`);
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    res.sendFile(path.join(publicPath, 'index.html'), (err) => {
+        if (err) {
+            logger.error(`❌ [STATIC] Error serving index.html: ${err.message}`);
+            res.status(500).send('Error loading index.html');
+        }
+    });
 });
 
 // Explicitly serve specific HTML files that are requested directly
-// This is done as a targeted fix because `express.static` might not be
-// picking them up, or due to frontend requiring exact .html paths.
 app.get('/login.html', (req, res) => {
-    logger.debug(`[STATIC] Serving login.html`);
-    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+    logger.debug(`[STATIC] Serving login.html for path: ${req.url}`);
+    res.sendFile(path.join(publicPath, 'login.html'), (err) => {
+        if (err) {
+            logger.error(`❌ [STATIC] Error serving login.html: ${err.message}`);
+            // Check if the error is due to file not found and send 404, otherwise 500
+            if (err.code === 'ENOENT') {
+                res.status(404).send('Login page not found');
+            } else {
+                res.status(500).send('Error loading login.html');
+            }
+        }
+    });
 });
 
 app.get('/register.html', (req, res) => {
-    logger.debug(`[STATIC] Serving register.html`);
-    res.sendFile(path.join(__dirname, 'public', 'register.html'));
+    logger.debug(`[STATIC] Serving register.html for path: ${req.url}`);
+    res.sendFile(path.join(publicPath, 'register.html'), (err) => {
+        if (err) {
+            logger.error(`❌ [STATIC] Error serving register.html: ${err.message}`);
+            if (err.code === 'ENOENT') {
+                res.status(404).send('Register page not found');
+            } else {
+                res.status(500).send('Error loading register.html');
+            }
+        }
+    });
 });
 
 app.get('/success.html', (req, res) => {
-    logger.debug(`[STATIC] Serving success.html`);
-    res.sendFile(path.join(__dirname, 'public', 'success.html'));
+    logger.debug(`[STATIC] Serving success.html for path: ${req.url}`);
+    res.sendFile(path.join(publicPath, 'success.html'), (err) => {
+        if (err) {
+            logger.error(`❌ [STATIC] Error serving success.html: ${err.message}`);
+            if (err.code === 'ENOENT') {
+                res.status(404).send('Success page not found');
+            } else {
+                res.status(500).send('Error loading success.html');
+            }
+        }
+    });
 });
 
 app.get('/cancel.html', (req, res) => {
-    logger.debug(`[STATIC] Serving cancel.html`);
-    res.sendFile(path.join(__dirname, 'public', 'cancel.html'));
+    logger.debug(`[STATIC] Serving cancel.html for path: ${req.url}`);
+    res.sendFile(path.join(publicPath, 'cancel.html'), (err) => {
+        if (err) {
+            logger.error(`❌ [STATIC] Error serving cancel.html: ${err.message}`);
+            if (err.code === 'ENOENT') {
+                res.status(404).send('Cancel page not found');
+            } else {
+                res.status(500).send('Error loading cancel.html');
+            }
+        }
+    });
 });
-
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
