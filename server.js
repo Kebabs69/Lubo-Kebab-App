@@ -165,23 +165,16 @@ app.use((req, res, next) => {
 // Requests like /index.html, /css/style.css, /js/main.js will be served by this.
 app.use(express.static(path.join(__dirname, 'public')));
 
-/**
- * IMPORTANT: Catch-all route to serve index.html for any client-side routing.
- * This MUST come AFTER all API routes and express.static to ensure API calls
- * are handled first, and only unmatched routes fall back to serving the main HTML.
- * @name GET *
- * @function
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
+/*
+// IMPORTANT: Catch-all route to serve index.html for any client-side routing.
+// This MUST come AFTER all API routes and express.static to ensure API calls
+// are handled first, and only unmatched routes fall back to serving the main HTML.
+// We are temporarily commenting this out to debug the "Missing parameter name" error.
 app.get('*', (req, res) => {
-    // If the request path is for an existing static file (e.g., /login.html, /cancel.html),
-    // express.static middleware above would have already handled it.
-    // This route is for paths that don't map to a static file and are not API routes,
-    // typically for client-side routing.
     logger.debug(`[STATIC] Serving index.html for path: ${req.url}`);
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+*/
 
 
 // Nodemailer transporter setup
