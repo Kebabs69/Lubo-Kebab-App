@@ -167,7 +167,7 @@ app.use((req, res, next) => {
 // Serve static files from the 'public' directory
 // This line tells Express to look for static files (like index.html, CSS, JS, images)
 // inside the 'public' folder when a request comes in.
-// Requests like /css/style.css, /js/main.js, /login.html, /success.html will be served by this.
+// Requests like /css/style.css, /js/main.js will be served by this.
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Explicitly serve index.html for the root path
@@ -175,6 +175,30 @@ app.get('/', (req, res) => {
     logger.debug(`[STATIC] Serving index.html for root path: ${req.url}`);
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+// Explicitly serve specific HTML files that are requested directly
+// This is done as a targeted fix because `express.static` might not be
+// picking them up, or due to frontend requiring exact .html paths.
+app.get('/login.html', (req, res) => {
+    logger.debug(`[STATIC] Serving login.html`);
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+app.get('/register.html', (req, res) => {
+    logger.debug(`[STATIC] Serving register.html`);
+    res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
+app.get('/success.html', (req, res) => {
+    logger.debug(`[STATIC] Serving success.html`);
+    res.sendFile(path.join(__dirname, 'public', 'success.html'));
+});
+
+app.get('/cancel.html', (req, res) => {
+    logger.debug(`[STATIC] Serving cancel.html`);
+    res.sendFile(path.join(__dirname, 'public', 'cancel.html'));
+});
+
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
