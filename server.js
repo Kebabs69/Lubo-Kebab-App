@@ -167,18 +167,24 @@ app.use((req, res, next) => {
 // Serve static files from the 'public' directory
 // This line tells Express to look for static files (like index.html, CSS, JS, images)
 // inside the 'public' folder when a request comes in.
-// Requests like /css/style.css, /js/main.js will be served by this.
+// Requests like /css/style.css, /js/main.js, /login.html, /success.html will be served by this.
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 // NEW FIX: Explicitly serve index.html for the root path
-// This route should come AFTER express.static but BEFORE any broad catch-all (if you re-add one)
-// and before centralized error handling.
+// This is important for directly accessing the home page.
 app.get('/', (req, res) => {
     logger.debug(`[STATIC] Serving index.html for root path: ${req.url}`);
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// NEW FIX (for SPAs): Catch-all for client-side routing.
+// This route will serve index.html for any path not matched by previous static files or API routes.
+// This is critical for client-side frameworks that handle routing (e.g., /login, /register as virtual paths).
+// This MUST be the last route definition before your error handling.
+app.get('*', (req, res) => {
+    logger.debug(`[STATIC] Serving index.html for unmatched path (client-side routing fallback): ${req.url}`);
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Nodemailer transporter setup
 // Moved this block to *after* the routes that need it are defined,
