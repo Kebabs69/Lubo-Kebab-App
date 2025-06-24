@@ -29,7 +29,7 @@ if (loginSubmitBtn) {
 
         try {
             // Send login credentials to the server
-            const response = await fetch('https://Lubo-Kebab-App.onrender.com/login', {
+            const response = await fetch('https://Lubo-Kebab-App-1.onrender.com/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,7 +47,7 @@ if (loginSubmitBtn) {
                 localStorage.setItem('isLoggedIn', 'true'); // Set login flag
                 
                 // Redirect immediately after successful login
-                window.location.href = 'https://Lubo-Kebab-App.onrender.com/index.html'; // Direct to absolute path
+                window.location.href = 'https://Lubo-Kebab-App-1.onrender.com/index.html'; // Direct to absolute path
             } else { // Server responded with an error status (e.g., 400, 401, 500)
                 console.error('Login failed:', data.message); // Keep this one for error info
                 if (loginErrorMessage) {
