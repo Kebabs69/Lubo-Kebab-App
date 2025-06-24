@@ -105,7 +105,7 @@ let currentKebabQuantity = 1;
 
 // Login Check for index.html - Ensures user is logged in
 if (localStorage.getItem('isLoggedIn') !== 'true') {
-    window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html'; // Absolute path for redirection
+    window.location.href = 'https://lubo-kebab-app-1.onrender.com/login.html'; // Absolute path for redirection
 }
 
 
@@ -463,7 +463,8 @@ if (modalQuantityPlus) {
         if (isNaN(currentVal)) currentVal = 0; // If somehow NaN, treat as 0 to add 1
         modalQuantityInput.value = currentVal + 1;
         updateModalTotalPrice();
-    });
+    }
+);
 }
 
 
@@ -726,7 +727,7 @@ if (payBtn) {
       payBtn.disabled = true;
       payBtn.textContent = 'Processing...';
 
-      const response = await fetch('https://Lubo-Kebab-App.onrender.com/create-checkout-session', {
+      const response = await fetch('https://lubo-kebab-app-1.onrender.com/create-checkout-session', { // Corrected URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -829,7 +830,7 @@ if (orderForm) {
     }
 
     try {
-      const response = await fetch('https://Lubo-Kebab-App.onrender.com/cash-order', {
+      const response = await fetch('https://lubo-kebab-app-1.onrender.com/cash-order', { // Corrected URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -850,42 +851,42 @@ if (orderForm) {
 <<<<<<< HEAD
         // Also clear inputs on successful order, for both types of items
         document.querySelectorAll('.item-quantity').forEach(input => {
-            input.value = 0; // For Drinks/Sides
+            input.value = 0;
         });
-        // OLD: Kebab resets from here are removed as they are now handled by modal state on open
-        /*
-        document.querySelectorAll('.kebab-size-select').forEach(select => {
-            select.value = ""; // For Kebabs
-        });
-        document.querySelectorAll('.selected-item-quantity').forEach(input => {
-            input.value = 1; // For Kebabs
-        });
-        document.querySelectorAll('.customization-options input[type="checkbox"]').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        document.querySelectorAll('.customization-options textarea.item-notes').forEach(textarea => {
-            textarea.value = '';
-        });
-        */
+        // Clear all relevant customer detail inputs as well
+        customerNameInput.value = '';
+        customerEmailInput.value = '';
+        customerPhoneInput.value = '';
+        deliveryAddressInput.value = '';
+        instructionsInput.value = '';
+        
+        window.location.href = 'https://lubo-kebab-app-1.onrender.com/success.html'; // Redirect to success page
 =======
-        // No need to reset individual quantity inputs for drinks/sides
-        // as they no longer have them in the new HTML structure.
-        // Kebab modal state is reset on its `openKebabCustomizationModal` call.
+        // Also clear inputs on successful order
+        // Note: Individual item quantity inputs are no longer present for drinks/sides in the new HTML.
+        // Their quantity is managed by addItemToCart (incrementing on each "Add" click).
+        // Kebab modal quantities are reset when the modal opens.
 
+        // Clear customer detail inputs
+        customerNameInput.value = '';
+        customerEmailInput.value = '';
+        customerPhoneInput.value = '';
+        deliveryAddressInput.value = '';
+        instructionsInput.value = '';
+
+        window.location.href = 'https://lubo-kebab-app-1.onrender.com/success.html'; // Redirect to success page
 >>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
-
-        window.location.href = 'https://Lubo-Kebab-App.onrender.com/success.html'; // Redirect to success page on successful cash order (Absolute path)
       } else {
-        const errorResult = await response.json();
-        showMessageModal('Order Failed', "❌ Failed to send order: " + (errorResult.message || "Unknown error"), 'error');
-        console.error("Cash order server error:", errorResult);
+        const errorData = await response.json();
+        showMessageModal('Order Failed', '❌ Order failed: ' + (errorData.message || 'An unknown error occurred.'), 'error');
+        console.error('Cash order failed:', errorData);
       }
-    } catch (error) {
-      showMessageModal('Network Error', "🚨 An error occurred while placing the cash order. Please check your internet connection and try again.", 'error');
-      console.error("Cash order fetch error:", error);
+    } catch (err) {
+      showMessageModal('Network Error', '🚨 An unexpected network error occurred while placing your order. Please check your internet connection and try again.', 'error');
+      console.error('Fetch error during cash order:', err);
     } finally {
-        // Re-enable the button if for some reason redirection didn't happen
-        if (placeOrderBtn && !window.location.href.includes('success.html')) {
+        // Re-enable button regardless of success/failure
+        if (placeOrderBtn) {
             placeOrderBtn.disabled = false;
             placeOrderBtn.textContent = '🧾 Place Order';
         }
@@ -893,219 +894,35 @@ if (orderForm) {
   });
 }
 
-<<<<<<< HEAD
-// Preview Button Logic (NOW USING CANVAS)
-=======
-// Preview Button Logic
->>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
-document.querySelectorAll('.preview-btn').forEach(button => {
-    button.addEventListener('click', () => {
-        const imageUrl = button.dataset.imageUrl;
-        const imageTitle = button.dataset.imageTitle;
-
-<<<<<<< HEAD
-        if (!modalCanvas || !modalCtx || !imageModalOverlay || !modalImageTitle) {
-            console.error('Modal canvas elements not found for image preview.');
-            showMessageModal('Error', 'Image preview is not available.', 'error');
-            return;
-        }
-
-        modalImageTitle.textContent = imageTitle;
-        imageModalOverlay.style.display = 'flex'; // Use flex to center content
-        document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
-
-        // Clear previous drawing on canvas
-        modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
-
-        const img = new Image();
-        img.crossOrigin = 'anonymous'; // Important for loading images from different origins
-
-        img.onload = () => {
-            // Calculate aspect ratios
-            const canvasAspectRatio = modalCanvas.width / modalCanvas.height;
-            const imageAspectRatio = img.width / img.height;
-
-            let drawWidth = modalCanvas.width;
-            let drawHeight = modalCanvas.height;
-            let offsetX = 0;
-            let offsetY = 0;
-
-            if (imageAspectRatio > canvasAspectRatio) {
-                // Image is wider than canvas, scale to fit width
-                drawHeight = modalCanvas.width / imageAspectRatio;
-                offsetY = (modalCanvas.height - drawHeight) / 2;
-            } else {
-                // Image is taller than canvas, scale to fit height
-                drawWidth = modalCanvas.height * imageAspectRatio;
-                offsetX = (modalCanvas.width - drawWidth) / 2;
-            }
-
-            modalCtx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
-        };
-
-        img.onerror = () => {
-            console.error('Failed to load image for canvas:', imageUrl);
-            // Draw a fallback message on the canvas
-            modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height); // Clear again
-            modalCtx.fillStyle = '#666'; // Text color
-            modalCtx.font = '20px Arial';
-            modalCtx.textAlign = 'center';
-            modalCtx.textBaseline = 'middle';
-            modalCtx.fillText('Image Unavailable', modalCanvas.width / 2, modalCanvas.height / 2);
-            showMessageModal('Image Error', 'Image for "' + imageTitle + '" could not be loaded. Showing placeholder.', 'error');
-        };
-
-        img.src = imageUrl;
-=======
-        if (modalImage && imageModalOverlay && modalImageTitle) {
-            modalImage.src = imageUrl;
-            modalImageTitle.textContent = imageTitle;
-            imageModalOverlay.style.display = 'flex'; // Use flex to center content
-
-            // Add an onerror handler to the modal image itself for better debugging
-            modalImage.onerror = () => {
-                console.error('Failed to load image:', imageUrl);
-                // Set a fallback image if the primary one fails
-                modalImage.src = 'https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';
-                modalImageTitle.textContent = 'Image Unavailable'; // Update title for fallback
-                showMessageModal('Image Error', 'Image for "' + imageTitle + '" could not be loaded. Showing placeholder.', 'error'); // Use custom modal
-            };
-
-        } else {
-            console.error('Modal elements not found for image preview.');
-        }
->>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
-    });
-});
-
-// Close image modal when close button is clicked
-if (imageModalCloseBtn) {
-    imageModalCloseBtn.addEventListener('click', () => {
-        if (imageModalOverlay) {
-            imageModalOverlay.style.display = 'none';
-<<<<<<< HEAD
-            document.body.style.overflow = ''; // Restore scrolling
-            // Clear canvas content when closing
-            if (modalCtx) {
-                modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
-            }
-            modalImageTitle.textContent = ''; // Clear title
-=======
-            // Clear image source and title when closing
-            modalImage.src = '';
-            modalImageTitle.textContent = '';
-            // Remove onerror/onload handlers to prevent memory leaks/unexpected behavior
-            modalImage.onerror = null;
-            modalImage.onload = null;
->>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
-        }
-    });
-}
-
-// Close image modal when clicking outside the image content
-if (imageModalOverlay) {
-    imageModalOverlay.addEventListener('click', (event) => {
-        // Check if the click occurred directly on the overlay, not on the content
-        if (event.target === imageModalOverlay) {
-            imageModalOverlay.style.display = 'none';
-<<<<<<< HEAD
-            document.body.style.overflow = '';
-            // Clear canvas content when closing
-            if (modalCtx) {
-                modalCtx.clearRect(0, 0, modalCanvas.width, modalCanvas.height);
-            }
-            modalImageTitle.textContent = ''; // Clear title
-=======
-            // Clear image source and title when closing
-            modalImage.src = '';
-            modalImageTitle.textContent = '';
-            // Remove onerror/onload handlers
-            modalImage.onerror = null;
-            modalImage.onload = null;
->>>>>>> 163e7c4194f2f26b4688a4db84c0e457b4bd5a55
-        }
-    });
-}
-
-
-// Live clock functionality
+// === Live Clock and Music Controls ===
 function updateClock() {
-  const liveClockElement = document.getElementById('liveClock');
-  if (liveClockElement) {
-    liveClockElement.textContent = new Date().toLocaleTimeString();
-  }
+    const liveClockElement = document.getElementById('liveClock');
+    if (liveClockElement) {
+        liveClockElement.textContent = new Date().toLocaleTimeString();
+    }
 }
-setInterval(updateClock, 1000);
-updateClock();
+setInterval(updateClock, 1000); // Update every second
+updateClock(); // Initial call
 
-// Music toggle functionality
 const music = document.getElementById('bg-music');
 const playBtnMusic = document.getElementById('playBtn');
 const pauseBtnMusic = document.getElementById('pauseBtn');
 
 if (playBtnMusic) {
     playBtnMusic.addEventListener('click', () => {
-        if (music) music.play();
+        music.play();
         playBtnMusic.style.display = 'none';
-        if (pauseBtnMusic) pauseBtnMusic.style.display = 'inline-block';
+        pauseBtnMusic.style.display = 'inline-block';
     });
 }
 
 if (pauseBtnMusic) {
     pauseBtnMusic.addEventListener('click', () => {
-        if (music) music.pause();
+        music.pause();
         playBtnMusic.style.display = 'inline-block';
-        if (pauseBtnMusic) pauseBtnMusic.style.display = 'none';
+        pauseBtnMusic.style.display = 'none';
     });
 }
 
-
-// Opening Status Checker functionality
-function checkOpenStatus() {
-  const now = new Date();
-  const day = now.getDay();
-  const hour = now.getHours();
-  const minute = now.getMinutes();
-  const totalMinutes = hour * 60 + minute;
-
-  const schedule = {
-    0: { open: 660, close: 1380 }, // Sunday 11:00 AM - 11:00 PM
-    1: { open: 660, close: 1380 }, // Monday 11:00 AM - 11:00 PM
-    2: { open: 660, close: 1380 }, // Tuesday 11:00 AM - 11:00 PM
-    3: { open: 660, close: 1380 }, // Wednesday 11:00 AM - 11:00 PM
-    4: { open: 660, close: 1380 }, // Thursday 11:00 AM - 11:00 PM
-    5: { open: 660, close: 1560 }, // Friday 11:00 AM - 02:00 AM (next day)
-    6: { open: 660, close: 1560 }  // Saturday 11:00 AM - 02:00 AM (next day)
-  };
-
-  const today = schedule[day];
-  let isOpen = false;
-
-  // Handle crossing midnight for Friday and Saturday
-  if (today.close < today.open) {
-    isOpen = totalMinutes >= today.open || totalMinutes < today.close;
-  } else {
-    isOpen = totalMinutes >= today.open && totalMinutes < today.close;
-  }
-
-  const statusEl = document.getElementById("openStatus");
-  if (statusEl) {
-    if (isOpen) {
-      statusEl.textContent = "✅ We are OPEN!";
-      statusEl.style.color = "green";
-    } else {
-      statusEl.textContent = "❌ Sorry, we're CLOSED.";
-      statusEl.style.color = "red";
-    }
-  }
-}
-checkOpenStatus();
-setInterval(checkOpenStatus, 60000);
-
-// Logout button logic for index.html
-if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('isLoggedIn'); // Clear the login flag
-        window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html'; // Redirect to login page (Absolute path)
-    });
-}
+// Initial update to display cart when the page loads
+document.addEventListener('DOMContentLoaded', updateCartDisplay);
