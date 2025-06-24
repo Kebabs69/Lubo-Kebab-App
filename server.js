@@ -31,7 +31,7 @@ if (!process.env.STRIPE_WEBHOOK_SECRET) {
     process.exit(1);
 }
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-    logger.error("❌ EMAIL_USER or EMAIL_PASS is NOT LOADED. Email functionality may be impaired.");
+    logger.warn("⚠️ EMAIL_USER or EMAIL_PASS is NOT LOADED. Email functionality may be impaired.");
     // Don't exit, as email is not strictly critical for basic server operation, but log severe warning.
 }
 if (!process.env.YOUR_DOMAIN) {
@@ -130,9 +130,14 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                 };
 
                 try {
-                    await transporter.sendMail(ownerEmail);
-                    await transporter.sendMail(customerEmail);
-                    logger.info("[EMAIL] Payment confirmation emails sent successfully.");
+                    // Check if transporter is defined before using it
+                    if (transporter) {
+                        await transporter.sendMail(ownerEmail);
+                        await transporter.sendMail(customerEmail);
+                        logger.info("[EMAIL] Payment confirmation emails sent successfully.");
+                    } else {
+                        logger.warn("[EMAIL] Email transporter not initialized. Skipping payment confirmation emails.");
+                    }
                 } catch (emailError) {
                     logger.error("❌ [EMAIL] Error sending payment confirmation emails:", emailError);
                 }
@@ -162,22 +167,22 @@ app.use((req, res, next) => {
 // Serve static files from the 'public' directory
 // This line tells Express to look for static files (like index.html, CSS, JS, images)
 // inside the 'public' folder when a request comes in.
-// Requests like /index.html, /css/style.css, /js/main.js will be served by this.
+// Requests like /css/style.css, /js/main.js will be served by this.
 app.use(express.static(path.join(__dirname, 'public')));
 
-/*
-// IMPORTANT: Catch-all route to serve index.html for any client-side routing.
-// This MUST come AFTER all API routes and express.static to ensure API calls
-// are handled first, and only unmatched routes fall back to serving the main HTML.
-// We are temporarily commenting this out to debug the "Missing parameter name" error.
-app.get('*', (req, res) => {
-    logger.debug(`[STATIC] Serving index.html for path: ${req.url}`);
+
+// NEW FIX: Explicitly serve index.html for the root path
+// This route should come AFTER express.static but BEFORE any broad catch-all (if you re-add one)
+// and before centralized error handling.
+app.get('/', (req, res) => {
+    logger.debug(`[STATIC] Serving index.html for root path: ${req.url}`);
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
-*/
 
 
 // Nodemailer transporter setup
+// Moved this block to *after* the routes that need it are defined,
+// but it is important to define it before it is used in email sending functions.
 const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -200,14 +205,19 @@ const transporter = nodemailer.createTransport({
  */
 app.get("/test-email", async (req, res) => {
     try {
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: process.env.EMAIL_USER,
-            subject: "✅ Test Email from Lubo's Kebab Server",
-            text: "This is a test email sent from your Node.js server.",
-        });
-        logger.info("[EMAIL] Test email sent successfully!");
-        res.status(200).send("Test email sent successfully!");
+        if (transporter) { // Check if transporter is defined
+            await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: process.env.EMAIL_USER,
+                subject: "✅ Test Email from Lubo's Kebab Server",
+                text: "This is a test email sent from your Node.js server.",
+            });
+            logger.info("[EMAIL] Test email sent successfully!");
+            res.status(200).send("Test email sent successfully!");
+        } else {
+            logger.warn("[EMAIL] Email transporter not initialized. Cannot send test email.");
+            res.status(500).send("Email service not available.");
+        }
     } catch (error) {
         logger.error("❌ [EMAIL] Error sending test email:", error);
         res.status(500).send("Failed to send test email.");
@@ -282,13 +292,18 @@ app.post("/register", async (req, res, next) => {
             `,
         };
 
-        transporter.sendMail(mailOptions, (mailErr, info) => {
-            if (mailErr) {
-                logger.error("❌ [EMAIL] Error sending welcome email:", mailErr);
-            } else {
-                logger.info("[EMAIL] Welcome email sent:", info.response);
-            }
-        });
+        if (transporter) { // Check if transporter is defined before using it
+            transporter.sendMail(mailOptions, (mailErr, info) => {
+                if (mailErr) {
+                    logger.error("❌ [EMAIL] Error sending welcome email:", mailErr);
+                } else {
+                    logger.info("[EMAIL] Welcome email sent:", info.response);
+                }
+            });
+        } else {
+            logger.warn("[EMAIL] Email transporter not initialized. Skipping welcome email.");
+        }
+
 
         res.status(201).json({ message: "User registered successfully!" });
 
@@ -421,14 +436,14 @@ app.post("/cash-order", async (req, res, next) => {
     };
 
     try {
-        if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        if (process.env.EMAIL_USER && process.env.EMAIL_PASS && transporter) {
             await transporter.sendMail(ownerMailOptions);
             if (sanitizedCustomer.email !== 'N/A') { // Only send to customer if email is valid
                 await transporter.sendMail(customerMailOptions);
             }
             logger.info("[EMAIL] Cash order confirmation emails sent.");
         } else {
-            logger.warn("[EMAIL] Email credentials not set. Skipping cash order email confirmations.");
+            logger.warn("[EMAIL] Email credentials or transporter not set. Skipping cash order email confirmations.");
         }
         res.status(200).send("Cash order received and emails processed!");
     } catch (error) {
