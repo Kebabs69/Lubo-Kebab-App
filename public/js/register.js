@@ -1,5 +1,5 @@
 // This script contains logic specific to the register.html page.
-// It will handle the form submission and redirect after successful registration.
+// It will handle the form submission and redirection after successful registration.
 
 // Get elements from the register form
 const registerEmailInput = document.getElementById('regEmail');
@@ -36,7 +36,7 @@ if (registerSubmitBtn) {
 
     try {
         // Send registration data to the server
-        const response = await fetch('https://Lubo-Kebab-App.onrender.com/register', { // Absolute URL
+        const response = await fetch('https://lubo-kebab-app-1.onrender.com/register', { // CORRECTED URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ if (registerSubmitBtn) {
             if (registrationSuccessMessage) registrationSuccessMessage.textContent = data.message || "Registration successful!"; // Display success message
             
             // Redirect to the login page after successful registration
-            window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html'; // Absolute URL
+            window.location.href = 'https://lubo-kebab-app-1.onrender.com/login.html'; // CORRECTED: Absolute URL
             
             // Clear form fields after successful registration
             registerEmailInput.value = '';

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login to Lubo's Kebab</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==
+" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://js.stripe.com/v3/"></script>
     <style>
         /* Your Original Styles for login.html (preserved from previous uploads) */
@@ -18,6 +21,7 @@
             min-height: 100vh;
             margin: 0;
             color: #333;
+            position: relative; /* For music controls */
         }
         .login-container {
             background-color: rgba(255, 255, 255, 0.95);
@@ -27,28 +31,39 @@
             width: 100%;
             max-width: 400px;
             text-align: center;
+            animation: fadeIn 0.8s ease-out;
+            position: relative; /* For error message positioning */
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         h2 {
-            color: #d2691e;
+            font-family: 'Oswald', sans-serif;
+            color: #A32A29;
             margin-bottom: 30px;
-            font-size: 2em;
+            font-size: 2.2em;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         input[type="email"],
         input[type="password"] {
             width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 12px 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1.05em;
+            font-family: 'Inter', sans-serif;
         }
         button {
-            background-color: #d2691e;
+            background-color: #A32A29;
             color: white;
-            font-size: 18px;
-            font-weight: bold;
-            width: 100%;
-            padding: 18px;
+            padding: 14px 20px;
             border: none;
             border-radius: 12px;
             cursor: pointer;
@@ -73,9 +88,67 @@
             margin-top: 10px;
             display: none; /* Hidden by default */
         }
+
+        /* Music Controls */
+        .music-controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .music-controls button {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+        }
+        .music-controls button:hover {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 600px) {
+            .login-container {
+                margin: 20px;
+                padding: 30px;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            input[type="email"],
+            input[type="password"],
+            button {
+                font-size: 1em;
+                padding: 10px 15px;
+            }
+            .music-controls {
+                bottom: 10px;
+                right: 10px;
+            }
+            .music-controls button {
+                padding: 6px 10px;
+                font-size: 0.8em;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Background Music -->
+    <audio id="bg-music" loop src="/assets/background-music.mp3">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="music-controls">
+        <button id="playBtn" title="Play Background Music"><i class="fas fa-play"></i> Play</button>
+        <button id="pauseBtn" style="display: none;" title="Pause Background Music"><i class="fas fa-pause"></i> Pause</button>
+    </div>
+
     <div class="login-container">
         <h2>Login to Your Account</h2>
         <form id="loginForm">
@@ -89,7 +162,7 @@
         <p class="link"><a href="/index.html">Back to Home</a></p> <!-- Absolute path -->
     </div>
 
-    <!-- IMPORTANT: Use absolute path for login.js and add a cache-buster -->
+    <!-- IMPORTANT: Link to the specific login.js file -->
     <script src="/js/login.js?v=202406161400"></script> 
 </body>
 </html>

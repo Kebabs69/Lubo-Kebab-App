@@ -9,269 +9,183 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==
+" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- ADDED: Stripe JS for consistency, though not directly used on this page for payment -->
     <script src="https://js.stripe.com/v3/"></script>
 
     <style>
-        /* Define consistent color variables (matching index.html and login.html) */
-        :root {
-            --primary-color: #A32A29; /* Deep Red/Maroon for Kebab theme - professional */
-            --secondary-color: #262626; /* Dark Grey for text and accents */
-            --accent-color: #FFD700; /* Gold/Yellow for highlights */
-            --light-bg: #F8F8F8; /* Very light grey for main backgrounds */
-            --dark-bg: #1A1A1A; /* Dark background for footer/navbar contrast */
-            --text-color-light: #F0F0F0; /* Light text for dark backgrounds */
-            --text-color-dark: #333333; /* Dark text for light backgrounds */
-            --border-color: #E0E0E0; /* Subtle light border */
-            --shadow-light: 0 4px 15px rgba(0,0,0,0.08); /* Light, soft shadow */
-            --shadow-strong: 0 8px 25px rgba(0,0,0,0.2); /* Stronger shadow for emphasis */
-            --border-radius-card: 12px;
-            --border-radius-button: 8px;
-            --transition-speed: 0.3s ease;
-        }
-
+        /* General Body and Container Styles */
         body {
             font-family: 'Inter', sans-serif;
-            background: url('/assets/kebab-b.jpg') no-repeat center center/cover fixed; /* Consistent background */
+            background: url('/assets/kebab-b.jpg') no-repeat center center/cover fixed; /* Absolute path */
             background-size: cover;
             display: flex;
-            flex-direction: column; /* Changed to column to align content vertically */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            color: var(--text-color-dark);
-            padding: 20px; /* Add padding for smaller screens */
+            color: #333;
+            position: relative; /* For music controls */
         }
 
-        /* Hero Section (consistent with login.html if you want a top banner, otherwise remove) */
-        .hero-section {
-            background: rgba(0, 0, 0, 0.6); /* Overlay for readability */
-            color: white;
-            text-align: center;
-            padding: 80px 20px;
-            margin-bottom: 20px;
-            width: 100%; /* Ensure it spans full width */
-            box-sizing: border-box; /* Include padding in width */
-        }
-
-        .hero-section h1 {
-            font-family: 'Oswald', sans-serif;
-            font-size: 3em;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-        }
-
-        .hero-section p {
-            font-size: 1.3em;
-            max-width: 700px;
-            margin: 0 auto 20px;
-        }
-
-        /* Form Container - Centralized and styled (consistent with login.html) */
         .form-container {
-            background-color: rgba(255, 255, 255, 0.98); /* Almost opaque white */
-            padding: 45px; /* More generous padding */
-            max-width: 450px; /* Consistent width */
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             width: 100%;
-            margin: 0 auto; /* Center the form */
-            border-radius: var(--border-radius-card); /* Consistent rounded corners */
-            box-shadow: var(--shadow-strong); /* Consistent shadow */
-            border: 1px solid var(--border-color);
-            transition: transform var(--transition-speed);
-            animation: fadeInScaleUp var(--transition-speed); /* Subtle animation on load */
-        }
-
-        @keyframes fadeInScaleUp {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .form-container:hover {
-            transform: translateY(-5px);
-        }
-
-        .form-container h2 {
-            font-family: 'Oswald', sans-serif; /* Use Oswald for headings */
-            font-size: 2.2em;
-            color: var(--primary-color);
+            max-width: 450px;
             text-align: center;
+            animation: slideIn 0.7s ease-out;
+            position: relative; /* For error/success message positioning */
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-family: 'Oswald', sans-serif;
+            color: #A32A29; /* Primary red */
             margin-bottom: 30px;
-            position: relative;
-            padding-bottom: 10px;
-        }
-        .form-container h2::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 3px;
-            background-color: var(--accent-color);
-            margin: 10px auto 0;
-            border-radius: 2px;
+            font-size: 2.2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .form-container input[type="email"],
-        .form-container input[type="password"] {
+        h2 .fas {
+            font-size: 1.1em;
+            color: #262626; /* Dark grey for icon */
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="email"],
+        input[type="password"] {
             width: 100%;
-            padding: 14px 18px; /* Improved padding */
-            margin-bottom: 20px; /* Consistent spacing */
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
             font-size: 1.05em;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-button); /* Consistent rounded corners */
-            background-color: var(--light-bg); /* Light background for inputs */
-            transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+            font-family: 'Inter', sans-serif;
         }
 
-        .form-container input[type="email"]:focus,
-        .form-container input[type="password"]:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(163, 42, 41, 0.2); /* Focus ring with primary color */
-        }
-
-        .error, .success-message {
-            text-align: center;
-            margin-top: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9em;
-            font-weight: 500;
-            display: none; /* Hidden by default */
-            padding: 10px;
-            border-radius: var(--border-radius-button);
-        }
-        .error {
-            color: #E74C3C; /* Brighter red for errors */
-            background-color: #FEE;
-            border: 1px solid #FCC;
-        }
-        .success-message {
-            color: #28A745; /* Green for success */
-            background-color: #E6FFE6;
-            border: 1px solid #BFE;
-        }
-
-        .register-btn { /* Consistent button styling */
-            width: 100%;
-            padding: 15px 20px;
-            background-color: var(--primary-color);
+        .register-btn {
+            background-color: #A32A29;
             color: white;
+            padding: 14px 20px;
             border: none;
-            border-radius: var(--border-radius-button);
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 1.15em;
-            font-weight: 600;
-            transition: background-color var(--transition-speed), transform var(--transition-speed), box-shadow var(--transition-speed);
-            box-shadow: var(--shadow-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            transition: background-color 0.3s ease;
+            font-size: 1.1em;
+            font-weight: bold;
             display: flex; /* For icon alignment */
             align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-top: 10px;
         }
 
         .register-btn:hover {
             background-color: #8D2524; /* Darker shade on hover */
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-strong);
-        }
-        .register-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        p.link { /* Consistent link styling */
-            margin-top: 25px;
+        /* Message Styles */
+        .error {
+            color: #dc3545; /* Bootstrap danger red */
+            margin-top: 10px;
             font-size: 0.95em;
-            color: var(--secondary-color);
+            display: none; /* Hidden by default */
+        }
+
+        .success-message {
+            color: #28a745; /* Bootstrap success green */
+            margin-top: 10px;
+            font-size: 0.95em;
+            display: none; /* Hidden by default */
+        }
+
+        /* Link Styles */
+        p.link {
+            margin-top: 20px;
+            font-size: 0.95em;
         }
 
         p.link a {
-            color: var(--primary-color);
+            color: #d2691e; /* Orange-brown for links */
             text-decoration: none;
-            font-weight: 600;
-            transition: color var(--transition-speed), text-decoration var(--transition-speed);
+            font-weight: bold;
+            transition: text-decoration 0.3s ease;
         }
 
         p.link a:hover {
             text-decoration: underline;
-            color: #8D2524;
         }
 
-        /* Live Clock and Music Controls (consistent with login.html) */
-        #liveClock {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: var(--accent-color);
-            color: var(--secondary-color);
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 1.1em;
-            box-shadow: var(--shadow-light);
-            z-index: 999;
-            border: 1px solid #FFC107;
-        }
+        /* Music Controls */
         .music-controls {
-            margin: 15px 20px;
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 999;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
         }
         .music-controls button {
-            background-color: var(--primary-color);
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
             color: white;
             border: none;
-            padding: 8px 15px;
-            font-size: 1em;
-            border-radius: var(--border-radius-button);
+            border-radius: 5px;
+            padding: 8px 12px;
             cursor: pointer;
-            transition: background-color var(--transition-speed);
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
         }
         .music-controls button:hover {
-            background-color: #8D2524;
+            background-color: rgba(0, 0, 0, 0.7);
         }
 
-
-        /* Responsive Adjustments (consistent with login.html) */
+        /* Responsive Adjustments */
         @media (max-width: 600px) {
             .form-container {
+                margin: 20px;
                 padding: 30px;
-                margin: 0 15px;
             }
-            .form-container h2 {
+            h2 {
                 font-size: 1.8em;
-                margin-bottom: 20px;
             }
-            .form-container input,
+            input[type="email"],
+            input[type="password"],
             .register-btn {
-                padding: 12px;
                 font-size: 1em;
-            }
-            p.link {
-                margin-top: 20px;
-                font-size: 0.9em;
-            }
-            #liveClock {
-                font-size: 0.9em;
-                padding: 8px 14px;
-                top: 10px;
-                right: 10px;
+                padding: 10px 15px;
             }
             .music-controls {
-                top: 10px;
-                left: 10px;
+                bottom: 10px;
+                right: 10px;
+            }
+            .music-controls button {
+                padding: 6px 10px;
+                font-size: 0.8em;
             }
         }
     </style>
 </head>
 <body>
-    <div id="liveClock"></div>
-    <audio id="bg-music" loop src="/assets/music.mp3"></audio> <!-- Absolute path -->
+    <!-- Background Music -->
+    <audio id="bg-music" loop src="/assets/background-music.mp3">
+        Your browser does not support the audio element.
+    </audio>
+
     <div class="music-controls">
         <button id="playBtn" title="Play Background Music"><i class="fas fa-play"></i> Play</button>
         <button id="pauseBtn" style="display: none;" title="Pause Background Music"><i class="fas fa-pause"></i> Pause</button>
