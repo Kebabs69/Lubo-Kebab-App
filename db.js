@@ -1,74 +1,52 @@
 // db.js
-
 const { Pool } = require('pg');
+const dotenv = require('dotenv');
 
-// Use process.env.DATABASE_URL for Render deployment
-// Otherwise, use local connection details for development
+// Load environment variables from .env file (for local development)
+// On Render, environment variables are set directly in the dashboard.
+dotenv.config();
+
+// Create a new PostgreSQL pool instance.
+// It will use the DATABASE_URL environment variable for connection.
+// This environment variable should be set in your Render service settings.
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
+    // Required for Render's PostgreSQL if you're not using custom certificates.
+    // In production, ensure this is handled securely.
     ssl: {
-        rejectUnauthorized: false // Required for Render's managed PostgreSQL to connect
+        rejectUnauthorized: false
     }
 });
 
+/**
+ * Initializes the database by creating the 'users' table if it doesn't already exist.
+ * This function should be called once when the server starts.
+ */
 async function initializeDatabase() {
     try {
-        await pool.connect(); // Test connection
-        console.log('Connected to PostgreSQL database');
-
-        // Create Users Table
-        // Removed 'username' column as it's not used in registration/login logic in server.js
-        const createUsersTableQuery = `
+        await pool.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 email VARCHAR(255) UNIQUE NOT NULL,
-                password VARCHAR(255) NOT NULL
+                password VARCHAR(255) NOT NULL,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );
-        `;
-        await pool.query(createUsersTableQuery);
-        console.log('Users table initialized or already exists.');
-
-        // Example: Create Products Table (if your app has one)
-        const createProductsTableQuery = `
-            CREATE TABLE IF NOT EXISTS products (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NOT NULL,
-                description TEXT,
-                price DECIMAL(10, 2) NOT NULL,
-                image_url TEXT
-            );
-        `;
-        await pool.query(createProductsTableQuery);
-        console.log('Products table initialized or already exists.');
-
-        // Example: Create Orders Table (if your app has one)
-        const createOrdersTableQuery = `
-            CREATE TABLE IF NOT EXISTS orders (
-                id SERIAL PRIMARY KEY,
-                user_id INTEGER REFERENCES users(id),
-                order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                total_amount DECIMAL(10, 2) NOT NULL,
-                status VARCHAR(50) DEFAULT 'pending'
-            );
-        `;
-        await pool.query(createOrdersTableQuery);
-        console.log('Orders table initialized or already exists.');
-
-        // Add other table creation queries here if you have more
-
-        console.log('PostgreSQL database schema initialized or already exists.');
-
+        `);
+        console.log("✅ Database table 'users' ensured to exist.");
     } catch (err) {
-        console.error('Error connecting to PostgreSQL or initializing database:', err);
-        // Depending on your app, you might want to exit or handle gracefully
-        // process.exit(1);
+        console.error("❌ Error connecting to PostgreSQL or initializing database:", err);
+        // Rethrow the error so the server doesn't start if DB connection fails
+        throw err;
     }
 }
 
-// Export functions for interacting with the database
+/**
+ * Executes a SQL query against the database pool.
+ * @param {string} text - The SQL query string.
+ * @param {Array} [params] - Optional parameters for the query.
+ * @returns {Promise<Object>} The result object from the pg query.
+ */
 module.exports = {
-    pool,
+    query: (text, params) => pool.query(text, params),
     initializeDatabase,
-    // THIS IS THE CRITICAL FIX: Export the query function from the pool
-    query: (text, params) => pool.query(text, params), 
 };
