@@ -36,7 +36,7 @@ if (registerSubmitBtn) {
 
     try {
         // Send registration data to the server
-        const response = await fetch('https://lubo-kebab-app-1.onrender.com/register', { // Corrected URL
+        const response = await fetch('https://Lubo-Kebab-App.onrender.com/register', { // Absolute URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ if (registerSubmitBtn) {
             if (registrationSuccessMessage) registrationSuccessMessage.textContent = data.message || "Registration successful!"; // Display success message
             
             // Redirect to the login page after successful registration
-            window.location.href = 'https://lubo-kebab-app-1.onrender.com/login.html'; // Corrected URL
+            window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html'; // Absolute URL
             
             // Clear form fields after successful registration
             registerEmailInput.value = '';
@@ -76,7 +76,6 @@ if (registerSubmitBtn) {
     }
   }); 
 } 
-
 
 // === Live Clock and Music Controls ===
 function updateClock() {
