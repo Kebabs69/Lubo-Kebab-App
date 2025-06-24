@@ -1,5 +1,6 @@
 // server.js
 const path = require("path");
+const fs = require('fs').promises; // <-- NEW: Import Node's file system module with promises
 const { query, initializeDatabase } = require("./db");
 const dotenv = require("dotenv");
 
@@ -172,13 +173,37 @@ const publicPath = path.join(__dirname, 'public');
 logger.info(`[STATIC] Express will serve static files from: ${publicPath}`);
 app.use(express.static(publicPath));
 
+// TEMPORARY DEBUGGING ROUTE: Check if login.html exists on the server
+app.get('/debug-login-file', async (req, res) => {
+    const loginFilePath = path.join(publicPath, 'login.html');
+    logger.info(`[DEBUG] Attempting to check file existence at: ${loginFilePath}`);
+    try {
+        await fs.access(loginFilePath, fs.constants.F_OK); // Check if file exists and is visible
+        logger.info(`[DEBUG] Successfully accessed login.html at: ${loginFilePath}`);
+        res.status(200).send(`File exists: ${loginFilePath}`);
+    } catch (error) {
+        logger.error(`❌ [DEBUG] Failed to access login.html at: ${loginFilePath}. Error: ${error.message}`);
+        if (error.code === 'ENOENT') {
+            res.status(404).send(`File NOT FOUND at: ${loginFilePath}. Error: ${error.message}`);
+        } else {
+            res.status(500).send(`Error checking file: ${error.message}`);
+        }
+    }
+});
+
+
 // Explicitly serve index.html for the root path
 app.get('/', (req, res) => {
     logger.debug(`[STATIC] Serving index.html for root path: ${req.url}`);
     res.sendFile(path.join(publicPath, 'index.html'), (err) => {
         if (err) {
             logger.error(`❌ [STATIC] Error serving index.html: ${err.message}`);
-            res.status(500).send('Error loading index.html');
+            // Check if the error is due to file not found and send 404, otherwise 500
+            if (err.code === 'ENOENT') {
+                res.status(404).send('Index page not found'); // More specific 404
+            } else {
+                res.status(500).send('Error loading index.html');
+            }
         }
     });
 });
