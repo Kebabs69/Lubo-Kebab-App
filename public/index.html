@@ -11,8 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==
-" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
    /* General Reset & Base Styles */
    * {
@@ -21,1238 +20,1764 @@
       padding: 0;
     }
 
+    :root {
+      --primary-color: #d2691e; /* Earthy orange/brown for branding */
+      --accent-color: #ffc107; /* Yellow for highlights */
+      --text-color: #333;
+      --light-bg: #fdf5e6; /* Light cream background */
+      --dark-bg: #2c3e50; /* Darker background for contrast */
+      --border-color: #e3e3e3;
+      --box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      --border-radius: 12px;
+    }
+
     body {
       font-family: 'Inter', sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background-color: #f4f4f4;
+      background: url('/assets/kebab-b.jpg') no-repeat center center/cover fixed; /* Changed to fixed for consistency, absolute path */
+      padding: 0 10px;
+      min-height: 100vh; /* Changed to min-height for flexible content */
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      color: var(--text-color);
+    }
+
+    header, footer {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    #top {
+      font-size: 46px;
+      color: red;
+    }
+
+    #top1 {
+      font-size: 21px;
+      color: black;
+    }
+
+    #navbar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0px;
+      margin: 0px 0;
+      background-color: var(--primary-color); /* Added background color */
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Added shadow */
+    }
+
+    #navbar img {
+      width: 150px;
+      margin-top: -10px;
+      margin-bottom: 5px; /* Adjusted margin */
+    }
+
+    #navcontent {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      padding-bottom: 10px; /* Added padding */
+      flex-wrap: wrap; /* Allow wrapping on small screens */
+      justify-content: center; /* Center items when wrapped */
+    }
+
+    #navcontent a {
+      text-decoration: none;
+      color: white;
+      padding: 8px 15px; /* Adjusted padding */
+      border-radius: 20px; /* More rounded */
+      transition: background-color 0.3s ease, transform 0.2s ease;
+      font-weight: 600; /* Bolder font */
+    }
+
+    #navcontent a:hover {
+      background-color: var(--accent-color); /* Changed to accent color */
+      transform: translateY(-2px);
+      color: var(--text-color); /* Changed text color on hover */
+    }
+    /* Style for the new logout button */
+    #logoutBtn {
+        text-decoration: none;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        background: none; /* Make it look like a link */
+        font-family: 'Inter', sans-serif; /* Match overall font */
+    }
+    #logoutBtn:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+        color: var(--text-color);
+    }
+
+
+    #container1 {
+      text-align: center;
+      padding: 50px 0;
+    }
+
+    .btn {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: 3px solid white;
+      border-radius: 15px;
+      background-color: yellow;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: red;
+    }
+
+    form {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+      align-items: flex-start; /* CRITICAL FIX: Align items to the top, preventing vertical stretching */
     }
 
     .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
+      flex: 1;
+      min-width: 280px;
+      border: 1px solid #e3e3e3; /* RE-ADDED: Base border for containers */
+      border-radius: 16px; /* RE-ADDED: Border radius for containers */
+      padding: 25px; /* RE-ADDED: Padding for containers */
+      background-color: #ffffff; /* RE-ADDED: Background for containers */
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07); /* RE-ADDED: Shadow for containers */
+    }
+
+    /* Styles for images integrated directly into containers */
+    .container img {
+        max-width: 100%; /* Make images responsive initially */
+        height: auto;
+        border-radius: 12px; /* Rounded corners for images */
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Soft shadow for images */
+        margin: 15px 0; /* Vertical spacing around images */
+    }
+
+
+    label, input, textarea, select { /* Added select here to apply default padding */
+      display: block;
       width: 100%;
+      margin: 10px 0;
     }
 
-    /* Header */
-    header {
-      background-color: #A32A29; /* Deep red for brand */
-      color: white;
-      padding: 1rem 0;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    input[type="checkbox"] {
+      width: auto;
+      display: inline-block;
+      margin-right: 10px;
     }
 
-    header .container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap; /* Allow wrapping on small screens */
+    p.total {
+      font-weight: bold;
+      font-size: 18px;
+      text-align: right;
     }
 
-    .logo {
-      width: 150px; /* Adjust as needed */
-      height: auto;
-    }
-
-    .header-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 10px 0; /* Space out from logo on small screens */
-    }
-
-    .header-content h1 {
-      font-family: 'Oswald', sans-serif; /* Stronger font for brand name */
-      font-size: 2.5rem;
-      margin-bottom: 5px;
-    }
-
-    .header-content p {
-      font-size: 1rem;
-      opacity: 0.9;
-    }
-
-    .header-actions {
-        display: flex;
-        flex-direction: column; /* Stack buttons vertically on small screens */
-        gap: 10px;
-    }
-
-    .header-actions .user-info {
-        font-size: 0.9rem;
-        text-align: center;
-    }
-
-    .header-actions .logout-btn {
-        background-color: #d9534f; /* Red for danger/logout */
+    /* Styles for the new Preview Button */
+    .preview-btn {
+        background-color: #4CAF50; /* Green */
         color: white;
-        padding: 8px 15px;
+        padding: 5px 10px;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        font-size: 14px;
+        margin-left: 10px;
         transition: background-color 0.3s ease;
+        margin-top: 5px; /* Added some space from kebab name for consistency */
     }
-
-    .header-actions .logout-btn:hover {
-        background-color: #c9302c;
-    }
-
-    /* Main Content Layout */
-    .main-content {
-      display: flex;
-      flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
-      padding: 20px;
-      gap: 20px;
-      flex-grow: 1; /* Allow main content to take available space */
-    }
-
-    .menu-section {
-      flex: 3; /* Menu takes more space */
-      min-width: 300px; /* Minimum width before wrapping */
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .menu-section h2 {
-      font-family: 'Oswald', sans-serif;
-      color: #A32A29;
-      margin-bottom: 20px;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 10px;
-    }
-
-    .menu-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 15px;
-      padding-bottom: 15px;
-      border-bottom: 1px dashed #eee;
-    }
-
-    .menu-item:last-child {
-      border-bottom: none;
-    }
-
-    .item-image {
-      width: 80px;
-      height: 80px;
-      border-radius: 8px;
-      object-fit: cover;
-      margin-right: 15px;
-      border: 1px solid #ddd;
-    }
-
-    .item-details {
-      flex-grow: 1;
-    }
-
-    .item-details h3 {
-      font-size: 1.2rem;
-      margin-bottom: 5px;
-      color: #333;
-    }
-
-    .item-details p {
-      font-size: 0.9rem;
-      color: #666;
-    }
-
-    .item-actions {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 5px;
-    }
-
-    .item-price {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #A32A29;
-    }
-
-    .add-to-cart-button,
-    .add-to-cart-modal-trigger-button,
-    .preview-btn {
-      background-color: #4CAF50; /* Green for add to cart */
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 8px 12px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: background-color 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .add-to-cart-button:hover,
-    .add-to-cart-modal-trigger-button:hover,
     .preview-btn:hover {
-      background-color: #45a049;
+        background-color: #45a049;
     }
 
-    .preview-btn {
-        background-color: #007bff; /* Blue for preview */
-        margin-top: 5px;
+    /* Styles for the Modal (Image Popup) */
+    .image-modal-overlay {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 10000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+        justify-content: center; /* Center content horizontally */
+        align-items: center; /* Center content vertically */
+        backdrop-filter: blur(5px); /* Optional blur effect */
     }
 
-    .preview-btn:hover {
-        background-color: #0056b3;
-    }
-
-    /* Cart/Order Summary */
-    .order-summary {
-      flex: 1; /* Cart takes less space */
-      min-width: 280px; /* Minimum width before wrapping */
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      display: flex;
-      flex-direction: column; /* Stack elements vertically */
-      gap: 15px;
-    }
-
-    .order-summary h2 {
-      font-family: 'Oswald', sans-serif;
-      color: #A32A29;
-      margin-bottom: 10px;
-      border-bottom: 2px solid #eee;
-      padding-bottom: 10px;
-    }
-
-    .cart-items {
-      list-style: none;
-      padding: 0;
-      flex-grow: 1; /* Allow cart items to expand */
-      overflow-y: auto; /* Enable scrolling for long carts */
-      max-height: 400px; /* Limit height for scrolling */
-      border-bottom: 1px solid #eee;
-      padding-bottom: 10px;
-      margin-bottom: 10px;
-    }
-
-    .cart-item-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 0;
-        border-bottom: 1px dashed #f0f0f0;
-        font-size: 0.95rem;
-    }
-
-    .cart-item-row:last-child {
-        border-bottom: none;
-    }
-
-    .cart-item-info {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .cart-item-info .item-name {
-        font-weight: bold;
-        color: #333;
-    }
-
-    .cart-item-info .customization-details {
-        font-size: 0.85em;
-        color: #777;
-        margin-top: 2px;
-    }
-
-    .cart-item-quantity-controls {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .cart-item-quantity-controls button {
-        background: none;
-        border: none;
-        color: #A32A29;
-        font-size: 1.2rem;
-        cursor: pointer;
-        padding: 3px;
-        transition: color 0.2s ease;
-    }
-
-    .cart-item-quantity-controls button:hover {
-        color: #d9534f;
-    }
-
-    .cart-item-quantity-controls .quantity-display {
-        font-weight: bold;
-        min-width: 20px;
+    .image-modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        border-radius: 12px;
+        width: 80%; /* Adjust width for desktop */
+        max-width: 700px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        position: relative;
         text-align: center;
     }
 
-    .cart-item-row .remove-item-button {
-        background-color: transparent;
-        color: #d9534f; /* Red for remove */
-        border: none;
-        font-size: 1.2rem;
+    .image-modal-content img {
+        max-width: 100%;
+        height: auto;
+        display: block; /* Remove extra space below image */
+        margin: 0 auto 15px auto; /* Center image within modal */
+        border-radius: 8px;
+    }
+
+    .image-modal-content h4 {
+        margin-bottom: 10px;
+        color: var(--primary-color);
+        font-size: 1.5em;
+    }
+
+    .image-modal-close {
+        color: #aaa;
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 32px;
+        font-weight: bold;
         cursor: pointer;
-        transition: color 0.3s ease;
-        padding: 5px;
-        margin-left: 10px;
     }
 
-    .cart-item-row .remove-item-button:hover {
-        color: #c9302c;
+    .image-modal-close:hover,
+    .image-modal-close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
     }
 
 
-    .cart-total {
+    #container4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 40px;
+    }
+
+    #container4 > div {
+      height: 360px;
       display: flex;
-      justify-content: space-between;
-      font-size: 1.2rem;
+      justify-content: center;
+      align-items: flex-end;
+      background-size: cover;
+      border-radius: 15px;
+      border: 2px solid black;
+    }
+
+    #row4 { background-image: url('https://media.geeksforgeeks.org/wp-content/uploads/20240711123258/jpeg-optimizer_various-meals-western-food-platter-dark-background.jpg'); }
+    #row5 { background-image: url('https://media.geeksforgeeks.org/wp-content/uploads/20240711123257/jpeg-optimizer_2151182491.jpg'); }
+    #row6 { background-image: url('https://media.geeksforgeeks.org/wp-content/uploads/20240711123255/jpeg-optimizer_4744.jpg'); }
+
+    #freebie-banner {
+      background-color: #ffdd57;
+      color: #333;
+      font-size: 20px;
       font-weight: bold;
-      padding-top: 10px;
-      border-top: 2px solid #eee;
-      color: #A32A29;
+      text-align: center;
+      padding: 15px;
+      border-radius: 12px;
+      margin: 20px 0;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      animation: pop-in 0.8s ease-out;
     }
 
-    .order-form {
-      display: flex;
+    @keyframes pop-in {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    #liveClock {
+      position: fixed;
+      top: 10px;
+      right: 15px;
+      background-color: #fff3cd;
+      color: #333;
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      z-index: 9999;
+    }
+
+    /* --- NEW TESTIMONIALS SECTION STYLES --- */
+    #testimonials-section {
+        background-color: var(--light-bg); /* Light background for the section */
+        padding: 50px 20px;
+        margin: 40px auto;
+        max-width: 1000px; /* Max width for content */
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        text-align: center;
+        border: 1px solid var(--border-color);
+    }
+
+    #testimonials-section h2 {
+        font-family: 'Roboto', sans-serif; /* A bold, clean font for titles */
+        font-size: 2.5em;
+        color: var(--primary-color);
+        margin-bottom: 40px;
+        position: relative;
+        display: inline-block; /* For the pseudo-element underline */
+    }
+
+    #testimonials-section h2::after {
+        content: '';
+        display: block;
+        width: 80px; /* Short underline */
+        height: 4px;
+        background-color: var(--accent-color); /* Yellow underline */
+        margin: 10px auto 0;
+        border-radius: 2px;
+    }
+
+    .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+        gap: 30px; /* Space between testimonial cards */
+        padding-top: 20px;
+    }
+
+    .testimonial-card {
+        background-color: #fff;
+        padding: 25px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Softer shadow */
+        text-align: left; /* Align text within card */
+        border: 1px solid #f0f0f0; /* Very light border */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-8px); /* Lift effect on hover */
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* More pronounced shadow on hover */
+    }
+
+    .testimonial-card .stars {
+        color: var(--accent-color); /* Yellow stars */
+        margin-bottom: 15px;
+        font-size: 1.2em; /* Slightly larger stars */
+    }
+
+    .testimonial-card p {
+        font-style: italic;
+        color: #555;
+        line-height: 1.6;
+        margin-bottom: 15px;
+    }
+
+    .testimonial-card .reviewer-name {
+        font-weight: 600;
+        color: var(--primary-color); /* Red/orange name */
+        font-size: 1.1em;
+    }
+    /* --- END NEW TESTIMONIALS SECTION STYLES --- */
+    
+input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  background: #f9f9f9;
+}
+
+/* Kebab Item Styling (Outer Border) */
+.kebab-item {
+    background-color: #ffffff; /* Explicit white background for clarity */
+    border: 1px solid black; /* SOLID BLACK BORDER */
+    border-radius: 12px; /* Rounded corners for the item block */
+    padding: 20px; /* Internal spacing */
+    margin-bottom: 25px; /* Space between kebab items */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07); /* Consistent shadow */
+    position: relative; /* Needed for positioning the add button */
+}
+
+/* NEW: Generic Menu Item styling for Drinks & Sides to match Kebabs */
+.menu-item {
+    background-color: #ffffff;
+    border: 1px solid black; /* Black border */
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+    position: relative;
+    display: flex; /* For layout of item content */
+    flex-direction: column;
+    justify-content: space-between; /* Pushes quantity/add to bottom */
+    align-items: center; /* Centers content horizontally */
+    text-align: center;
+}
+
+/* New: Add button that triggers the modal for kebabs */
+.add-to-cart-modal-trigger-button {
+    position: absolute;
+    top: 15px; /* Adjusted position */
+    right: 15px; /* Adjusted position */
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    border-radius: 50%; /* Make it circular */
+    width: 38px; /* Size of the circle */
+    height: 38px; /* Size of the circle */
+    font-size: 1.5em; /* Plus icon size */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease, transform 0.2s ease;
+    z-index: 5; /* Ensure it's above other elements if needed */
+}
+.add-to-cart-modal-trigger-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+.add-to-cart-modal-trigger-button:active {
+    transform: scale(0.95);
+}
+
+
+/* Styles for the new Preview Button */
+.preview-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+    margin-top: 5px; /* Add some space from kebab name */
+}
+.preview-btn:hover {
+    background-color: #45a049;
+}
+
+
+/* Customization Options for each kebab (within the modal) */
+.kebab-item .customization-options { /* This refers to the original customization options, now inside the modal. */
+    background-color: #fff; /* Keep white for inner options */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    margin-bottom: 0;
+}
+
+.kebab-item .customization-options h5 {
+    font-size: 1em;
+    margin-bottom: 10px;
+    color: #555;
+    border-bottom: 1px dashed #eee;
+    padding-bottom: 5px;
+}
+
+.kebab-item .customization-options .checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.kebab-item .customization-options .checkbox-group label {
+    display: flex;
+    align-items: center;
+    width: auto; /* Override full width for checkboxes */
+    margin: 0;
+    font-size: 0.9em;
+    color: #444;
+}
+
+.kebab-item .customization-options .checkbox-group input[type="checkbox"] {
+    margin-right: 5px;
+    width: auto; /* Keep checkbox small */
+}
+
+.kebab-item .customization-options textarea {
+    min-height: 60px;
+    resize: vertical;
+    font-size: 0.9em;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+
+/* Styles for the old item-selection-row structure (Drinks & Sides) */
+/* This specific rule for .item-selection-row is now commented out as items are inside .menu-item */
+/* .item-selection-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-top: 1px dashed #eee;
+}
+.item-selection-row:first-of-type {
+    border-top: none;
+} */
+
+.item-name-price {
+    flex-grow: 1; /* Allows name and price to take available space */
+    font-size: 1.05em;
+    font-weight: 500;
+    color: var(--text-color);
+}
+.item-name-price span.price {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-left: 8px;
+}
+
+.item-quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* UNIFIED: Changed from 5px to 10px to match kebab controls */
+    margin-top: 15px; /* Added margin for separation within menu-item */
+}
+.item-quantity-control input[type="number"] {
+    width: 60px; /* Fixed width for quantity input */
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 0.95em;
+    text-align: center;
+    background-color: var(--light-bg);
+    -moz-appearance: textfield; /* Hide Firefox stepper arrows */
+}
+/* Hide Chrome, Safari, Edge, Opera stepper arrows */
+.item-quantity-control input[type="number"]::-webkit-outer-spin-button,
+.item-quantity-control input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.add-to-cart-button {
+    background-color: #28a745; /* Green add button */
+    color: white;
+    padding: 10px 15px; /* UNIFIED: Changed from 6px 12px to 10px 15px */
+    border: none;
+    border-radius: 8px; /* UNIFIED: Changed from 6px to 8px */
+    cursor: pointer;
+    font-size: 1em; /* UNIFIED: Changed from 0.9em to 1em */
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.add-to-cart-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+.add-to-cart-button:active {
+    transform: translateY(0);
+}
+
+
+/* Clear Cart Button Styling */
+#clearCartBtn {
+    display: block; /* Make it a block element */
+    width: 100%; /* Full width */
+    margin-top: 15px; /* Space above */
+    padding: 12px 20px;
+    background-color: #e74c3c; /* Red color for a clear/delete action */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+#clearCartBtn:hover {
+    background-color: #c0392b; /* Darker red on hover */
+    transform: translateY(-2px);
+}
+#clearCartBtn:active {
+    transform: translateY(0);
+}
+
+/* Styles for cart items and remove button */
+.cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start; /* Align text and button to the top if item text wraps */
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee; /* Subtle separator between cart items */
+}
+
+.cart-item-row:last-of-type {
+    border-bottom: none; /* No border after the last item */
+}
+
+.cart-item-info {
+    flex-grow: 1; /* Allows item info to take most space */
+    margin-right: 10px; /* Space between text and button */
+    font-size: 0.95em;
+    color: var(--text-color);
+}
+
+.cart-item-info .item-name {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.cart-item-info .item-customizations {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+.remove-item-button {
+    background: none;
+    border: none;
+    color: #e74c3c; /* Red for remove action */
+    font-size: 1.2em; /* Slightly larger icon */
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.2s ease, transform 0.2s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.remove-item-button:hover {
+    color: #c0392b; /* Darker red on hover */
+    transform: scale(1.1);
+}
+
+
+/* --- NEW KEBAB CUSTOMIZATION MODAL STYLES --- */
+#kebabCustomizationModal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10002; /* Higher than other modals */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.85); /* Darker overlay */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
+}
+
+.kebab-modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px; /* Max width for customization modal */
+    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    position: relative;
+    animation: fadeInScale 0.3s ease-out;
+    display: flex;
+    flex-direction: column; /* Stack sections vertically */
+    gap: 20px; /* Space between sections */
+}
+
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.kebab-modal-close {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.kebab-modal-close:hover {
+    color: var(--primary-color);
+}
+
+.kebab-modal-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2em;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.modal-section {
+    background-color: var(--light-bg);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.modal-section h4 {
+    font-size: 1.3em;
+    color: var(--dark-bg);
+    margin-bottom: 15px;
+    border-bottom: 1px dashed #ccc;
+    padding-bottom: 8px;
+}
+
+.modal-checkbox-group, .modal-radio-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Space between options */
+}
+
+.modal-checkbox-group label, .modal-radio-group label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: auto; /* Allow items to size naturally */
+    font-size: 0.95em;
+    color: #444;
+}
+
+.modal-checkbox-group input[type="checkbox"],
+.modal-radio-group input[type="radio"] {
+    margin-right: 8px;
+    width: auto; /* Override full width */
+    transform: scale(1.2); /* Slightly larger checkboxes/radios */
+    cursor: pointer;
+}
+
+/* Specific styling for radio buttons to look like selectable cards */
+.modal-radio-group label {
+    background-color: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 10px 15px;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.modal-radio-group label:hover {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.3);
+}
+
+.modal-radio-group input[type="radio"]:checked + span { /* Span is the text next to radio */
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.modal-radio-group input[type="radio"]:checked {
+    accent-color: var(--primary-color); /* Highlight checked radio */
+}
+
+
+.modal-quantity-control {
+    display: flex;
+    justify-content: center; /* Center the quantity controls */
+    align-items: center;
+    gap: 15px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.modal-quantity-control button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5em;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+.modal-quantity-control button:hover {
+    background-color: #a04000;
+    transform: translateY(-1px);
+}
+.modal-quantity-control button:active {
+    transform: translateY(0);
+}
+
+.modal-quantity-control input[type="number"] {
+    width: 80px; /* Wider input for quantity */
+    padding: 10px;
+    text-align: center;
+    font-size: 1.2em;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: #fcfcfc;
+    -moz-appearance: textfield; /* Hide Firefox stepper arrows */
+}
+.modal-quantity-control input[type="number"]::-webkit-outer-spin-button,
+.modal-quantity-control input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.modal-add-to-cart-button {
+    background-color: #28a745;
+    color: white;
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.modal-add-to-cart-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+
+@media (max-width: 768px) {
+  .wrapper {
+    flex-direction: column;
+    align-items: stretch; /* Keep stretch for mobile as columns will naturally fill */
+  }
+
+  .container {
+    min-width: 100% !important;
+  }
+  
+  .image-modal-content {
+      width: 90%; /* Larger on mobile */
+  }
+
+
+  form {
+    padding: 15px;
+  }
+
+  h3, h4 {
+    text-align: center;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Responsive Adjustments for Registration Section (carried over from your original, might not be fully used now) */
+  .form-container {
+      margin: 30px 15px;
+      padding: 25px;
+  }
+
+  .hero-section {
+      padding: 50px 15px;
+  }
+  .hero-section h1 {
+      font-size: 2em;
+  }
+  .hero-section p {
+      font-size: 1em;
+  }
+
+  #navbar img {
+      width: 100px;
+  }
+  #navcontent {
       flex-direction: column;
       gap: 10px;
-      padding-top: 15px;
-      border-top: 1px solid #eee;
-    }
+      padding-bottom: 10px;
+  }
+  #navcontent a {
+      width: 80%;
+      text-align: center;
+  }
 
-    .order-form h3 {
-        font-family: 'Oswald', sans-serif;
-        color: #262626;
-        margin-bottom: 5px;
-    }
+  #liveClock {
+      font-size: 16px;
+      padding: 6px 12px;
+      top: 10px;
+      right: 10px;
+  }
+  .music-controls {
+      top: 10px;
+      left: 10px;
+  }
 
-    .order-form label {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: -5px; /* Pull label closer to input */
-    }
-
-    .order-form input[type="text"],
-    .order-form input[type="email"],
-    .order-form input[type="tel"],
-    .order-form textarea,
-    .order-form select {
+  /* Testimonials Responsive */
+  #testimonials-section {
+      padding: 30px 15px;
+      margin: 20px auto;
+  }
+  #testimonials-section h2 {
+      font-size: 2em;
+      margin-bottom: 30px;
+  }
+  .testimonials-grid {
+      grid-template-columns: 1fr; /* Stack reviews on mobile */
+  }
+  .testimonial-card {
+      padding: 20px;
+  }
+  
+  /* Responsive for Kebab Order Controls (not directly used now for kebabs, but affects drinks/sides) */
+  /* Re-purposing some of these for the modal quantity control if needed for responsiveness */
+  .kebab-order-controls { /* Still affects drinks/sides for layout */
+      flex-direction: column;
+      align-items: stretch;
+  }
+  .kebab-order-controls .kebab-size-select,
+  .kebab-order-controls .selected-item-quantity,
+  .kebab-order-controls .add-selected-kebab-to-cart-button {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-family: 'Inter', sans-serif;
-      font-size: 1rem;
-    }
+      margin-bottom: 10px;
+  }
+  .kebab-order-controls .add-selected-kebab-to-cart-button:last-child {
+      margin-bottom: 0;
+  }
 
-    .order-form textarea {
-      resize: vertical;
-      min-height: 60px;
-    }
 
-    .order-form button {
-      background-color: #A32A29;
+  /* Responsive for Drinks/Sides quantity control */
+  /* The .menu-item styling will mostly handle this now */
+  .item-quantity-control {
+      flex-direction: row; /* Keep horizontal on mobile unless very small */
+      justify-content: center;
+  }
+  .item-quantity-control input[type="number"] {
+      width: 50px;
+  }
+  .item-quantity-control .add-to-cart-button {
+      padding: 8px 12px;
+      font-size: 0.9em;
+  }
+
+  /* Responsive for Kebab Modal */
+  .kebab-modal-content {
+      padding: 20px;
+      margin: 20px; /* Give some space from screen edges */
+  }
+  .kebab-modal-title {
+      font-size: 1.5em;
+  }
+  .modal-section h4 {
+      font-size: 1.1em;
+  }
+  .modal-checkbox-group, .modal-radio-group {
+      gap: 10px; /* Smaller gap on mobile */
+  }
+  .modal-checkbox-group label, .modal-radio-group label {
+      font-size: 0.85em;
+      padding: 8px 12px;
+  }
+  .modal-quantity-control {
+      flex-direction: row; /* Keep horizontal if possible, or adjust as needed */
+      justify-content: space-around;
+      gap: 10px;
+  }
+  .modal-quantity-control button {
+      width: 35px;
+      height: 35px;
+      font-size: 1.3em;
+  }
+  .modal-quantity-control input[type="number"] {
+      width: 70px;
+      font-size: 1em;
+      padding: 8px;
+  }
+  .modal-add-to-cart-button {
+      font-size: 1em;
+      padding: 12px;
+  }
+
+}
+
+/* Hero Section - Adapted for Register Page (carried over from your original, might not be fully used now) */
+.hero-section {
+    background: rgba(0, 0, 0, 0.6); /* Overlay for readability */
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+    margin-bottom: 20px;
+}
+
+.hero-section h1 {
+    font-size: 3em;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+}
+
+.hero-section p {
+    font-size: 1.3em;
+    max-width: 700px;
+    margin: 0 auto 20px;
+}
+
+/* Form Container - Centralized and styled (carried over from your original, might not be fully used now) */
+.form-container {
+    background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+    padding: 40px;
+    max-width: 500px;
+    margin: 50px auto; /* Center the form with more margin */
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    border: 1px solid var(--border-color);
+    transition: transform 0.3s ease;
+}
+
+.form-container:hover {
+    transform: translateY(-5px);
+}
+
+.form-container h2 {
+    font-size: 2.2em;
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.form-container input[type="email"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 15px; /* Increased padding */
+    margin-bottom: 25px; /* More space between inputs */
+    font-size: 17px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px; /* Slightly less rounded */
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-container input[type="email"]:focus,
+.form-container input[type="password"]:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.2); /* Focus shadow */
+}
+
+.error {
+    color: #e6351f; /* Red for error messages */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 0.95em;
+}
+
+.register-btn { /* Specific style for register button, keeping it separate for clarity */
+    background-color: var(--primary-color);
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.register-btn:hover {
+    background-color: #a04000; /* Darker primary on hover */
+    transform: translateY(-2px);
+}
+
+/* Music control buttons and Live Clock (Optional - keep if desired) */
+.music-controls {
+    margin: 15px 20px;
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    z-index: 9999;
+}
+
+.music-controls button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.music-controls button:hover {
+    background-color: #a04000;
+}
+
+#liveClock {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    background-color: var(--light-bg);
+    color: var(--primary-color);
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 19px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.25);
+    z-index: 9999;
+    border: 1px solid var(--primary-color);
+}
+
+/* --- NEW MESSAGE MODAL STYLES --- */
+.message-modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 10001; /* Higher than image modal */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.7); /* Darker overlay */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+    backdrop-filter: blur(8px); /* More pronounced blur */
+}
+
+.message-modal-content {
+    background-color: #ffffff;
+    margin: auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 15px; /* More rounded */
+    width: 90%;
+    max-width: 450px; /* Max width for message boxes */
+    box-shadow: var(--shadow-strong);
+    position: relative;
+    text-align: center;
+    animation: fadeInSlideDown 0.4s ease-out; /* Entry animation */
+}
+
+@keyframes fadeInSlideDown {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.message-modal-content h4 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.message-modal-content h4 .icon {
+    font-size: 1.1em;
+    color: var(--accent-color); /* Default icon color, can be overridden by type */
+}
+
+.message-modal-content p {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    color: var(--secondary-color);
+}
+
+.message-modal-close {
+    color: #888;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.message-modal-close:hover,
+.message-modal-close:focus {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.message-modal-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: var(--border-radius-button);
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: var(--shadow-light);
+}
+.message-modal-button:hover {
+    background-color: #8D2524;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+}
+
+/* Specific colors for modal types */
+.message-modal-content.success .icon { color: #28A745; } /* Green for success */
+.message-modal-content.error .icon { color: #E74C3C; }   /* Red for error */
+.message-modal-content.warning .icon { color: #FFC107; } /* Yellow for warning */
+
+/* Responsive for message modal */
+@media (max-width: 600px) {
+    .message-modal-content {
+        padding: 20px;
+    }
+    .message-modal-content h4 {
+        font-size: 1.5em;
+    }
+    .message-modal-content p {
+        font-size: 0.9em;
+    }
+    .message-modal-button {
+        padding: 10px 20px;
+    }
+}
+
+</style>
+</head>
+<body>
+<!-- ✅ ADDED: Login Check Script - MUST BE AT THE TOP OF BODY -->
+<!-- RE-ENABLED LOGIN CHECK -->
+<script>
+    // This script runs immediately when the body loads
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+        // If not logged in, redirect to the login page
+        window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html';
+    }
+</script>
+
+<div id="liveClock">
+</div>
+<audio id="bg-music" loop="" src="/assets/music.mp3"> <!-- Absolute path -->
+</audio>
+<div class="music-controls">
+<button id="playBtn" style="padding: 5px 10px; font-size: 14px; border-radius: 8px;">
+    ▶ Play
+   </button>
+<button id="pauseBtn" style="padding: 5px 10px; font-size: 14px; border-radius: 8px; display: none;">
+    ⏸ Pause
+   </button>
+</div>
+<nav id="navbar">
+<img alt="Lubo's Kebab Logo" src="/assets/logo.png"/> <!-- Absolute path -->
+<ul id="navcontent">
+  <li><a href="/index.html#menu"><i class="fas fa-utensils"></i> Menu</a></li>
+  <li><a href="/index.html#orderForm"><i class="fas fa-shopping-cart"></i> Order</a></li>
+  <li><a href="/index.html#testimonials-section"><i class="fas fa-star"></i> Reviews</a></li>
+  <li><a href="/index.html#hours-card"><i class="fas fa-clock"></i> Hours</a></li>
+  <!-- REPLACED: Register and Login links with Logout button -->
+  <li><button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button></li>
+</ul>
+</nav>
+
+<form id="orderForm">
+<div class="wrapper">
+   <div class="container" id="menu">
+      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+            🥙 Menu
+         </h3>
+        <!-- Chicken Kebab -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Kebab</h4>
+            <button type="button" class="preview-btn" data-image-title="Chicken Kebab" data-image-url="/assets/chicken-preview.png">Preview</button>
+            <!-- NEW: Button to open modal -->
+            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="chicken-kebab" data-kebab-name="Chicken Kebab">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- Lamb Kebab -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
+            <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
+            <!-- NEW: Button to open modal -->
+            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="lamb-kebab" data-kebab-name="Lamb Kebab">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+      
+        <!-- Veggie Wrap -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
+            <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
+            <!-- NEW: Button to open modal -->
+            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="veggie-wrap" data-kebab-name="Veggie Wrap">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- Mixed Grill -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
+            <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
+            <!-- NEW: Button to open modal -->
+            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="mixed-grill" data-kebab-name="Mixed Grill">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+   </div>
+   <div class="container" id="drinks">
+      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+            🥤 Drinks
+         </h3>
+      <!-- Drinks Items - Updated to use .menu-item structure with Preview buttons and quantity inputs -->
+      <div class="menu-item" data-item-id="coca-cola">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Coca Cola <span class="price">£1.50</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Coca Cola" data-image-url="https://placehold.co/300x200/FF00FF/FFFFFF?text=Coca-Cola">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Coca Cola" data-item-price="1.5">Add</button>
+         </div>
+      </div>
+      <div class="menu-item" data-item-id="pepsi">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Pepsi <span class="price">£1.50</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Pepsi" data-image-url="https://placehold.co/300x200/FF00FF/FFFFFF?text=Pepsi">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Pepsi" data-item-price="1.5">Add</button>
+         </div>
+      </div>
+      <div class="menu-item" data-item-id="orange-juice">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Orange Juice <span class="price">£2.00</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Orange Juice" data-image-url="https://placehold.co/300x200/FFA500/FFFFFF?text=Orange+Juice">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Orange Juice" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="menu-item" data-item-id="apple-juice">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Apple Juice <span class="price">£2.00</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Apple Juice" data-image-url="https://placehold.co/300x200/8B0000/FFFFFF?text=Apple+Juice">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Apple Juice" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="menu-item" data-item-id="water">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Water <span class="price">£1.00</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Water" data-image-url="https://placehold.co/300x200/007BFF/FFFFFF?text=Water">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Water" data-item-price="1">Add</button>
+         </div>
+      </div>
+   </div>
+   <div class="container" id="sides">
+      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+            🥗 Sides
+         </h3>
+      <!-- Sides Items - Updated to use .menu-item structure with Preview buttons and quantity inputs -->
+      <div class="menu-item" data-item-id="fries">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Fries <span class="price">£2.00</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Fries" data-image-url="https://placehold.co/300x200/FFFF00/000000?text=Fries">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Fries" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="menu-item" data-item-id="cheesy-chips">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Cheesy Chips <span class="price">£2.50</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Cheesy Chips" data-image-url="https://placehold.co/300x200/FFC107/000000?text=Cheesy+Chips">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Cheesy Chips" data-item-price="2.5">Add</button>
+         </div>
+      </div>
+      <div class="menu-item" data-item-id="onion-rings">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Onion Rings <span class="price">£2.00</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Onion Rings" data-image-url="https://placehold.co/300x200/C0C0C0/000000?text=Onion+Rings">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Onion Rings" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="menu-item" data-item-id="side-salad">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Side Salad <span class="price">£2.00</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Side Salad" data-image-url="https://placehold.co/300x200/33FF57/000000?text=Side+Salad">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Side Salad" data-item-price="2">Add</button>
+         </div>
+      </div>
+      <div class="menu-item" data-item-id="garlic-bread">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Garlic Bread <span class="price">£1.50</span></h4>
+         <button type="button" class="preview-btn" data-image-title="Garlic Bread" data-image-url="https://placehold.co/300x200/DAA520/000000?text=Garlic+Bread">Preview</button>
+         <div class="item-quantity-control">
+            <input type="number" class="item-quantity" value="0" min="0">
+            <button type="button" class="add-to-cart-button" data-item-name="Garlic Bread" data-item-price="1.5">Add</button>
+         </div>
+      </div>
+   </div>
+   <div class="container" id="cart">
+      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+            🛒 Your Cart
+         </h3>
+      <ul id="cartItems">
+          <!-- Cart items will be dynamically added here by JavaScript -->
+          <li style="color: #666; text-align: center; padding: 10px;">Your cart is empty.</li>
+      </ul>
+      <p class="total">
+            Total: £
+            <span id="totalPrice">
+            0.00
+            </span>
+      </p>
+      <input id="orderSummary" name="Order Summary" type="hidden"/>
+
+      <!-- Clear Cart Button -->
+      <button type="button" id="clearCartBtn">
+          <i class="fas fa-trash-alt"></i> Clear Cart
+      </button>
+
+      <h4>
+            Your Details
+         </h4>
+      <label>
+            Full Name:
+            <input name="Full Name" required="" type="text"/>
+      </label>
+      <label>
+            Email:
+            <input name="Email" required="" type="email"/>
+      </label>
+      <label>
+            Mobile Number:
+            <input name="Mobile Number" required="" type="tel"/>
+      </label>
+      <label>
+            Special Instructions:
+            <textarea name="Instructions"></textarea>
+      </label>
+      <label>
+            Delivery Address:
+            <textarea name="Delivery Address" required=""></textarea>
+      </label>
+      <label>
+         Payment Method:
+         <select id="paymentToggle" name="Payment Method" required>
+            <option value="cash">💵 Cash on Delivery</option>
+            <option value="card" selected>💳 Card (Stripe)</option>
+         </select>
+      </label>
+
+      <button id="payWithCardBtn" type="button" style="
+      display: none;
+      margin: 10px 0;
+      background-color: #27ae60;
       color: white;
       padding: 12px 20px;
       border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1.1rem;
+      border-radius: 8px;
+      font-size: 16px;
       font-weight: bold;
-      transition: background-color 0.3s ease;
-      margin-top: 10px;
-    }
-
-    .order-form button:hover {
-      background-color: #8D2524;
-    }
-
-    .order-form .payment-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    /* Footer */
-    footer {
-      background-color: #262626; /* Dark grey for footer */
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+      ">
+         💳 Pay with Card
+      </button>
+      <button type="submit" style="
+      display: block;
+      width: 100%;
+      background-color: #c0392b;
       color: white;
-      text-align: center;
-      padding: 1rem 0;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
       margin-top: 20px;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-    }
-
-    footer p {
-      font-size: 0.9rem;
-      opacity: 0.8;
-    }
-
-    .live-status {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 15px;
-      padding: 10px 0;
-      border-top: 1px dashed #eee;
-      font-size: 0.95rem;
-      color: #555;
-    }
-
-    .music-controls button {
-        background-color: #007bff; /* Blue for music controls */
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 5px 10px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        font-size: 0.85rem;
-    }
-
-    .music-controls button:hover {
-        background-color: #0056b3;
-    }
-
-    /* Modal Styles */
-    .image-modal-overlay, .message-modal-overlay, .kebab-customization-modal {
-        display: none; /* Hidden by default */
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.7);
-        justify-content: center;
-        align-items: center;
-        backdrop-filter: blur(5px); /* Frosted glass effect */
-        -webkit-backdrop-filter: blur(5px);
-    }
-
-    .image-modal-content, .message-modal-content, .kebab-modal-content {
-        background-color: #fefefe;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-        max-width: 90%;
-        max-height: 90%;
-        overflow-y: auto;
-        position: relative;
-        text-align: center;
-        animation: fadeInScale 0.3s ease-out forwards; /* Add animation */
-    }
-
-    @keyframes fadeInScale {
-        from {
-            opacity: 0;
-            transform: scale(0.9);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
-
-
-    .message-modal-content {
-        max-width: 400px;
-        text-align: center;
-    }
-
-    .message-modal-content.success { border: 2px solid #28a745; }
-    .message-modal-content.error { border: 2px solid #dc3545; }
-    .message-modal-content.warning { border: 2px solid #ffc107; }
-
-    .message-modal-content h3 {
-        color: #333;
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-    }
-
-    .message-modal-content h3 .icon {
-        font-size: 1.2em; /* Adjust icon size relative to text */
-    }
-
-    .message-modal-content p {
-        font-size: 1.1rem;
-        color: #555;
-        margin-bottom: 20px;
-    }
-
-    .message-modal-content button {
-        background-color: #A32A29;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background-color 0.3s ease;
-    }
-
-    .message-modal-content button:hover {
-        background-color: #8D2524;
-    }
-
-
-    .modal-image {
-        max-width: 100%;
-        height: auto;
-        display: block;
-        margin: 0 auto 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .modal-image-title {
-        font-family: 'Oswald', sans-serif;
-        font-size: 1.8rem;
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    .modal-close {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        color: #aaa;
-        font-size: 28px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: color 0.3s ease;
-    }
-
-    .modal-close:hover,
-    .modal-close:focus {
-        color: #333;
-        text-decoration: none;
-    }
-
-
-    /* Kebab Customization Modal Specific Styles */
-    .kebab-modal-content {
-        max-width: 500px;
-        text-align: left;
-    }
-
-    .kebab-modal-content h3 {
-        font-family: 'Oswald', sans-serif;
-        color: #A32A29;
-        font-size: 2rem;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #eee;
-        padding-bottom: 10px;
-    }
-
-    .modal-section {
-        margin-bottom: 20px;
-    }
-
-    .modal-section h4 {
-        font-family: 'Inter', sans-serif;
-        font-size: 1.1rem;
-        color: #555;
-        margin-bottom: 10px;
-        border-bottom: 1px solid #f0f0f0;
-        padding-bottom: 5px;
-    }
-
-    .modal-radio-group label,
-    .modal-checkbox-group label {
-        display: block;
-        margin-bottom: 8px;
-        cursor: pointer;
-        font-size: 1rem;
-        color: #333;
-        transition: color 0.2s ease;
-    }
-
-    .modal-radio-group label:hover,
-    .modal-checkbox-group label:hover {
-        color: #A32A29;
-    }
-
-    .modal-radio-group input[type="radio"],
-    .modal-checkbox-group input[type="checkbox"] {
-        margin-right: 8px;
-        accent-color: #A32A29; /* Style radio/checkbox */
-    }
-
-    .item-notes {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        min-height: 80px;
-        resize: vertical;
-        font-family: 'Inter', sans-serif;
-        font-size: 0.95rem;
-    }
-
-    .modal-quantity-control {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 15px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-    }
-
-    .modal-quantity-control button {
-        background-color: #A32A29;
-        color: white;
-        border: none;
-        border-radius: 50%; /* Make them round */
-        width: 35px;
-        height: 35px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-        font-size: 1.2rem;
-        transition: background-color 0.3s ease;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    }
-
-    .modal-quantity-control button:hover {
-        background-color: #8D2524;
-    }
-
-    .modal-quantity-control input[type="number"] {
-        width: 60px;
-        padding: 8px 5px;
-        text-align: center;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        font-size: 1.1rem;
-        font-weight: bold;
-        -moz-appearance: textfield; /* Remove number input arrows Firefox */
-    }
-
-    .modal-quantity-control input[type="number"]::-webkit-outer-spin-button,
-    .modal-quantity-control input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-
-    .modal-add-to-cart-button {
-        width: 100%;
-        background-color: #4CAF50;
-        color: white;
-        padding: 15px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 1.2rem;
-        font-weight: bold;
-        transition: background-color 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    .modal-add-to-cart-button:hover {
-        background-color: #45a049;
-        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-    }
-
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-      .container {
-        padding: 15px;
-      }
-
-      .header-content h1 {
-        font-size: 2rem;
-      }
-
-      .header-actions {
-        flex-direction: row; /* Buttons side-by-side on smaller screens, if space allows */
-        justify-content: center;
-        width: 100%;
-      }
-
-      .main-content {
-        flex-direction: column; /* Stack menu and order summary vertically */
-        padding: 15px;
-      }
-
-      .menu-section, .order-summary {
-        min-width: unset; /* Remove min-width to allow full flexibility */
-        width: 100%;
-      }
-
-      .cart-items {
-          max-height: 250px; /* Reduce max height for smaller screens */
-      }
-    }
-
-    @media (max-width: 480px) {
-      .header-content h1 {
-        font-size: 1.8rem;
-      }
-      .logo {
-        width: 120px;
-      }
-      .menu-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .item-image {
-        margin-right: 0;
-        margin-bottom: 10px;
-      }
-      .item-actions {
-        width: 100%;
-        align-items: flex-start;
-      }
-      .add-to-cart-button,
-      .add-to-cart-modal-trigger-button,
-      .preview-btn {
-        width: 100%;
-        justify-content: center;
-      }
-      .order-form input,
-      .order-form textarea,
-      .order-form select,
-      .order-form button {
-        font-size: 0.9rem;
-        padding: 10px;
-      }
-
-      .modal-image-title {
-        font-size: 1.5rem;
-      }
-      .kebab-modal-content h3 {
-        font-size: 1.5rem;
-      }
-    }
-  </style>
-</head>
-<body>
-<header>
-<div class="container">
-<img alt="Lubo's Kebab Logo" class="logo" src="/assets/logo.png"/>
-<div class="header-content">
-<h1>
-         Lubo's Kebab
-        </h1>
-<p>
-         Authentic Flavours, Unbeatable Taste
-        </p>
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      ">
+         🧾 Place Order
+      </button>
+      <div style="margin-top: 20px; padding: 15px; border: 2px solid #c0392b; border-radius: 12px; background-color: #fff4e6; text-align: center;">
+         <p style="font-size: 22px; font-weight: bold; color: #c0392b;">
+               💵💰 CASH PAYMENTS ONLY 💰💵
+            </p>
+         <p style="font-size: 17px; color: #333;">
+               At this time, we are accepting
+               <strong>
+                  Cash on Delivery
+               </strong>
+               only.
+               <br/>
+               .
+               <br/>
+               Card and online payments will be available soon.We appreciate your understanding and support! 🙏
+            </p>
+      </div>
+   </div>
 </div>
-<div class="header-actions">
-<p class="user-info">
-<i class="fas fa-user-circle">
-          </i>
-          Logged in as: <span id="loggedInUserEmail">Guest</span>
-</p>
-<button class="logout-btn" id="logoutBtn">
-<i class="fas fa-sign-out-alt">
-          </i>
-          Logout
-        </button>
-</div>
-</div>
-</header>
-<main class="main-content container">
-<section class="menu-section" id="kebabs">
-<h2>
-<i class="fas fa-hotdog">
-        </i>
-        Kebabs
-      </h2>
-<div class="menu-item">
-<img alt="Chicken Kebab" class="item-image" src="/assets/chicken-kebab.jpg"/>
-<div class="item-details">
-<h3>
-          Chicken Kebab
-        </h3>
-<p>
-          Marinated chicken, grilled to perfection, served with fresh salad and your choice of sauce.
-        </p>
-</div>
-<div class="item-actions">
-<span class="item-price">
-          From £5.00
-        </span>
-<button class="add-to-cart-modal-trigger-button" data-kebab-id="chicken-kebab">
-<i class="fas fa-plus">
-          </i>
-          Add
-        </button>
-<button class="preview-btn" data-image-url="/assets/chicken-kebab.jpg" data-image-title="Chicken Kebab">
-<i class="fas fa-eye">
-          </i>
-          Preview
-        </button>
-</div>
-</div>
-<div class="menu-item">
-<img alt="Lamb Kebab" class="item-image" src="/assets/lamb-kebab.jpg"/>
-<div class="item-details">
-<h3>
-          Lamb Kebab
-        </h3>
-<p>
-          Succulent lamb pieces, slow-cooked and seasoned, served with salad.
-        </p>
-</div>
-<div class="item-actions">
-<span class="item-price">
-          From £6.00
-        </span>
-<button class="add-to-cart-modal-trigger-button" data-kebab-id="lamb-kebab">
-<i class="fas fa-plus">
-          </i>
-          Add
-        </button>
-<button class="preview-btn" data-image-url="/assets/lamb-kebab.jpg" data-image-title="Lamb Kebab">
-<i class="fas fa-eye">
-          </i>
-          Preview
-        </button>
-</div>
-</div>
-<div class="menu-item">
-<img alt="Veggie Wrap" class="item-image" src="/assets/veggie-wrap.jpg"/>
-<div class="item-details">
-<h3>
-          Veggie Wrap
-        </h3>
-<p>
-          Delicious grilled vegetables and halloumi wrapped in a warm tortilla.
-        </p>
-</div>
-<div class="item-actions">
-<span class="item-price">
-          From £4.00
-        </span>
-<button class="add-to-cart-modal-trigger-button" data-kebab-id="veggie-wrap">
-<i class="fas fa-plus">
-          </i>
-          Add
-        </button>
-<button class="preview-btn" data-image-url="/assets/veggie-wrap.jpg" data-image-title="Veggie Wrap">
-<i class="fas fa-eye">
-          </i>
-          Preview
-        </button>
-</div>
-</div>
-<div class="menu-item">
-<img alt="Mixed Grill" class="item-image" src="/assets/mixed-grill.jpg"/>
-<div class="item-details">
-<h3>
-          Mixed Grill
-        </h3>
-<p>
-          A generous platter of chicken, lamb, and kofte, with rice and salad.
-        </p>
-</div>
-<div class="item-actions">
-<span class="item-price">
-          From £8.00
-        </span>
-<button class="add-to-cart-modal-trigger-button" data-kebab-id="mixed-grill">
-<i class="fas fa-plus">
-          </i>
-          Add
-        </button>
-<button class="preview-btn" data-image-url="/assets/mixed-grill.jpg" data-image-title="Mixed Grill">
-<i class="fas fa-eye">
-          </i>
-          Preview
-        </button>
-</div>
-</div>
-</section>
-<section class="menu-section" id="drinks">
-<h2>
-<i class="fas fa-mug-hot">
-        </i>
-        Drinks
-      </h2>
-<div class="menu-item">
-<img alt="Coca-Cola" class="item-image" src="/assets/cola.jpg"/>
-<div class="item-details">
-<h3>
-          Coca-Cola
-        </h3>
-<p>
-          Refreshing classic cola.
-        </p>
-</div>
-<div class="item-actions">
-<span class="item-price">
-          £1.50
-        </span>
-<button class="add-to-cart-button" data-item-name="Coca-Cola" data-item-price="1.50">
-<i class="fas fa-plus">
-          </i>
-          Add
-        </button>
-<button class="preview-btn" data-image-url="/assets/cola.jpg" data-image-title="Coca-Cola">
-<i class="fas fa-eye">
-          </i>
-          Preview
-        </button>
-</div>
-</div>
-<div class="menu-item">
-<img alt="Orange Juice" class="item-image" src="/assets/orange-juice.jpg"/>
-<div class="item-details">
-<h3>
-          Orange Juice
-        </h3>
-<p>
-          Freshly squeezed orange juice.
-        </p>
-</div>
-<div class="item-actions">
-<span class="item-price">
-          £2.00
-        </span>
-<button class="add-to-cart-button" data-item-name="Orange Juice" data-item-price="2.00">
-<i class="fas fa-plus">
-          </i>
-          Add
-        </button>
-<button class="preview-btn" data-image-url="/assets/orange-juice.jpg" data-image-title="Orange Juice">
-<i class="fas fa-eye">
-          </i>
-          Preview
-        </button>
-</div>
-</div>
-</section>
-<section class="menu-section" id="sides">
-<h2>
-<i class="fas fa-fries">
-        </i>
-        Sides
-      </h2>
-<div class="menu-item">
-<img alt="French Fries" class="item-image" src="/assets/fries.jpg"/>
-<div class="item-details">
-<h3>
-          French Fries
-        </h3>
-<p>
-          Crispy golden fries, seasoned to perfection.
-        </p>
-</div>
-<div class="item-actions">
-<span class="item-price">
-          £2.50
-        </span>
-<button class="add-to-cart-button" data-item-name="French Fries" data-item-price="2.50">
-<i class="fas fa-plus">
-          </i>
-          Add
-        </button>
-<button class="preview-btn" data-image-url="/assets/fries.jpg" data-image-title="French Fries">
-<i class="fas fa-eye">
-          </i>
-          Preview
-        </button>
-</div>
-</div>
-<div class="menu-item">
-<img alt="Coleslaw" class="item-image" src="/assets/coleslaw.jpg"/>
-<div class="item-details">
-<h3>
-          Coleslaw
-        </h3>
-<p>
-          Creamy homemade coleslaw.
-        </p>
-</div>
-<div class="item-actions">
-<span class="item-price">
-          £1.80
-        </span>
-<button class="add-to-cart-button" data-item-name="Coleslaw" data-item-price="1.80">
-<i class="fas fa-plus">
-          </i>
-          Add
-        </button>
-<button class="preview-btn" data-image-url="/assets/coleslaw.jpg" data-image-title="Coleslaw">
-<i class="fas fa-eye">
-          </i>
-          Preview
-        </button>
-</div>
-</div>
-</section>
-<aside class="order-summary">
-<h2>
-<i class="fas fa-shopping-cart">
-        </i>
-        Your Order
-      </h2>
-<ul class="cart-items" id="cartItems">
-<!-- Cart items will be dynamically added here by JavaScript -->
-</ul>
-<div class="cart-total">
-<span>
-        Total:
-       </span>
-<span>
-        £<span id="totalPrice">0.00</span>
-</span>
-</div>
-<div class="live-status">
-<span>
-        Restaurant Status:
-       </span>
-<span id="openStatus">
-        Checking...
-       </span>
-</div>
-<div class="music-controls">
-<audio id="bg-music" loop="" src="/assets/background-music.mp3">
-        Your browser does not support the audio element.
-       </audio>
-<button id="playBtn" title="Play Background Music">
-<i class="fas fa-play">
-          </i>
-          Play
-        </button>
-<button id="pauseBtn" style="display: none;" title="Pause Background Music">
-<i class="fas fa-pause">
-          </i>
-          Pause
-        </button>
-</div>
-<form class="order-form" id="orderForm">
-<h3>
-        Customer Information
-       </h3>
-<label for="fullName">
-        Full Name:
-       </label>
-<input id="fullName" name="Full Name" required="" type="text"/>
-<label for="email">
-        Email:
-       </label>
-<input id="email" name="Email" required="" type="email"/>
-<label for="mobileNumber">
-        Mobile Number:
-       </label>
-<input id="mobileNumber" name="Mobile Number" required="" type="tel"/>
-<label for="deliveryAddress">
-        Delivery Address:
-       </label>
-<textarea id="deliveryAddress" name="Delivery Address" required=""></textarea>
-<label for="instructions">
-        Special Instructions:
-       </label>
-<textarea id="instructions" name="Instructions" placeholder="e.g., No onions, extra sauce, delivery notes..."></textarea>
-<label for="paymentToggle">
-        Payment Method:
-       </label>
-<select id="paymentToggle">
-<option value="cash">
-          Cash on Delivery
-         </option>
-<option value="card">
-          Pay with Card
-         </option>
-</select>
-<div class="payment-buttons">
-<button id="placeOrderBtn" type="submit">
-<i class="fas fa-receipt">
-          </i>
-          Place Order
-        </button>
-<button id="payWithCardBtn" style="display: none;" type="button">
-<i class="fas fa-credit-card">
-          </i>
-          Pay with Card
-        </button>
-</div>
-<button class="clear-cart-btn" id="clearCartBtn" type="button">
-<i class="fas fa-trash-alt">
-          </i>
-          Clear Cart
-        </button>
 </form>
-</aside>
-</main>
+<div id="confirmationMessage" style="display:none; margin: 40px auto; max-width: 600px; background-color: #d4edda; color: #155724; padding: 20px; border-radius: 12px; border: 2px solid #c3e6cb; text-align: center; font-size: 18px;">
+   ✅
+   <strong>
+    Thank you for your order!
+   </strong>
+<br/>
+   Your order has been received and will be processed shortly. We'll contact you if needed.
+  </div>
+<div id="freebie-banner">
+   🎁
+   <strong>
+    FREE Drink
+   </strong>
+   <br>with orders over
+   <strong>
+    £30
+   </strong>
+   ! 🎉
+  </div>
+<p style="color: white; font-size: 24px; background-color: #c0392b; padding: 10px; border-radius: 10px;">
+   Our phone number 👉1234567890
+  </p>
+<p style="color: white; font-size: 24px; background: #c0392b; padding: 10px; border-radius: 10px;">
+<img alt="Kebab" src="/assets/Kebab2.png" style="vertical-align: middle; border-radius: 8px;" width="100"/> <!-- Absolute path -->
+   Lubo's Kebab unique QR code — share it with your friends! 😋
+  </p>
+
+<!-- NEW: Testimonials Section -->
+<section id="testimonials-section">
+    <h2>What Our Customers Say</h2>
+    <div class="testimonials-grid">
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p>"Absolutely delicious kebabs! The meat is always tender, and the sauces are just perfect. My go-to place!"</p>
+            <div class="reviewer-name">- Samuel L.</div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+            </div>
+            <p>"Great service and even better food. The veggie wrap is surprisingly flavorful. Highly recommend!"</p>
+            <div class="reviewer-name">- Julius B.</div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+            </div>
+            <p>"Fast delivery and hot food. The mixed grill is fantastic value for money. Will order again!"</p>
+            <div class="reviewer-name">- Alin S.</div>
+        </div>
+        <div class="testimonial-card">
+            <div class="stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+            </div>
+            <p>"Lubo's Kebab never disappoints! Fresh ingredients, generous portions, and truly authentic taste."</p>
+            <div class="reviewer-name">- Humza K.</div>
+        </div>
+    </div>
+</section>
+<!-- END NEW: Testimonials Section -->
+
+<section id="container4">
+<div id="row4">
+<button class="btn">
+     We are
+    </button>
+</div>
+<div id="row5">
+<button class="btn">
+     Happy to be here
+    </button>
+</div>
+<div id="row6">
+<button class="btn">
+     For you!!!
+    </button>
+</div>
+</section>
+<div id="hours-card" style="
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 15px;
+  background: #fff8f0;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+">
+<h2 style="margin-bottom: 10px;">
+    Opening Hours
+   </h2>
+<p id="openStatus" style="font-weight: bold; font-size: 18px;">
+    Checking...
+   </p>
+<table style="margin: 20px auto 0; border-collapse: collapse; width: 100%; font-size: 16px;">
+<tr>
+<td>
+      Monday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 23:00 PM
+     </td>
+</tr>
+<tr>
+<td>
+      Tuesday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 23:00 PM
+     </td>
+</tr>
+<tr>
+<td>
+      Wednesday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 23:00 PM
+     </td>
+</tr>
+<tr>
+<td>
+      Thursday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 11:00 PM
+     </td>
+</tr>
+<tr>
+<td>
+      Friday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 02:00 AM
+     </td>
+</tr>
+<tr>
+<td>
+      Saturday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 02:00 AM
+     </td>
+</tr>
+<tr>
+<td>
+      Sunday
+     </td>
+<td style="text-align:right;">
+      11:00 AM – 11:00 PM
+     </td>
+</tr>
+</table>
+</div>
 <footer>
-<div class="container">
-<p>
-      © 2024 Lubo's Kebab. All rights reserved.
-     </p>
+   © 2025 Lubo's Kebab. All rights reserved.\n  </footer>
+
+<!-- NEW: Image Modal Structure -->
+<div id="imageModalOverlay" class="image-modal-overlay">
+    <div class="image-modal-content">
+        <span class="image-modal-close">&times;</span>
+        <h4 id="modalImageTitle"></h4>
+        <img id="modalImage" src="" alt="Kebab Preview" onerror="this.onerror=null;this.src='https://placehold.co/600x400/cccccc/333333?text=Image+Unavailable';"/>
+    </div>
 </div>
-</footer>
-<!-- Image Preview Modal -->
-<div class="image-modal-overlay" id="imageModalOverlay">
-<div class="image-modal-content">
-<span class="modal-close image-modal-close">
-        &times;
-       </span>
-<img alt="Preview" class="modal-image" id="modalImage" src=""/>
-<h3 class="modal-image-title" id="modalImageTitle">
-        Image Title
-       </h3>
+
+<!-- NEW: Generic Message Modal Structure -->
+<div id="messageModalOverlay" class="message-modal-overlay">
+    <div class="message-modal-content">
+        <span class="message-modal-close">&times;</span>
+        <h4 id="messageModalTitle"><i class="fas fa-info-circle icon"></i> Message</h4>
+        <p id="messageModalText">This is a generic message.</p>
+        <button id="messageModalButton" class="message-modal-button">OK</button>
+    </div>
 </div>
+
+<!-- NEW: Kebab Customization Modal -->
+<div id="kebabCustomizationModal" class="kebab-modal-overlay">
+    <div class="kebab-modal-content">
+        <span class="kebab-modal-close">&times;</span>
+        <h3 class="kebab-modal-title">Customize <span id="modalKebabName">Kebab</span></h3>
+
+        <div class="modal-section">
+            <h4>Size & Price</h4>
+            <div class="modal-radio-group" id="modalKebabSizes">
+                <!-- Size options will be injected here by JavaScript -->
+                <!-- Example: <label><input type="radio" name="kebabSize" value="Small" data-price="5.00"> <span>Small - £5.00</span></label> -->
+            </div>
+        </div>
+
+        <div class="modal-section">
+            <h4>Salads</h4>
+            <div class="modal-checkbox-group" id="modalKebabToppings">
+                <!-- Toppings will be injected here by JavaScript -->
+                <!-- Example: <label><input type="checkbox" value="Lettuce"> Lettuce</label> -->
+                <label><input type="checkbox" value="Cabbage"> Cabbage</label>
+                <label><input type="checkbox" value="Lettuce"> Lettuce</label>
+                <label><input type="checkbox" value="Tomato"> Tomato</label>
+                <label><input type="checkbox" value="Cucumber"> Cucumber</label>
+                <label><input type="checkbox" value="Onion"> Onion</label>
+                <label><input type="checkbox" value="Pickles"> Pickles</label>
+            </div>
+        </div>
+
+        <div class="modal-section">
+            <h4>Sauces</h4>
+            <div class="modal-checkbox-group" id="modalKebabSauces">
+                <!-- Sauces will be injected here by JavaScript -->
+                <!-- Example: <label><input type="checkbox" value="Garlic Sauce"> Garlic Sauce</label> -->
+                <label><input type="checkbox" value="Garlic Sauce"> Garlic Sauce</label>
+                <label><input type="checkbox" value="Chili Sauce"> Chili Sauce</label>
+                <label><input type="checkbox" value="Mayonnaise"> Mayonnaise</label>
+                <label><input type="checkbox" value="Ketchup"> Ketchup</label>
+                <label><input type="checkbox" value="BBQ Sauce"> BBQ Sauce</label>
+                <label><input type="checkbox" value="Mint Sauce"> Mint Sauce</label>
+                <label><input type="checkbox" value="Relish"> Relish</label>
+                <label><input type="checkbox" value="Sweet Chilli"> Sweet Chilli</label>
+                <label><input type="checkbox" value="Burger Sauce"> Burger Sauce</label>
+            </div>
+        </div>
+        
+        <div class="modal-section">
+            <h4>Special Notes</h4>
+            <textarea id="modalKebabNotes" class="item-notes" placeholder="e.g., 'Extra spicy', 'No tomato'"></textarea>
+        </div>
+
+
+        <div class="modal-quantity-control">
+            <button id="modalQuantityMinus"><i class="fas fa-minus"></i></button>
+            <input type="number" id="modalQuantityInput" value="1" min="1" max="99">
+            <button id="modalQuantityPlus"><i class="fas fa-plus"></i></button>
+        </div>
+
+        <button id="modalAddToCartButton" class="modal-add-to-cart-button">
+            Add to Cart - £<span id="modalCurrentPrice">0.00</span>
+        </button>
+    </div>
 </div>
-<!-- Generic Message Modal -->
-<div class="message-modal-overlay" id="messageModalOverlay">
-<div class="message-modal-content">
-<span class="modal-close" id="messageModalCloseBtn">
-        &times;
-       </span>
-<h3 id="messageModalTitle">
-        Message Title
-       </h3>
-<p id="messageModalText">
-        This is a generic message.
-       </p>
-<button id="messageModalButton">
-        OK
-       </button>
-</div>
-</div>
-<!-- Kebab Customization Modal -->
-<div class="kebab-customization-modal" id="kebabCustomizationModal">
-<div class="kebab-modal-content">
-<span class="modal-close kebab-modal-close">
-        &times;
-       </span>
-<h3 id="modalKebabName">
-        Kebab Name
-       </h3>
-<div class="modal-section">
-<h4>
-        Select Size
-       </h4>
-<div class="modal-radio-group" id="modalKebabSizes">
-<!-- Sizes will be dynamically added here by JavaScript -->
-</div>
-</div>
-<div class="modal-section">
-<h4>
-        Toppings
-       </h4>
-<div class="modal-checkbox-group" id="modalKebabToppings">
-<label>
-<input type="checkbox" value="Lettuce"/>
-<span>
-            Lettuce
-           </span>
-</label>
-<label>
-<input type="checkbox" value="Tomato"/>
-<span>
-            Tomato
-           </span>
-</label>
-<label>
-<input type="checkbox" value="Onion"/>
-<span>
-            Onion
-           </span>
-</label>
-<label>
-<input type="checkbox" value="Cucumber"/>
-<span>
-            Cucumber
-           </span>
-</label>
-<label>
-<input type="checkbox" value="Jalapenos"/>
-<span>
-            Jalapenos
-           </span>
-</label>
-</div>
-</div>
-<div class="modal-section">
-<h4>
-        Sauces
-       </h4>
-<div class="modal-checkbox-group" id="modalKebabSauces">
-<label>
-<input type="checkbox" value="Garlic Sauce"/>
-<span>
-            Garlic Sauce
-           </span>
-</label>
-<label>
-<input type="checkbox" value="Chilli Sauce"/>
-<span>
-            Chilli Sauce
-           </span>
-</label>
-<label>
-<input type="checkbox" value="Mint Sauce"/>
-<span>
-            Mint Sauce
-           </span>
-</label>
-<label>
-<input type="checkbox" value="Burger Sauce"/>
-<span>
-            Burger Sauce
-           </span>
-</label>
-</div>
-</div>
-<div class="modal-section">
-<h4>
-        Special Notes
-       </h4>
-<textarea class="item-notes" id="modalKebabNotes" placeholder="e.g., 'Extra spicy', 'No tomato'"></textarea>
-</div>
-<div class="modal-quantity-control">
-<button id="modalQuantityMinus">
-<i class="fas fa-minus">
-          </i>
-</button>
-<input id="modalQuantityInput" max="99" min="1" type="number" value="1"/>
-<button id="modalQuantityPlus">
-<i class="fas fa-plus">
-          </i>
-</button>
-</div>
-<button class="modal-add-to-cart-button" id="modalAddToCartButton">
-        Add to Cart - £<span id="modalCurrentPrice">0.00</span>
-</button>
-</div>
-</div>
+
 <!-- Stripe.js library - Ensure this loads first -->
-<script src="https://js.stripe.com/v3/">
-</script>
+<script src="https://js.stripe.com/v3/"></script>
 <!-- Initialize Stripe immediately after the library loads -->
 <script>
     // IMPORTANT: PASTE YOUR ABSOLUTELY CORRECT pk_test_ KEY HERE!
     // This uses 'var' to ensure the 'stripe' object is globally accessible to index.js
-    var stripe = Stripe('pk_test_51RUy79GgUCD1xOEWjVwuJ0g8JsDt1npUR5JVj1HRaIBgLLKPZAHFkmYQSPbHObEeYFqpInDUYiOUA043Tj2krv52004zHbr5wj'); // Replace with your actual publishable key
+    var stripe = Stripe('pk_test_51RUy79GgUCD1xOEWjVwuJ0g8JsDt1npUR5JVj1HRaIBgLLKPZAHFkmYQSPbHObEeYFqpInDUYiOUA043Tj2krv52004zHbr5wj'); // <-- Replace this with your actual pk_test_ key!
 </script>
-<!-- Your main JavaScript file -->
-<script src="/js/index.js?v=202406161400">
-</script>
+
+<!-- IMPORTANT: Link to the specific index.js file (load AFTER Stripe is initialized) -->
+<script src="/js/index.js?v=202406161400"></script> <!-- Absolute path and cache buster -->
 </body>
 </html>
