@@ -1,15 +1,17 @@
-// server.cjs
+// server.js
 const path = require("path");
 const { query, initializeDatabase } = require("./db");
 const dotenv = require("dotenv");
-dotenv.config(); // Load environment variables first
+
+// Load environment variables first
+dotenv.config();
 
 // Enhanced Logging Utility (simple console wrapper)
 const logger = {
-  info: (...args) => console.log("[INFO]", ...args),
-  warn: (...args) => console.warn("[WARN]", ...args),
-  error: (...args) => console.error("[ERROR]", ...args),
-  debug: (...args) => process.env.NODE_ENV !== 'production' && console.log("[DEBUG]", ...args),
+    info: (...args) => console.log("[INFO]", ...args),
+    warn: (...args) => console.warn("[WARN]", ...args),
+    error: (...args) => console.error("[ERROR]", ...args),
+    debug: (...args) => process.env.NODE_ENV !== 'production' && console.log("[DEBUG]", ...args),
 };
 
 logger.info("🧪 Starting up server.js...");
@@ -21,19 +23,19 @@ const nodemailer = require("nodemailer");
 
 // Check for critical environment variables at startup
 if (!process.env.STRIPE_SECRET_KEY) {
-  logger.error("❌ STRIPE_SECRET_KEY is NOT LOADED. Please check your .env file.");
-  process.exit(1); // Exit if critical keys are missing
+    logger.error("❌ STRIPE_SECRET_KEY is NOT LOADED. Please check your .env file.");
+    process.exit(1); // Exit if critical keys are missing
 }
 if (!process.env.STRIPE_WEBHOOK_SECRET) {
-  logger.error("❌ STRIPE_WEBHOOK_SECRET is NOT LOADED. Please check your .env file.");
-  process.exit(1);
+    logger.error("❌ STRIPE_WEBHOOK_SECRET is NOT LOADED. Please check your .env file.");
+    process.exit(1);
 }
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-  logger.error("❌ EMAIL_USER or EMAIL_PASS is NOT LOADED. Email functionality may be impaired.");
-  // Don't exit, as email is not strictly critical for basic server operation, but log severe warning.
+    logger.error("❌ EMAIL_USER or EMAIL_PASS is NOT LOADED. Email functionality may be impaired.");
+    // Don't exit, as email is not strictly critical for basic server operation, but log severe warning.
 }
 if (!process.env.YOUR_DOMAIN) {
-  logger.warn("⚠️ YOUR_DOMAIN is not set in .env. Stripe success/cancel URLs might be incorrect.");
+    logger.warn("⚠️ YOUR_DOMAIN is not set in .env. Stripe success/cancel URLs might be incorrect.");
 }
 
 logger.info("Stripe Secret Key:", process.env.STRIPE_SECRET_KEY ? "Loaded" : "NOT LOADED - Check .env");
@@ -42,7 +44,7 @@ const bcrypt = require("bcrypt");
 
 const app = express();
 
-// Apply CORS middleware
+// Apply CORS middleware - always before routes that need to be accessible cross-origin
 app.use(cors());
 
 // --- CRITICAL FIX FOR STRIPE WEBHOOK ---
@@ -50,103 +52,100 @@ app.use(cors());
 // because Stripe's webhook needs the raw body.
 // The /webhook route will use express.raw()
 app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
-  logger.info('--- Webhook endpoint received a request! ---');
-  const sig = req.headers["stripe-signature"];
+    logger.info('--- Webhook endpoint received a request! ---');
+    const sig = req.headers["stripe-signature"];
 
-  let event;
+    let event;
 
-  try {
-    // req.body is now the raw buffer/string because express.raw() ran for this specific route
-    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-    logger.info(`[STRIPE] Webhook: Event constructed successfully. Type: ${event.type}`);
-  } catch (err) {
-    logger.error("❌ [STRIPE] Webhook signature verification failed.", err.message);
-    logger.error("      Raw Body (truncated):", req.body ? req.body.toString().substring(0, 500) + '...' : 'No body');
-    logger.error("      Signature Header:", sig);
-    return res.status(400).send(`Webhook Error: ${err.message}`);
-  }
+    try {
+        // req.body is now the raw buffer/string because express.raw() ran for this specific route
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+        logger.info(`[STRIPE] Webhook: Event constructed successfully. Type: ${event.type}`);
+    } catch (err) {
+        logger.error("❌ [STRIPE] Webhook signature verification failed.", err.message);
+        logger.error("       Raw Body (truncated):", req.body ? req.body.toString().substring(0, 500) + '...' : 'No body');
+        logger.error("       Signature Header:", sig);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
 
-  // Handle different Stripe event types
-  switch (event.type) {
-    case "checkout.session.completed":
-      logger.info('[STRIPE] Webhook: Received checkout.session.completed event.');
-      const session = event.data.object;
-      const email = session.customer_details?.email;
-      logger.info(`[STRIPE] Webhook: Processing session for email: ${email}`);
+    // Handle different Stripe event types
+    switch (event.type) {
+        case "checkout.session.completed":
+            logger.info('[STRIPE] Webhook: Received checkout.session.completed event.');
+            const session = event.data.object;
+            const email = session.customer_details?.email;
+            logger.info(`[STRIPE] Webhook: Processing session for email: ${email}`);
 
-      try {
-        const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 100 });
-        let orderItemsText = '';
-        if (lineItems.data && lineItems.data.length > 0) {
-          orderItemsText = lineItems.data.map(item => {
-            const productName = item.description;
-            const unitAmount = (item.price.unit_amount / 100).toFixed(2);
-            const quantity = item.quantity;
-            return `<li>${productName} - £${unitAmount} (x${quantity})</li>`;
-          }).join('');
-        } else {
-          logger.warn("[STRIPE] Webhook: No line items found for session", session.id);
-          orderItemsText = '<li>No specific item details available from Stripe line items.</li>';
-        }
+            try {
+                const lineItems = await stripe.checkout.sessions.listLineItems(session.id, { limit: 100 });
+                let orderItemsText = '';
+                if (lineItems.data && lineItems.data.length > 0) {
+                    orderItemsText = lineItems.data.map(item => {
+                        const productName = item.description;
+                        const unitAmount = (item.price.unit_amount / 100).toFixed(2);
+                        const quantity = item.quantity;
+                        return `<li>${productName} - £${unitAmount} (x${quantity})</li>`;
+                    }).join('');
+                } else {
+                    logger.warn("[STRIPE] Webhook: No line items found for session", session.id);
+                    orderItemsText = '<li>No specific item details available from Stripe line items.</li>';
+                }
 
-        const total = (session.amount_total / 100).toFixed(2);
+                const total = (session.amount_total / 100).toFixed(2);
 
-        const ownerEmail = {
-          from: process.env.EMAIL_USER,
-          to: process.env.EMAIL_USER,
-          subject: "💳 New Stripe Payment Received",
-          html: `
-            <h2>Stripe Payment Received!</h2>
-            <p><strong>Customer Email:</strong> ${email}</p>
-            <p><strong>Amount:</strong> £${total}</p>
-            <p><strong>Status:</strong> ${session.payment_status}</p>
-            <hr>
-            <h3>Order Details:</h3>
-            <ul>
-              ${orderItemsText}
-            </ul>
-            <p>Please log in to Stripe Dashboard for full session details.</p>
-          `,
-        };
+                const ownerEmail = {
+                    from: process.env.EMAIL_USER,
+                    to: process.env.EMAIL_USER,
+                    subject: "💳 New Stripe Payment Received",
+                    html: `
+                        <h2>Stripe Payment Received!</h2>
+                        <p><strong>Customer Email:</strong> ${email}</p>
+                        <p><strong>Amount:</strong> £${total}</p>
+                        <p><strong>Status:</strong> ${session.payment_status}</p>
+                        <hr>
+                        <h3>Order Details:</h3>
+                        <ul>
+                            ${orderItemsText}
+                        </ul>
+                        <p>Please log in to Stripe Dashboard for full session details.</p>
+                    `,
+                };
 
-        const customerEmail = {
-          from: process.env.EMAIL_USER,
-          to: email,
-          subject: "🧾 Your Lubo's Kebab Receipt",
-          html: `
-            <h2>Thanks for your payment!</h2>
-            <p>We received your order and it's being prepared.</p>
-            <p><strong>Amount Paid:</strong> £${total}</p>
-            <p><strong>Payment Status:</strong> ${session.payment_status}</p>
-            <hr>
-            <h3>Your Order Details:</h3>
-            <ul>
-              ${orderItemsText}
-            </ul>
-            <p>We appreciate your business!</p>
-          `,
-        };
+                const customerEmail = {
+                    from: process.env.EMAIL_USER,
+                    to: email,
+                    subject: "🧾 Your Lubo's Kebab Receipt",
+                    html: `
+                        <h2>Thanks for your payment!</h2>
+                        <p>We received your order and it's being prepared.</p>
+                        <p><strong>Amount Paid:</strong> £${total}</p>
+                        <p><strong>Payment Status:</strong> ${session.payment_status}</p>
+                        <hr>
+                        <h3>Your Order Details:</h3>
+                        <ul>
+                            ${orderItemsText}
+                        </ul>
+                        <p>We appreciate your business!</p>
+                    `,
+                };
 
-        try {
-          await transporter.sendMail(ownerEmail);
-          await transporter.sendMail(customerEmail);
-          logger.info("[EMAIL] Payment confirmation emails sent successfully.");
-        } catch (emailError) {
-          logger.error("❌ [EMAIL] Error sending payment confirmation emails:", emailError);
-        }
-      } catch (processingError) {
-        logger.error("❌ [STRIPE] Error processing checkout.session.completed event:", processingError);
-      }
-      break;
-    // Add other event types here if needed
-    // case 'payment_intent.succeeded':
-    //   // handle payment_intent.succeeded
-    //   break;
-    default:
-      logger.warn(`[STRIPE] Webhook: Received unhandled event type: ${event.type}`);
-  }
+                try {
+                    await transporter.sendMail(ownerEmail);
+                    await transporter.sendMail(customerEmail);
+                    logger.info("[EMAIL] Payment confirmation emails sent successfully.");
+                } catch (emailError) {
+                    logger.error("❌ [EMAIL] Error sending payment confirmation emails:", emailError);
+                }
+            } catch (processingError) {
+                logger.error("❌ [STRIPE] Error processing checkout.session.completed event:", processingError);
+            }
+            break;
+        // Add other event types here if needed
+        default:
+            logger.warn(`[STRIPE] Webhook: Received unhandled event type: ${event.type}`);
+    }
 
-  res.status(200).json({ received: true });
+    res.status(200).json({ received: true });
 });
 
 // Apply general body parsing middleware for all OTHER routes
@@ -156,80 +155,47 @@ app.use(express.urlencoded({ extended: true }));
 
 // Request logging middleware
 app.use((req, res, next) => {
-  logger.info(`👉 Incoming request: ${req.method} ${req.url}`);
-  next();
+    logger.info(`👉 Incoming request: ${req.method} ${req.url}`);
+    next();
 });
 
 // Serve static files from the 'public' directory
+// This line tells Express to look for static files (like index.html, CSS, JS, images)
+// inside the 'public' folder when a request comes in.
+// Requests like /index.html, /css/style.css, /js/main.js will be served by this.
 app.use(express.static(path.join(__dirname, 'public')));
 
 /**
- * Route to serve the main index.html page.
- * @name GET /
+ * IMPORTANT: Catch-all route to serve index.html for any client-side routing.
+ * This MUST come AFTER all API routes and express.static to ensure API calls
+ * are handled first, and only unmatched routes fall back to serving the main HTML.
+ * @name GET *
  * @function
  * @param {Object} req - Express request object.
  * @param {Object} res - Express response object.
  */
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+app.get('*', (req, res) => {
+    // If the request path is for an existing static file (e.g., /login.html, /cancel.html),
+    // express.static middleware above would have already handled it.
+    // This route is for paths that don't map to a static file and are not API routes,
+    // typically for client-side routing.
+    logger.debug(`[STATIC] Serving index.html for path: ${req.url}`);
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-/**
- * Route to serve the registration page.
- * @name GET /register.html
- * @function
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
-app.get("/register.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "register.html"));
-});
-
-/**
- * Route to serve the login page.
- * @name GET /login.html
- * @function
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
-app.get("/login.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "login.html"));
-});
-
-/**
- * Route to serve the success page after a successful order/payment.
- * @name GET /success.html
- * @function
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
-app.get("/success.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "success.html"));
-});
-
-/**
- * Route to serve the cancellation page after a payment cancellation.
- * @name GET /cancel.html
- * @function
- * @param {Object} req - Express request object.
- * @param {Object} res - Express response object.
- */
-app.get("/cancel.html", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "cancel.html"));
-});
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-  tls: {
-    // WARNING: This is for development/testing only and should be removed in production
-    // or configured securely with proper SSL certificates.
-    rejectUnauthorized: false,
-  },
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
+    tls: {
+        // WARNING: This is for development/testing only and should be removed in production
+        // or configured securely with proper SSL certificates.
+        rejectUnauthorized: false,
+    },
 });
 
 /**
@@ -240,19 +206,19 @@ const transporter = nodemailer.createTransport({
  * @param {Object} res - Express response object.
  */
 app.get("/test-email", async (req, res) => {
-  try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
-      subject: "✅ Test Email from Lubo's Kebab Server",
-      text: "This is a test email sent from your Node.js server.",
-    });
-    logger.info("[EMAIL] Test email sent successfully!");
-    res.status(200).send("Test email sent successfully!");
-  } catch (error) {
-    logger.error("❌ [EMAIL] Error sending test email:", error);
-    res.status(500).send("Failed to send test email.");
-  }
+    try {
+        await transporter.sendMail({
+            from: process.env.EMAIL_USER,
+            to: process.env.EMAIL_USER,
+            subject: "✅ Test Email from Lubo's Kebab Server",
+            text: "This is a test email sent from your Node.js server.",
+        });
+        logger.info("[EMAIL] Test email sent successfully!");
+        res.status(200).send("Test email sent successfully!");
+    } catch (error) {
+        logger.error("❌ [EMAIL] Error sending test email:", error);
+        res.status(500).send("Failed to send test email.");
+    }
 });
 
 /**
@@ -264,13 +230,13 @@ app.get("/test-email", async (req, res) => {
  * @param {Object} res - Express response object.
  */
 app.get('/api/registered-users', async (req, res, next) => {
-  try {
-    const result = await query("SELECT id, email FROM users");
-    res.status(200).json({ users: result.rows });
-  } catch (err) {
-    logger.error("❌ [DB] Error fetching users:", err.message);
-    next(err); // Pass error to centralized error handler
-  }
+    try {
+        const result = await query("SELECT id, email FROM users");
+        res.status(200).json({ users: result.rows });
+    } catch (err) {
+        logger.error("❌ [DB] Error fetching users:", err.message);
+        next(err); // Pass error to centralized error handler
+    }
 });
 
 /**
@@ -283,60 +249,60 @@ app.get('/api/registered-users', async (req, res, next) => {
  * @param {Object} res - Express response object.
  */
 app.post("/register", async (req, res, next) => {
-  const { email, password, confirmPassword } = req.body;
+    const { email, password, confirmPassword } = req.body;
 
-  if (!email || !password || !confirmPassword) {
-    return res.status(400).json({ message: "All fields are required." });
-  }
-
-  if (password !== confirmPassword) {
-    return res.status(400).json({ message: "Passwords do not match." });
-  }
-
-  // Basic email format validation (can be more robust with regex)
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return res.status(400).json({ message: "Invalid email format." });
-  }
-
-  try {
-    const userExists = await query("SELECT * FROM users WHERE email = $1", [email]);
-    if (userExists.rows.length > 0) {
-      return res.status(409).json({ message: "User with that email already exists." });
+    if (!email || !password || !confirmPassword) {
+        return res.status(400).json({ message: "All fields are required." });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    if (password !== confirmPassword) {
+        return res.status(400).json({ message: "Passwords do not match." });
+    }
 
-    await query(
-      "INSERT INTO users (email, password) VALUES ($1, $2)",
-      [email, hashedPassword]
-    );
+    // Basic email format validation (can be more robust with regex)
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return res.status(400).json({ message: "Invalid email format." });
+    }
 
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
-      to: email,
-      subject: "✅ Welcome to Lubo's Kebab!",
-      html: `
-        <h2>Welcome, ${email}!</h2>
-        <p>Thank you for registering with Lubo's Kebab. You can now log in and start ordering your favorite kebabs!</p>
-        <p>Enjoy your meal!</p>
-        <p>If you have any questions, feel free to contact us.</p>
-      `,
-    };
+    try {
+        const userExists = await query("SELECT * FROM users WHERE email = $1", [email]);
+        if (userExists.rows.length > 0) {
+            return res.status(409).json({ message: "User with that email already exists." });
+        }
 
-    transporter.sendMail(mailOptions, (mailErr, info) => {
-      if (mailErr) {
-        logger.error("❌ [EMAIL] Error sending welcome email:", mailErr);
-      } else {
-        logger.info("[EMAIL] Welcome email sent:", info.response);
-      }
-    });
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    res.status(201).json({ message: "User registered successfully!" });
+        await query(
+            "INSERT INTO users (email, password) VALUES ($1, $2)",
+            [email, hashedPassword]
+        );
 
-  } catch (error) {
-    logger.error("❌ [AUTH] Error during registration process:", error);
-    next(error); // Pass error to centralized error handler
-  }
+        const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: "✅ Welcome to Lubo's Kebab!",
+            html: `
+                <h2>Welcome, ${email}!</h2>
+                <p>Thank you for registering with Lubo's Kebab. You can now log in and start ordering your favorite kebabs!</p>
+                <p>Enjoy your meal!</p>
+                <p>If you have any questions, feel free to contact us.</p>
+            `,
+        };
+
+        transporter.sendMail(mailOptions, (mailErr, info) => {
+            if (mailErr) {
+                logger.error("❌ [EMAIL] Error sending welcome email:", mailErr);
+            } else {
+                logger.info("[EMAIL] Welcome email sent:", info.response);
+            }
+        });
+
+        res.status(201).json({ message: "User registered successfully!" });
+
+    } catch (error) {
+        logger.error("❌ [AUTH] Error during registration process:", error);
+        next(error); // Pass error to centralized error handler
+    }
 });
 
 /**
@@ -349,35 +315,35 @@ app.post("/register", async (req, res, next) => {
  * @param {Object} res - Express response object.
  */
 app.post("/login", async (req, res, next) => {
-  logger.info('[AUTH] --- Entered /login route ---');
-  const { email, password } = req.body;
+    logger.info('[AUTH] --- Entered /login route ---');
+    const { email, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required." });
-  }
-
-  try {
-    const result = await query("SELECT * FROM users WHERE email = $1", [email]);
-    const user = result.rows[0];
-
-    if (!user) {
-      logger.warn(`[AUTH] Login attempt for ${email}: User not found.`);
-      return res.status(401).json({ message: "Invalid credentials." });
+    if (!email || !password) {
+        return res.status(400).json({ message: "Email and password are required." });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      logger.warn(`[AUTH] Login attempt for ${email}: Password mismatch.`);
-      return res.status(401).json({ message: "Invalid credentials." });
-    }
+    try {
+        const result = await query("SELECT * FROM users WHERE email = $1", [email]);
+        const user = result.rows[0];
 
-    logger.info(`[AUTH] Login successful for ${email}.`);
-    // In a real application, you would issue a JWT or session token here.
-    res.status(200).json({ message: "Login successful!", userId: user.id });
-  } catch (error) {
-    logger.error("❌ [DB] Database error during login:", error.message);
-    next(error); // Pass error to centralized error handler
-  }
+        if (!user) {
+            logger.warn(`[AUTH] Login attempt for ${email}: User not found.`);
+            return res.status(401).json({ message: "Invalid credentials." });
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            logger.warn(`[AUTH] Login attempt for ${email}: Password mismatch.`);
+            return res.status(401).json({ message: "Invalid credentials." });
+        }
+
+        logger.info(`[AUTH] Login successful for ${email}.`);
+        // In a real application, you would issue a JWT or session token here.
+        res.status(200).json({ message: "Login successful!", userId: user.id });
+    } catch (error) {
+        logger.error("❌ [DB] Database error during login:", error.message);
+        next(error); // Pass error to centralized error handler
+    }
 });
 
 /**
@@ -390,164 +356,164 @@ app.post("/login", async (req, res, next) => {
  * @param {Object} res - Express response object.
  */
 app.post("/cash-order", async (req, res, next) => {
-  const { order, customer } = req.body;
+    const { order, customer } = req.body;
 
-  if (!order || !Array.isArray(order) || order.length === 0 || !customer) {
-    return res.status(400).json({ message: "Missing or invalid order/customer data." });
-  }
-
-  // Sanitize customer inputs to prevent email injection etc. (basic example)
-  const sanitizedCustomer = {
-    name: customer.name ? String(customer.name).trim() : 'N/A',
-    email: customer.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email) ? String(customer.email).trim() : 'N/A',
-    phone: customer.phone ? String(customer.phone).trim() : 'N/A',
-    address: customer.address ? String(customer.address).trim() : 'N/A',
-    instructions: customer.instructions ? String(customer.instructions).trim() : 'None',
-  };
-
-  const orderItemsText = order.map(item => {
-    let itemDetail = `<li>${String(item.name).trim()} - £${(Number(item.price) || 0).toFixed(2)} (x${Number(item.quantity) || 1})`;
-    if (item.customizations) {
-      if (item.customizations.sauces && item.customizations.sauces.length > 0) {
-        itemDetail += `<br>&nbsp;&nbsp;&nbsp;Sauces: ${item.customizations.sauces.map(s => String(s).trim()).join(', ')}`;
-      }
-      if (item.customizations.toppings && item.customizations.toppings.length > 0) {
-        itemDetail += `<br>&nbsp;&nbsp;&nbsp;Toppings: ${item.customizations.toppings.map(t => String(t).trim()).join(', ')}`;
-      }
-      if (item.customizations.notes) {
-        itemDetail += `<br>&nbsp;&nbsp;&nbsp;Notes: ${String(item.customizations.notes).trim()}`;
-      }
+    if (!order || !Array.isArray(order) || order.length === 0 || !customer) {
+        return res.status(400).json({ message: "Missing or invalid order/customer data." });
     }
-    itemDetail += `</li>`;
-    return itemDetail;
-  }).join('');
 
-  const total = order.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 1), 0);
+    // Sanitize customer inputs to prevent email injection etc. (basic example)
+    const sanitizedCustomer = {
+        name: customer.name ? String(customer.name).trim() : 'N/A',
+        email: customer.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email) ? String(customer.email).trim() : 'N/A',
+        phone: customer.phone ? String(customer.phone).trim() : 'N/A',
+        address: customer.address ? String(customer.address).trim() : 'N/A',
+        instructions: customer.instructions ? String(customer.instructions).trim() : 'None',
+    };
 
-  const ownerMailOptions = {
-    from: process.env.EMAIL_USER,
-    to: process.env.EMAIL_USER,
-    subject: "💵 New Cash Order Received!",
-    html: `
-      <h1>You have a new cash order!</h1>
-      <p><strong>Customer Name:</strong> ${sanitizedCustomer.name}</p>
-      <p><strong>Customer Email:</strong> ${sanitizedCustomer.email}</p>
-      <p><strong>Customer Phone:</strong> ${sanitizedCustomer.phone}</p>
-      <p><strong>Delivery Address:</strong> ${sanitizedCustomer.address}</p>
-      <p><strong>Instructions:</strong> ${sanitizedCustomer.instructions}</p>
-      <hr>
-      <h3>Order Details:</h3>
-      <ul>
-        ${orderItemsText}
-      </ul>
-      <h3>Total: £${total.toFixed(2)}</h3>
-    `,
-  };
+    const orderItemsText = order.map(item => {
+        let itemDetail = `<li>${String(item.name).trim()} - £${(Number(item.price) || 0).toFixed(2)} (x${Number(item.quantity) || 1})`;
+        if (item.customizations) {
+            if (item.customizations.sauces && item.customizations.sauces.length > 0) {
+                itemDetail += `<br>&nbsp;&nbsp;&nbsp;Sauces: ${item.customizations.sauces.map(s => String(s).trim()).join(', ')}`;
+            }
+            if (item.customizations.toppings && item.customizations.toppings.length > 0) {
+                itemDetail += `<br>&nbsp;&nbsp;&nbsp;Toppings: ${item.customizations.toppings.map(t => String(t).trim()).join(', ')}`;
+            }
+            if (item.customizations.notes) {
+                itemDetail += `<br>&nbsp;&nbsp;&nbsp;Notes: ${String(item.customizations.notes).trim()}`;
+            }
+        }
+        itemDetail += `</li>`;
+        return itemDetail;
+    }).join('');
 
-  const customerMailOptions = {
-    from: process.env.EMAIL_USER,
-    to: sanitizedCustomer.email, // Use sanitized email here
-    subject: "🧾 Your Lubo's Kebab Cash Order Confirmation",
-    html: `
-      <h2>Thanks for your cash order, ${sanitizedCustomer.name}!</h2>
-      <p>We received your order and will prepare it shortly.</p>
-      <p><strong>Amount Due on Delivery:</strong> £${total.toFixed(2)}</p>
-      <hr>
-      <h3>Your Order:</h3>
-      <ul>
-        ${orderItemsText}
-      </ul>
-      <p>We appreciate your business!</p>
-    `,
-  };
+    const total = order.reduce((sum, item) => sum + (Number(item.price) || 0) * (Number(item.quantity) || 1), 0);
 
-  try {
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
-      await transporter.sendMail(ownerMailOptions);
-      if (sanitizedCustomer.email !== 'N/A') { // Only send to customer if email is valid
-        await transporter.sendMail(customerMailOptions);
-      }
-      logger.info("[EMAIL] Cash order confirmation emails sent.");
-    } else {
-      logger.warn("[EMAIL] Email credentials not set. Skipping cash order email confirmations.");
+    const ownerMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER,
+        subject: "💵 New Cash Order Received!",
+        html: `
+            <h1>You have a new cash order!</h1>
+            <p><strong>Customer Name:</strong> ${sanitizedCustomer.name}</p>
+            <p><strong>Customer Email:</strong> ${sanitizedCustomer.email}</p>
+            <p><strong>Customer Phone:</strong> ${sanitizedCustomer.phone}</p>
+            <p><strong>Delivery Address:</strong> ${sanitizedCustomer.address}</p>
+            <p><strong>Instructions:</strong> ${sanitizedCustomer.instructions}</p>
+            <hr>
+            <h3>Order Details:</h3>
+            <ul>
+                ${orderItemsText}
+            </ul>
+            <h3>Total: £${total.toFixed(2)}</h3>
+        `,
+    };
+
+    const customerMailOptions = {
+        from: process.env.EMAIL_USER,
+        to: sanitizedCustomer.email, // Use sanitized email here
+        subject: "🧾 Your Lubo's Kebab Cash Order Confirmation",
+        html: `
+            <h2>Thanks for your cash order, ${sanitizedCustomer.name}!</h2>
+            <p>We received your order and will prepare it shortly.</p>
+            <p><strong>Amount Due on Delivery:</strong> £${total.toFixed(2)}</p>
+            <hr>
+            <h3>Your Order:</h3>
+            <ul>
+                ${orderItemsText}
+            </ul>
+            <p>We appreciate your business!</p>
+        `,
+    };
+
+    try {
+        if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+            await transporter.sendMail(ownerMailOptions);
+            if (sanitizedCustomer.email !== 'N/A') { // Only send to customer if email is valid
+                await transporter.sendMail(customerMailOptions);
+            }
+            logger.info("[EMAIL] Cash order confirmation emails sent.");
+        } else {
+            logger.warn("[EMAIL] Email credentials not set. Skipping cash order email confirmations.");
+        }
+        res.status(200).send("Cash order received and emails processed!");
+    } catch (error) {
+        logger.error("❌ [EMAIL] Error processing cash order or sending emails:", error);
+        next(error); // Pass error to centralized error handler
     }
-    res.status(200).send("Cash order received and emails processed!");
-  } catch (error) {
-    logger.error("❌ [EMAIL] Error processing cash order or sending emails:", error);
-    next(error); // Pass error to centralized error handler
-  }
 });
 
 // --- Stripe Checkout Session Endpoint ---
 app.post("/create-checkout-session", async (req, res, next) => {
-  const { cart, customerEmail } = req.body;
+    const { cart, customerEmail } = req.body;
 
-  logger.info("Creating Stripe session with cart (first 500 chars):", JSON.stringify(cart).substring(0, 500) + '...');
-  logger.info("Customer email for session:", customerEmail);
+    logger.info("Creating Stripe session with cart (first 500 chars):", JSON.stringify(cart).substring(0, 500) + '...');
+    logger.info("Customer email for session:", customerEmail);
 
-  if (!cart || !Array.isArray(cart) || cart.length === 0) {
-    logger.error("❌ Cart is empty or invalid for session creation");
-    return res.status(400).json({ error: "Cart is empty or invalid" });
-  }
-  if (!customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
-    logger.error("❌ Invalid customer email format:", customerEmail);
-    return res.status(400).json({ error: "Invalid customer email format." });
-  }
-
-  try {
-    const line_items = cart.map(item => ({
-      price_data: {
-        currency: 'gbp',
-        product_data: {
-          name: String(item.name) +
-                (item.customizations && (item.customizations.sauces.length > 0 || item.customizations.toppings.length > 0 || item.customizations.notes)
-                  ? ' (' +
-                    (item.customizations.sauces.length > 0 ? 'Sauces: ' + item.customizations.sauces.map(s => String(s).trim()).join(', ') : '') +
-                    (item.customizations.sauces.length > 0 && item.customizations.toppings.length > 0 ? '; ' : '') +
-                    (item.customizations.toppings.length > 0 ? 'Toppings: ' + item.customizations.toppings.map(t => String(t).trim()).join(', ') : '') +
-                    ((item.customizations.sauces.length > 0 || item.customizations.toppings.length > 0) && item.customizations.notes ? '; ' : '') +
-                    (item.customizations.notes ? 'Notes: ' + String(item.customizations.notes).trim() : '')
-                  + ')' : ''), // ✅ Append customizations to product name for Stripe display
-        },
-        unit_amount: Math.round(Number(item.price) * 100),
-      },
-      quantity: Number(item.quantity) || 1,
-    }));
-
-    logger.info("Line items for Stripe:", JSON.stringify(line_items));
-
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items,
-      mode: 'payment',
-      customer_email: customerEmail,
-      success_url: `${process.env.YOUR_DOMAIN}/success.html`,
-      cancel_url: `${process.env.YOUR_DOMAIN}/cancel.html`,
-      // metadata: {
-      //   cart: JSON.stringify(cart) // Only use if you absolutely need the full cart in metadata, can cause payload too large.
-      // }
-    });
-
-    logger.info("✅ Stripe session created:", session.id);
-    res.json({ id: session.id });
-
-  } catch (error) {
-    logger.error("❌ Stripe session creation failed:", error.raw ? error.raw.message : error.message || error);
-    if (error.raw) {
-        logger.error("Stripe Raw Error:", JSON.stringify(error.raw, null, 2));
+    if (!cart || !Array.isArray(cart) || cart.length === 0) {
+        logger.error("❌ Cart is empty or invalid for session creation");
+        return res.status(400).json({ error: "Cart is empty or invalid" });
     }
-    next(error); // Pass error to centralized error handler
-  }
+    if (!customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
+        logger.error("❌ Invalid customer email format:", customerEmail);
+        return res.status(400).json({ error: "Invalid customer email format." });
+    }
+
+    try {
+        const line_items = cart.map(item => ({
+            price_data: {
+                currency: 'gbp',
+                product_data: {
+                    name: String(item.name) +
+                        (item.customizations && (item.customizations.sauces.length > 0 || item.customizations.toppings.length > 0 || item.customizations.notes)
+                            ? ' (' +
+                            (item.customizations.sauces.length > 0 ? 'Sauces: ' + item.customizations.sauces.map(s => String(s).trim()).join(', ') : '') +
+                            (item.customizations.sauces.length > 0 && item.customizations.toppings.length > 0 ? '; ' : '') +
+                            (item.customizations.toppings.length > 0 ? 'Toppings: ' + item.customizations.toppings.map(t => String(t).trim()).join(', ') : '') +
+                            ((item.customizations.sauces.length > 0 || item.customizations.toppings.length > 0) && item.customizations.notes ? '; ' : '') +
+                            (item.customizations.notes ? 'Notes: ' + String(item.customizations.notes).trim() : '')
+                            + ')' : ''), // ✅ Append customizations to product name for Stripe display
+                },
+                unit_amount: Math.round(Number(item.price) * 100),
+            },
+            quantity: Number(item.quantity) || 1,
+        }));
+
+        logger.info("Line items for Stripe:", JSON.stringify(line_items));
+
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items,
+            mode: 'payment',
+            customer_email: customerEmail,
+            success_url: `${process.env.YOUR_DOMAIN}/success.html`,
+            cancel_url: `${process.env.YOUR_DOMAIN}/cancel.html`,
+            // metadata: {
+            //   cart: JSON.stringify(cart) // Only use if you absolutely need the full cart in metadata, can cause payload too large.
+            // }
+        });
+
+        logger.info("✅ Stripe session created:", session.id);
+        res.json({ id: session.id });
+
+    } catch (error) {
+        logger.error("❌ Stripe session creation failed:", error.raw ? error.raw.message : error.message || error);
+        if (error.raw) {
+            logger.error("Stripe Raw Error:", JSON.stringify(error.raw, null, 2));
+        }
+        next(error); // Pass error to centralized error handler
+    }
 });
 
 
 const PORT = process.env.PORT || 3000;
 
 // Centralized Error Handling Middleware
-// This should be the last app.use() middleware
+// This should be the last app.use() middleware before app.listen
 app.use((err, req, res, next) => {
-  logger.error("🔥 Unhandled Server Error:", err.stack);
-  res.status(500).json({ message: "An unexpected server error occurred." });
+    logger.error("🔥 Unhandled Server Error:", err.stack);
+    res.status(500).json({ message: "An unexpected server error occurred." });
 });
 
 
