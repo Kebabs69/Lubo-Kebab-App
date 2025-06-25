@@ -28,31 +28,30 @@ if (loginSubmitBtn) {
         // console.log('Attempting login for email:', email); // Debug log removed
 
         try {
-            // Send login credentials to the server
-            const response = await fetch('https://Lubo-Kebab-App-1.onrender.com/login', {
+            // Send login credentials to the server using absolute path
+            const response = await fetch('https://lubo-kebab-app-1.onrender.com/login', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password })
             });
 
-            // console.log('Fetch response received. Status:', response.status); // Debug log removed
+            const result = await response.json();
+            // console.log('Server response:', result); // Debug log removed
 
-            const data = await response.json(); // Parse the JSON response from the server
+            if (response.ok && result.success) {
+                // Store login status in localStorage
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email); // Optionally store email
 
-            if (response.ok) { // Server responded with a success status (200-299)
-                console.log('Login successful:', data.message); // Keep this one for general info
-                // Optional: Set a flag in localStorage or session storage to indicate login
-                localStorage.setItem('isLoggedIn', 'true'); // Set login flag
-                
-                // Redirect immediately after successful login
-                window.location.href = 'https://Lubo-Kebab-App-1.onrender.com/index.html'; // Direct to absolute path
-            } else { // Server responded with an error status (e.g., 400, 401, 500)
-                console.error('Login failed:', data.message); // Keep this one for error info
+                // Redirect to the main ordering page after successful login (absolute path)
+                window.location.href = 'https://lubo-kebab-app-1.onrender.com/index.html';
+            } else {
+                // Display error message
                 if (loginErrorMessage) {
                     loginErrorMessage.style.display = 'block';
-                    loginErrorMessage.textContent = data.message || 'Login failed. Please check your credentials.';
+                    loginErrorMessage.textContent = result.message || 'Invalid email or password. Please check your credentials.';
                 }
             }
         } catch (error) {
@@ -97,3 +96,53 @@ if (pauseBtnMusic) {
         pauseBtnMusic.style.display = 'none';
     });
 }
+
+
+// === Opening Status Checker functionality (MOVED FROM INDEX.JS) ===
+function checkOpenStatus() {
+    const now = new Date();
+    const day = now.getDay(); // 0 for Sunday, 1 for Monday, etc.
+    const hour = now.getHours();
+    const minute = now.getMinutes();
+    const totalMinutes = hour * 60 + minute;
+
+    // Define opening hours in minutes from midnight (e.g., 11:00 AM = 11*60 = 660)
+    const schedule = {
+        0: { open: 660, close: 1380 }, // Sunday 11:00 AM - 11:00 PM
+        1: { open: 660, close: 1380 }, // Monday 11:00 AM - 11:00 PM
+        2: { open: 660, close: 1380 }, // Tuesday 11:00 AM - 11:00 PM
+        3: { open: 660, close: 1380 }, // Wednesday 11:00 AM - 11:00 PM
+        4: { open: 660, close: 1380 }, // Thursday 11:00 AM - 11:00 PM
+        5: { open: 660, close: 1560 }, // Friday 11:00 AM - 02:00 AM (next day) - 1560 is 26*60 (2AM next day)
+        6: { open: 660, close: 1560 }  // Saturday 11:00 AM - 02:00 AM (next day)
+    };
+
+    const today = schedule[day];
+    let isOpen = false;
+
+    // Handle crossing midnight for Friday and Saturday (or any day where close time is numerically smaller than open)
+    if (today.close < today.open) {
+        // If current time is past open or before close (next day)
+        isOpen = totalMinutes >= today.open || totalMinutes < today.close;
+    } else {
+        // Normal hours within a single day
+        isOpen = totalMinutes >= today.open && totalMinutes < today.close;
+    }
+
+    const statusEl = document.getElementById('openStatus');
+    if (statusEl) {
+        if (isOpen) {
+            statusEl.textContent = '✅ We are OPEN!';
+            statusEl.style.color = 'green';
+        } else {
+            statusEl.textContent = '❌ Sorry, we\'re CLOSED.';
+            statusEl.style.color = 'red';
+        }
+    } else {
+        console.warn("Element with ID 'openStatus' not found on login page.");
+    }
+}
+
+// Run the function immediately and then every minute
+checkOpenStatus();
+setInterval(checkOpenStatus, 60000); // Update every minute (60,000 milliseconds)

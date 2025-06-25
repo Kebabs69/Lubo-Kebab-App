@@ -6,6 +6,7 @@
     <title>Login to Lubo's Kebab</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet"/>
     <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
         /* Your Original Styles for login.html (preserved from previous uploads) */
         body {
@@ -13,11 +14,13 @@
             background: url('/assets/kebab-b.jpg') no-repeat center center/cover fixed; /* Absolute path for image */
             background-size: cover;
             display: flex;
+            flex-direction: column; /* Allow content to stack */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
             color: #333;
+            padding: 20px; /* Add some padding for small screens */
         }
         .login-container {
             background-color: rgba(255, 255, 255, 0.95);
@@ -25,30 +28,31 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 400px;
+            max-width: 450px; /* Adjusted max-width slightly for better fit with new content */
             text-align: center;
+            margin-bottom: 20px; /* Space between login form and hours */
         }
         h2 {
             color: #d2691e;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 2em;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
         input[type="email"],
         input[type="password"] {
-            width: 100%;
-            padding: 15px;
-            margin-bottom: 20px;
+            padding: 12px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1em;
         }
         button {
             background-color: #d2691e;
             color: white;
-            font-size: 18px;
-            font-weight: bold;
-            width: 100%;
-            padding: 18px;
+            padding: 12px 20px;
             border: none;
             border-radius: 12px;
             cursor: pointer;
@@ -72,24 +76,135 @@
             color: red;
             margin-top: 10px;
             display: none; /* Hidden by default */
+            font-weight: bold;
+        }
+
+        /* Styles for the opening hours card (moved from index.html) */
+        #hours-card {
+            max-width: 450px; /* Match login container width */
+            width: 100%;
+            padding: 20px;
+            border-radius: 15px;
+            background: #fff8f0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            font-family: 'Inter', sans-serif; /* Consistent font */
+            text-align: center;
+            margin-top: 20px; /* Space above */
+        }
+
+        #hours-card h2 {
+            margin-bottom: 10px;
+            color: #d2691e; /* Primary color for consistency */
+            font-size: 2em; /* Match login title size */
+            border-bottom: 2px solid #eee; /* Subtle separator */
+            padding-bottom: 10px;
+        }
+
+        #hours-card p#openStatus {
+            font-weight: bold;
+            font-size: 1.2em; /* Slightly larger for emphasis */
+            margin-bottom: 15px;
+        }
+
+        #hours-card table {
+            margin: 20px auto 0;
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.95em; /* Slightly smaller for table readability */
+            color: #555;
+        }
+
+        #hours-card table td {
+            padding: 8px 0;
+            border-bottom: 1px dashed #f0f0f0;
+        }
+
+        #hours-card table tr:last-child td {
+            border-bottom: none;
+        }
+
+        #hours-card table td:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+
+        #hours-card table td:last-child {
+            text-align: right;
+        }
+
+        /* Media queries for responsiveness */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .login-container, #hours-card {
+                padding: 25px;
+                margin-top: 15px;
+                margin-bottom: 15px;
+            }
+            h2 {
+                font-size: 1.8em;
+            }
+            input[type="email"], input[type="password"] {
+                padding: 10px;
+                font-size: 0.95em;
+            }
+            button {
+                padding: 10px 15px;
+                font-size: 0.95em;
+            }
+            p.link {
+                font-size: 0.9em;
+            }
+            #hours-card h2 {
+                font-size: 1.8em;
+            }
+            #hours-card p#openStatus {
+                font-size: 1.1em;
+            }
+            #hours-card table {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
 <body>
+    <div id="liveClock" style="position: fixed; top: 15px; right: 20px; background-color: #fff3cd; color: #333; padding: 8px 14px; border-radius: 12px; font-weight: bold; font-size: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); z-index: 9999;"></div>
+    <audio id="bg-music" loop="" src="/assets/music.mp3"></audio>
+    <div class="music-controls" style="position: fixed; top: 15px; left: 20px; z-index: 9999;">
+        <button id="playBtn" style="padding: 5px 10px; font-size: 14px; border-radius: 8px; background-color: #d2691e; color: white; border: none; cursor: pointer;">▶ Play</button>
+        <button id="pauseBtn" style="display: none; padding: 5px 10px; font-size: 14px; border-radius: 8px; background-color: #d2691e; color: white; border: none; cursor: pointer;">⏸ Pause</button>
+    </div>
+
     <div class="login-container">
         <h2>Login to Your Account</h2>
         <form id="loginForm">
             <input type="email" placeholder="Email Address" id="loginEmail" required>
             <input type="password" placeholder="Password" id="loginPassword" required>
             <!-- Ensure type is 'button' and ID is present -->
-            <button type="button" id="loginSubmitBtn">Login</button> 
+            <button type="button" id="loginSubmitBtn">Login</button>
             <p class="error-message" id="error-message"></p>
         </form>
         <p class="link">Don't have an account? <a href="/register.html">Register here</a></p> <!-- Absolute path -->
         <p class="link"><a href="/index.html">Back to Home</a></p> <!-- Absolute path -->
     </div>
 
-    <!-- IMPORTANT: Use absolute path for login.js and add a cache-buster -->
-    <script src="/js/login.js?v=202406161400"></script> 
+    <!-- NEWLY ADDED: Opening Hours Card -->
+    <div id="hours-card">
+        <h2>Opening Hours</h2>
+        <p id="openStatus">Checking...</p>
+        <table>
+            <tr><td>Monday</td><td style="text-align:right;">11:00 AM – 23:00 PM</td></tr>
+            <tr><td>Tuesday</td><td style="text-align:right;">11:00 AM – 23:00 PM</td></tr>
+            <tr><td>Wednesday</td><td style="text-align:right;">11:00 AM – 23:00 PM</td></tr>
+            <tr><td>Thursday</td><td style="text-align:right;">11:00 AM – 11:00 PM</td></tr>
+            <tr><td>Friday</td><td style="text-align:right;">11:00 AM – 02:00 AM</td></tr>
+            <tr><td>Saturday</td><td style="text-align:right;">11:00 AM – 02:00 AM</td></tr>
+            <tr><td>Sunday</td><td style="text-align:right;">11:00 AM – 11:00 PM</td></tr>
+        </table>
+    </div>
+
+    <!-- IMPORTANT: Link to the specific login.js file with absolute path and cache buster -->
+    <script src="/js/login.js?v=202406161400"></script>
 </body>
 </html>
