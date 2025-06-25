@@ -562,7 +562,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     width: 60px; /* Fixed width for quantity input */
     padding: 6px 8px;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 10px;
     font-size: 0.95em;
     text-align: center;
     background-color: var(--light-bg);
@@ -1156,7 +1156,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     left: 0;
     top: 0;
     width: 100%; /* Full width */
-    height: 100%; /* Full height */
+    height: 100%;
     overflow: auto; /* Enable scroll if needed */
     background-color: rgba(0,0,0,0.7); /* Darker overlay */
     justify-content: center; /* Center content horizontally */
@@ -1520,20 +1520,24 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       ">
          🧾 Place Order
       </button>
-      <div style="margin-top: 20px; padding: 15px; border: 2px solid #c0392b; border-radius: 12px; background-color: #fff4e6; text-align: center;">
-         <p style="font-size: 22px; font-weight: bold; color: #c0392b;">
-               💵💰 CASH PAYMENTS ONLY 💰💵
+      <!-- UPDATED PAYMENT MESSAGE -->
+      <div style="margin-top: 20px; padding: 15px; border: 2px solid #27ae60; border-radius: 12px; background-color: #e6ffe6; text-align: center;">
+         <p style="font-size: 22px; font-weight: bold; color: #27ae60;">
+               ✅ Payment Options Available! ✅
             </p>
          <p style="font-size: 17px; color: #333;">
-               At this time, we are accepting
+               You can choose between
                <strong>
                   Cash on Delivery
                </strong>
-               only.
-               <br/>
-               .
-               <br/>
-               Card and online payments will be available soon.We appreciate your understanding and support! 🙏
+               or secure online payment by
+               <strong>
+                  Card (Stripe)
+               </strong>
+               at checkout.
+            </p>
+         <p style="font-size: 17px; color: #333; margin-top: 10px;">
+               Simply select your preferred method above. We appreciate your business! 🙏
             </p>
       </div>
    </div>
