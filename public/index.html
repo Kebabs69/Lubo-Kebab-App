@@ -25,7 +25,7 @@
       --accent-color: #ffc107; /* Yellow for highlights */
       --text-color: #333;
       --light-bg: #fdf5e6; /* Light cream background */
-      --dark-bg: #2c3e50; /* Darker background for contrast */
+      --dark-bg: #2c3e50; /* Dark darker background for contrast */
       --border-color: #e3e3e3;
       --box-shadow: 0 4px 20px rgba(0,0,0,0.07);
       --border-radius: 12px;
@@ -395,7 +395,7 @@
         font-size: 1.1em;
     }
     /* --- END NEW TESTIMONIALS SECTION STYLES --- */
-    
+
 input[type="text"], input[type="email"], input[type="tel"], input[type="number"], textarea, select {
   padding: 10px;
   border: 1px solid #ccc;
@@ -608,7 +608,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     font-size: 1em;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
     box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
 #clearCartBtn:hover {
@@ -863,7 +863,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   .container {
     min-width: 100% !important;
   }
-  
+
   .image-modal-content {
       width: 90%; /* Larger on mobile */
   }
@@ -937,7 +937,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   .testimonial-card {
       padding: 20px;
   }
-  
+
   /* Responsive for Kebab Order Controls (not directly used now for kebabs, but affects drinks/sides) */
   /* Re-purposing some of these for the modal quantity control if needed for responsiveness */
   .kebab-order-controls { /* Still affects drinks/sides for layout */
@@ -1030,7 +1030,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     margin: 0 auto 20px;
 }
 
-/* Form Container - Centralized and styled (carried over from your original, might not be fully used now) */
+/* Form Container - Centralized and styled (consistent with login.html) */
 .form-container {
     background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
     padding: 40px;
@@ -1051,6 +1051,17 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     color: var(--primary-color);
     text-align: center;
     margin-bottom: 30px;
+    position: relative;
+    padding-bottom: 10px;
+}
+.form-container h2::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background-color: var(--accent-color);
+    margin: 10px auto 0;
+    border-radius: 2px;
 }
 
 .form-container input[type="email"],
@@ -1260,7 +1271,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     // This script runs immediately when the body loads
     if (localStorage.getItem('isLoggedIn') !== 'true') {
         // If not logged in, redirect to the login page
-        window.location.href = 'https://Lubo-Kebab-App.onrender.com/login.html';
+        window.location.href = 'https://lubo-kebab-app-1.onrender.com/login.html';
     }
 </script>
 
@@ -1313,7 +1324,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
                 <i class="fas fa-plus"></i>
             </button>
         </div>
-      
+
         <!-- Veggie Wrap -->
         <div class="kebab-item">
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
@@ -1749,7 +1760,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
                 <label><input type="checkbox" value="Burger Sauce"> Burger Sauce</label>
             </div>
         </div>
-        
+
         <div class="modal-section">
             <h4>Special Notes</h4>
             <textarea id="modalKebabNotes" class="item-notes" placeholder="e.g., 'Extra spicy', 'No tomato'"></textarea>

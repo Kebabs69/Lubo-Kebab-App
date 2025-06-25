@@ -96,6 +96,8 @@ let currentKebabQuantity = 1;
 // This check now uses the correct domain for redirection.
 // Note: This script is intended for index.html. If other pages (like success.html)
 // are also loading this script, they will also trigger this check.
+// This check should ideally only be on login-protected pages, but for now,
+// it is kept here as per original structure.
 if (localStorage.getItem('isLoggedIn') !== 'true') {
     window.location.href = 'https://lubo-kebab-app-1.onrender.com/login.html'; // Corrected Absolute path for redirection
 }
@@ -847,6 +849,7 @@ function checkOpenStatus() {
       statusEl.textContent = "✅ We are OPEN!";
       statusEl.style.color = "green";
     } else {
+      statusEl.textContent = "❌ Sorry, we're CLOSED.";
       statusEl.style.color = "red";
     }
   }
