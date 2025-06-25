@@ -40,8 +40,9 @@ if (loginSubmitBtn) {
             const result = await response.json();
             console.log('Server response for login:', result); // Debug log: Inspect full server response
 
-            if (response.ok && result.success) {
-                console.log('Login successful condition met. Setting localStorage and attempting redirect...'); // Debug log
+            // MODIFIED: Changed condition from result.success to result.userId
+            if (response.ok && result.userId) { // Check if response is OK and userId exists in the result
+                console.log('Login successful condition met (userId found). Setting localStorage and attempting redirect...'); // Debug log
                 // Store login status in localStorage
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userEmail', email); // Optionally store email
@@ -54,6 +55,7 @@ if (loginSubmitBtn) {
                 // Display error message
                 if (loginErrorMessage) {
                     loginErrorMessage.style.display = 'block';
+                    // Use the message from the server if available, otherwise a generic one
                     loginErrorMessage.textContent = result.message || 'Invalid email or password. Please check your credentials.';
                 }
             }
