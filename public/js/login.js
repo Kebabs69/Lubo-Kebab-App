@@ -25,7 +25,7 @@ if (loginSubmitBtn) {
         if (loginErrorMessage) loginErrorMessage.textContent = '';
         // if (loginSuccessMessage) loginSuccessMessage.textContent = '';
 
-        // console.log('Attempting login for email:', email); // Debug log removed
+        console.log('Attempting login for email:', email); // Debug log
 
         try {
             // Send login credentials to the server using absolute path
@@ -38,16 +38,19 @@ if (loginSubmitBtn) {
             });
 
             const result = await response.json();
-            // console.log('Server response:', result); // Debug log removed
+            console.log('Server response for login:', result); // Debug log: Inspect full server response
 
             if (response.ok && result.success) {
+                console.log('Login successful condition met. Setting localStorage and attempting redirect...'); // Debug log
                 // Store login status in localStorage
                 localStorage.setItem('isLoggedIn', 'true');
                 localStorage.setItem('userEmail', email); // Optionally store email
 
                 // Redirect to the main ordering page after successful login (absolute path)
                 window.location.href = 'https://lubo-kebab-app-1.onrender.com/index.html';
+                console.log('Redirecting to index.html...'); // Debug log: This should be the last log if redirect works
             } else {
+                console.log('Login failed or condition not met. Displaying error.'); // Debug log
                 // Display error message
                 if (loginErrorMessage) {
                     loginErrorMessage.style.display = 'block';
