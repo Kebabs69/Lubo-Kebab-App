@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">\
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
    /* General Reset & Base Styles */
@@ -1261,7 +1261,6 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
         padding: 10px 20px;
     }
 }
-
 </style>
 </head>
 <body>
@@ -1351,7 +1350,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       <!-- Drinks Items - Updated to use .menu-item structure with Preview buttons and quantity inputs -->
       <div class="menu-item" data-item-id="coca-cola">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Coca Cola <span class="price">£1.50</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Coca Cola" data-image-url="/Reg Assets/Drinks/coca-cola.png">Preview</button>
+         <button type="button" class="preview-btn" data-image-title="Coca Cola" data-image-url="/reg-assets/drinks/coca-cola.png">Preview</button>
          <div class="item-quantity-control">
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Coca Cola" data-item-price="1.5">Add</button>
@@ -1457,7 +1456,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
           <i class="fas fa-trash-alt"></i> Clear Cart
       </button>
 
-      <!-- NEW: Estimated Delivery Time Display -->
+      <!-- Estimated Delivery Time Display -->
       <div style="margin-top: 20px; padding: 15px; border: 2px solid #d2691e; border-radius: 12px; background-color: #fffaf0; text-align: center;">
          <p style="font-size: 20px; font-weight: bold; color: #d2691e;">
                🚚 Estimated Delivery:
@@ -1512,7 +1511,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       border-radius: 8px;
       font-size: 16px;
       font-weight: bold;
-      cursor: pointer;
+      cursor: pointer; /* Re-enabled by default */
       box-shadow: 0 3px 6px rgba(0,0,0,0.15);
       ">
          💳 Pay with Card
@@ -1528,7 +1527,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       border: none;
       border-radius: 10px;
       margin-top: 20px;
-      cursor: pointer;
+      cursor: pointer; /* Re-enabled by default */
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       ">
          🧾 Place Order
