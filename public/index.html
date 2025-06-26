@@ -14,8 +14,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <style>
    /* General Reset & Base Styles */
-   * {
-      box-sizing: border-box;
+   * {\n      box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
@@ -1350,7 +1349,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       <!-- Drinks Items - Updated to use .menu-item structure with Preview buttons and quantity inputs -->
       <div class="menu-item" data-item-id="coca-cola">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Coca Cola <span class="price">£1.50</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Coca Cola" data-image-url="/reg-assets/drinks/coca-cola.png">Preview</button>
+         <button type="button" class="preview-btn" data-image-title="Coca Cola" data-image-url="/assets/coca-cola.png">Preview</button>
          <div class="item-quantity-control">
             <input type="number" class="item-quantity" value="0" min="0">
             <button type="button" class="add-to-cart-button" data-item-name="Coca Cola" data-item-price="1.5">Add</button>
