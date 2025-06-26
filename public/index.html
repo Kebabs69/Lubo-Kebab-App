@@ -471,7 +471,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     font-size: 14px;
     margin-left: 10px;
     transition: background-color 0.3s ease;
-    margin-top: 5px; /* Add some space from kebab name */
+    margin-top: 5px; /* Added some space from kebab name for consistency */
 }
 .preview-btn:hover {
     background-color: #45a049;
@@ -1308,7 +1308,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Kebab</h4>
             <button type="button" class="preview-btn" data-image-title="Chicken Kebab" data-image-url="/assets/chicken-preview.png">Preview</button>
             <!-- NEW: Button to open modal -->
-            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="chicken-kebab" data-kebab-name="Chicken Kebab">
+            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chicken-kebab" data-item-name="Chicken Kebab" data-item-type="kebab">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -1318,7 +1318,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
             <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
             <!-- NEW: Button to open modal -->
-            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="lamb-kebab" data-kebab-name="Lamb Kebab">
+            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="lamb-kebab" data-item-name="Lamb Kebab" data-item-type="kebab">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -1328,7 +1328,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
             <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
             <!-- NEW: Button to open modal -->
-            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="veggie-wrap" data-kebab-name="Veggie Wrap">
+            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="veggie-wrap" data-item-name="Veggie Wrap" data-item-type="kebab">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -1338,7 +1338,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
             <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
             <!-- NEW: Button to open modal -->
-            <button type="button" class="add-to-cart-modal-trigger-button" data-kebab-id="mixed-grill" data-kebab-name="Mixed Grill">
+            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="mixed-grill" data-item-name="Mixed Grill" data-item-type="kebab">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -1351,42 +1351,42 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       <div class="menu-item" data-item-id="coca-cola">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Coca Cola <span class="price">£1.50</span></h4>
          <button type="button" class="preview-btn" data-image-title="Coca Cola" data-image-url="/assets/coca-cola.png">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Coca Cola" data-item-price="1.5">Add</button>
-         </div>
+         <!-- NEW: Plus button for drinks -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="coca-cola" data-item-name="Coca Cola" data-item-price="1.50" data-item-type="drink">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
       <div class="menu-item" data-item-id="pepsi">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Pepsi <span class="price">£1.50</span></h4>
          <button type="button" class="preview-btn" data-image-title="Pepsi" data-image-url="https://placehold.co/300x200/FF00FF/FFFFFF?text=Pepsi">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Pepsi" data-item-price="1.5">Add</button>
-         </div>
+         <!-- NEW: Plus button for drinks -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="pepsi" data-item-name="Pepsi" data-item-price="1.50" data-item-type="drink">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
       <div class="menu-item" data-item-id="sprite">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Sprite <span class="price">£1.50</span></h4>
          <button type="button" class="preview-btn" data-image-title="Sprite" data-image-url="/assets/sprite.png">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Sprite" data-item-price="1.5">Add</button>
-         </div>
+         <!-- NEW: Plus button for drinks -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="sprite" data-item-name="Sprite" data-item-price="1.50" data-item-type="drink">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
       <div class="menu-item" data-item-id="fanta">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Fanta <span class="price">£1.50</span></h4>
          <button type="button" class="preview-btn" data-image-title="Fanta" data-image-url="/assets/fanta.png">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Fanta" data-item-price="1.5">Add</button>
-         </div>
+         <!-- NEW: Plus button for drinks -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="fanta" data-item-name="Fanta" data-item-price="1.50" data-item-type="drink">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
       <div class="menu-item" data-item-id="water">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Water <span class="price">£1.00</span></h4>
          <button type="button" class="preview-btn" data-image-title="Water" data-image-url="https://placehold.co/300x200/007BFF/FFFFFF?text=Water">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Water" data-item-price="1">Add</button>
-         </div>
+         <!-- NEW: Plus button for drinks -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="water" data-item-name="Water" data-item-price="1.00" data-item-type="drink">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
    </div>
    <div class="container" id="sides">
@@ -1397,42 +1397,42 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       <div class="menu-item" data-item-id="fries">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Fries <span class="price">£2.00</span></h4>
          <button type="button" class="preview-btn" data-image-title="Fries" data-image-url="https://placehold.co/300x200/FFFF00/000000?text=Fries">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Fries" data-item-price="2">Add</button>
-         </div>
+         <!-- NEW: Plus button for sides -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="fries" data-item-name="Fries" data-item-price="2.00" data-item-type="side">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
       <div class="menu-item" data-item-id="cheesy-chips">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Cheesy Chips <span class="price">£2.50</span></h4>
          <button type="button" class="preview-btn" data-image-title="Cheesy Chips" data-image-url="https://placehold.co/300x200/FFC107/000000?text=Cheesy+Chips">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Cheesy Chips" data-item-price="2.5">Add</button>
-         </div>
+         <!-- NEW: Plus button for sides -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="cheesy-chips" data-item-name="Cheesy Chips" data-item-price="2.50" data-item-type="side">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
       <div class="menu-item" data-item-id="onion-rings">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Onion Rings <span class="price">£2.00</span></h4>
          <button type="button" class="preview-btn" data-image-title="Onion Rings" data-image-url="https://placehold.co/300x200/C0C0C0/000000?text=Onion+Rings">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Onion Rings" data-item-price="2">Add</button>
-         </div>
+         <!-- NEW: Plus button for sides -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="onion-rings" data-item-name="Onion Rings" data-item-price="2.00" data-item-type="side">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
       <div class="menu-item" data-item-id="side-salad">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Side Salad <span class="price">£2.00</span></h4>
          <button type="button" class="preview-btn" data-image-title="Side Salad" data-image-url="https://placehold.co/300x200/33FF57/000000?text=Side+Salad">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Side Salad" data-item-price="2">Add</button>
-         </div>
+         <!-- NEW: Plus button for sides -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="side-salad" data-item-name="Side Salad" data-item-price="2.00" data-item-type="side">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
       <div class="menu-item" data-item-id="garlic-bread">
          <h4 style="margin-bottom: 10px; color: var(--primary-color);">Garlic Bread <span class="price">£1.50</span></h4>
          <button type="button" class="preview-btn" data-image-title="Garlic Bread" data-image-url="https://placehold.co/300x200/DAA520/000000?text=Garlic+Bread">Preview</button>
-         <div class="item-quantity-control">
-            <input type="number" class="item-quantity" value="0" min="0">
-            <button type="button" class="add-to-cart-button" data-item-name="Garlic Bread" data-item-price="1.5">Add</button>
-         </div>
+         <!-- NEW: Plus button for sides -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="garlic-bread" data-item-name="Garlic Bread" data-item-price="1.50" data-item-type="side">
+            <i class="fas fa-plus"></i>
+         </button>
       </div>
    </div>
    <div class="container" id="cart">
@@ -1662,21 +1662,20 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 <div id="kebabCustomizationModal" class="kebab-modal-overlay">
     <div class="kebab-modal-content">
         <span class="kebab-modal-close">&times;</span>
-        <h3 class="kebab-modal-title">Customize <span id="modalKebabName">Kebab</span></h3>
+        <h3 class="kebab-modal-title">Customize <span id="modalKebabName">Item</span></h3>
 
-        <div class="modal-section">
+        <!-- Size & Price Section (visible for kebabs only) -->
+        <div class="modal-section" id="modalSizeSection">
             <h4>Size & Price</h4>
             <div class="modal-radio-group" id="modalKebabSizes">
                 <!-- Size options will be injected here by JavaScript -->
-                <!-- Example: <label><input type="radio" name="kebabSize" value="Small" data-price="5.00"> <span>Small - £5.00</span></label> -->
             </div>
         </div>
 
-        <div class="modal-section">
+        <!-- Salads Section (visible for kebabs only) -->
+        <div class="modal-section" id="modalToppingsSection">
             <h4>Salads</h4>
             <div class="modal-checkbox-group" id="modalKebabToppings">
-                <!-- Toppings will be injected here by JavaScript -->
-                <!-- Example: <label><input type="checkbox" value="Lettuce"> Lettuce</label> -->
                 <label><input type="checkbox" value="Cabbage"> Cabbage</label>
                 <label><input type="checkbox" value="Lettuce"> Lettuce</label>
                 <label><input type="checkbox" value="Tomato"> Tomato</label>
@@ -1686,11 +1685,10 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             </div>
         </div>
 
-        <div class="modal-section">
+        <!-- Sauces Section (visible for kebabs only) -->
+        <div class="modal-section" id="modalSaucesSection">
             <h4>Sauces</h4>
             <div class="modal-checkbox-group" id="modalKebabSauces">
-                <!-- Sauces will be injected here by JavaScript -->
-                <!-- Example: <label><input type="checkbox" value="Garlic Sauce"> Garlic Sauce</label> -->
                 <label><input type="checkbox" value="Garlic Sauce"> Garlic Sauce</label>
                 <label><input type="checkbox" value="Chili Sauce"> Chili Sauce</label>
                 <label><input type="checkbox" value="Mayonnaise"> Mayonnaise</label>
