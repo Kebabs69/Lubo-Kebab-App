@@ -72,16 +72,7 @@ const menuData = {
             { label: 'Large', price: 8.00 }
         ]
     },
-    'veggie-wrap': {
-        name: 'Veggie Wrap',
-        type: 'kebab',
-        sizes: [
-            { label: 'Small', price: 4.00 },
-            { label: 'Medium', price: 5.00 },
-            { label: 'Large', price: 6.00 }
-        ]
-    },
-    'mixed-grill': {
+    'mixed-grill': { // Swapped position in data
         name: 'Mixed Grill',
         type: 'kebab',
         sizes: [
@@ -90,15 +81,38 @@ const menuData = {
             { label: 'Large', price: 11.00 }
         ]
     },
+    'veggie-wrap': { // Swapped position in data
+        name: 'Veggie Wrap',
+        type: 'kebab',
+        sizes: [
+            { label: 'Small', price: 4.00 },
+            { label: 'Medium', price: 5.00 },
+            { label: 'Large', price: 6.00 }
+        ]
+    },
     // Drinks
     'coca-cola': { name: 'Coca Cola', type: 'drink', price: 1.50 },
     'pepsi': { name: 'Pepsi', type: 'drink', price: 1.50 },
-    'sprite': { name: 'Sprite', type: 'drink', price: 1.50 }, // Updated
-    'fanta': { name: 'Fanta', type: 'drink', price: 1.50 },     // Updated
+    'sprite': { name: 'Sprite', type: 'drink', price: 1.50 },
+    'fanta': { name: 'Fanta', type: 'drink', price: 1.50 },
     'water': { name: 'Water', type: 'drink', price: 1.00 },
     // Sides
-    'fries': { name: 'Fries', type: 'side', price: 2.00 },
-    'cheesy-chips': { name: 'Cheesy Chips', type: 'side', price: 2.50 },
+    'chips': { // Renamed from fries to chips
+        name: 'Chips',
+        type: 'customizable-side', // New type for sides with sizes/sauces
+        sizes: [
+            { label: 'Small', price: 3.00 },
+            { label: 'Large', price: 4.00 }
+        ]
+    },
+    'cheesy-chips': {
+        name: 'Cheesy Chips',
+        type: 'customizable-side', // New type for sides with sizes/sauces
+        sizes: [
+            { label: 'Small', price: 4.50 },
+            { label: 'Large', price: 4.80 }
+        ]
+    },
     'onion-rings': { name: 'Onion Rings', type: 'side', price: 2.00 },
     'side-salad': { name: 'Side Salad', type: 'side', price: 2.00 },
     'garlic-bread': { name: 'Garlic Bread', type: 'side', price: 1.50 }
@@ -107,7 +121,7 @@ const menuData = {
 
 // Variables to store current modal selection state
 let currentItemId = null;
-let currentItemType = null; // 'kebab', 'drink', 'side'
+let currentItemType = null; // 'kebab', 'drink', 'side', 'customizable-side'
 let currentItemBasePrice = 0; // Price based on selected size or fixed price for drinks/sides
 let currentItemQuantity = 1;
 
@@ -338,12 +352,18 @@ function openItemCustomizationModal(itemId, itemType, itemPrice = null) {
 
 
     // Show/hide sections based on item type
-    if (itemType === 'kebab') {
+    if (itemType === 'kebab' || itemType === 'customizable-side') {
         modalSizeSection.style.display = 'block';
-        modalToppingsSection.style.display = 'block';
-        modalSaucesSection.style.display = 'block';
+        modalSaucesSection.style.display = 'block'; // Sauces for kebabs and customizable sides
 
-        // Populate sizes for kebabs
+        // Toppings (Salads) are only for 'kebab' type
+        if (itemType === 'kebab') {
+            modalToppingsSection.style.display = 'block';
+        } else {
+            modalToppingsSection.style.display = 'none';
+        }
+
+        // Populate sizes for kebabs and customizable-sides
         modalKebabSizes.innerHTML = ''; // Clear previous size options
         itemData.sizes.forEach(size => {
             const radioHtml = `
@@ -354,13 +374,13 @@ function openItemCustomizationModal(itemId, itemType, itemPrice = null) {
             `;
             modalKebabSizes.insertAdjacentHTML('beforeend', radioHtml);
         });
-        currentItemBasePrice = 0; // Kebab price depends on size selection
-    } else { // For 'drink' or 'side'
+        currentItemBasePrice = 0; // Price depends on size selection
+    } else { // For 'drink' or 'side' (simple sides like Onion Rings, Side Salad, Garlic Bread)
         modalSizeSection.style.display = 'none';
         modalToppingsSection.style.display = 'none';
         modalSaucesSection.style.display = 'none';
 
-        currentItemBasePrice = itemPrice; // Use the fixed price for drinks/sides
+        currentItemBasePrice = itemPrice; // Use the fixed price for simple drinks/sides
     }
 
     // Reset all checkboxes in the modal (sauces and toppings)
@@ -373,7 +393,7 @@ function openItemCustomizationModal(itemId, itemType, itemPrice = null) {
     // Add event listeners for changes within the modal to update price
     // Using event delegation for radio buttons (sizes)
     modalKebabSizes.removeEventListener('change', updateModalTotalPrice); // Remove previous
-    if (itemType === 'kebab') { // Only add if sizes are relevant
+    if (itemType === 'kebab' || itemType === 'customizable-side') { // Only add if sizes are relevant
         modalKebabSizes.addEventListener('change', updateModalTotalPrice);
     }
 
@@ -408,12 +428,12 @@ function closeItemCustomizationModal() {
 function updateModalTotalPrice() {
     let basePrice = 0;
 
-    if (currentItemType === 'kebab') {
+    if (currentItemType === 'kebab' || currentItemType === 'customizable-side') {
         const selectedSizeRadio = modalKebabSizes.querySelector('input[name="kebabSize"]:checked');
         if (selectedSizeRadio) {
             basePrice = parseFloat(selectedSizeRadio.dataset.price);
         }
-    } else { // 'drink' or 'side'
+    } else { // 'drink' or 'side' (simple sides)
         basePrice = currentItemBasePrice;
     }
 
@@ -435,7 +455,7 @@ document.querySelectorAll('.add-to-cart-modal-trigger-button').forEach(button =>
     button.addEventListener('click', () => {
         const itemId = button.dataset.itemId;
         const itemType = button.dataset.itemType;
-        const itemPrice = button.dataset.itemPrice ? parseFloat(button.dataset.itemPrice) : null; // Only for drinks/sides
+        const itemPrice = button.dataset.itemPrice ? parseFloat(button.dataset.itemPrice) : null; // Only for drinks/simple sides
 
         openItemCustomizationModal(itemId, itemType, itemPrice);
     });
@@ -476,22 +496,27 @@ if (modalAddToCartButton) {
             return;
         }
 
-        if (currentItemType === 'kebab') {
+        if (currentItemType === 'kebab' || currentItemType === 'customizable-side') {
             const selectedSizeRadio = modalKebabSizes.querySelector('input[name="kebabSize"]:checked');
             if (!selectedSizeRadio) {
-                showMessageModal('Selection Required', 'Please select a size for your kebab.', 'warning');
+                showMessageModal('Selection Required', 'Please select a size for your ' + selectedName + '.', 'warning');
                 return;
             }
             const selectedSize = selectedSizeRadio.value;
             selectedPrice = parseFloat(selectedSizeRadio.dataset.price);
             selectedName = `${menuData[currentItemId].name} - ${selectedSize}`; // Append size to name
 
+            // Sauces are applicable for both kebabs and customizable-sides
             customizations.sauces = Array.from(modalKebabSauces.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
-            customizations.toppings = Array.from(modalKebabToppings.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
 
-        } else { // For 'drink' or 'side'
+            // Toppings (salads) are only for kebabs
+            if (currentItemType === 'kebab') {
+                customizations.toppings = Array.from(modalKebabToppings.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+            }
+
+        } else { // For 'drink' or 'side' (simple sides)
             selectedPrice = currentItemBasePrice;
-            // No specific sauces/toppings for drinks/sides, only notes are relevant here.
+            // No specific sauces/toppings for drinks/simple sides, only notes are relevant here.
         }
 
         addItemToCart(selectedName, selectedPrice, quantity, customizations);

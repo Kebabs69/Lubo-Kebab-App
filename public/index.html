@@ -1323,22 +1323,22 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             </button>
         </div>
 
-        <!-- Veggie Wrap -->
-        <div class="kebab-item">
-            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
-            <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
-            <!-- NEW: Button to open modal -->
-            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="veggie-wrap" data-item-name="Veggie Wrap" data-item-type="kebab">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-
-        <!-- Mixed Grill -->
+        <!-- Mixed Grill (Now at the top of the kebabs section after Lamb) -->
         <div class="kebab-item">
             <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
             <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
             <!-- NEW: Button to open modal -->
             <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="mixed-grill" data-item-name="Mixed Grill" data-item-type="kebab">
+                <i class="fas fa-plus"></i>
+            </button>
+        </div>
+
+        <!-- Veggie Wrap (Now at the bottom of the kebabs section) -->
+        <div class="kebab-item">
+            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
+            <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
+            <!-- NEW: Button to open modal -->
+            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="veggie-wrap" data-item-name="Veggie Wrap" data-item-type="kebab">
                 <i class="fas fa-plus"></i>
             </button>
         </div>
@@ -1393,20 +1393,21 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
             🥗 Sides
          </h3>
-      <!-- Sides Items - Updated to use .menu-item structure with Preview buttons and quantity inputs -->
-      <div class="menu-item" data-item-id="fries">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Fries <span class="price">£2.00</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Fries" data-image-url="https://placehold.co/300x200/FFFF00/000000?text=Fries">Preview</button>
-         <!-- NEW: Plus button for sides -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="fries" data-item-name="Fries" data-item-price="2.00" data-item-type="side">
+      <!-- Chips (formerly Fries) -->
+      <div class="menu-item" data-item-id="chips">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chips</h4>
+         <button type="button" class="preview-btn" data-image-title="Chips" data-image-url="https://placehold.co/300x200/FFFF00/000000?text=Chips">Preview</button>
+         <!-- NEW: Plus button for chips -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chips" data-item-name="Chips" data-item-type="customizable-side">
             <i class="fas fa-plus"></i>
          </button>
       </div>
+      <!-- Cheesy Chips -->
       <div class="menu-item" data-item-id="cheesy-chips">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Cheesy Chips <span class="price">£2.50</span></h4>
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Cheesy Chips</h4>
          <button type="button" class="preview-btn" data-image-title="Cheesy Chips" data-image-url="https://placehold.co/300x200/FFC107/000000?text=Cheesy+Chips">Preview</button>
-         <!-- NEW: Plus button for sides -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="cheesy-chips" data-item-name="Cheesy Chips" data-item-price="2.50" data-item-type="side">
+         <!-- NEW: Plus button for cheesy chips -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="cheesy-chips" data-item-name="Cheesy Chips" data-item-type="customizable-side">
             <i class="fas fa-plus"></i>
          </button>
       </div>
@@ -1664,7 +1665,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
         <span class="kebab-modal-close">&times;</span>
         <h3 class="kebab-modal-title">Customize <span id="modalKebabName">Item</span></h3>
 
-        <!-- Size & Price Section (visible for kebabs only) -->
+        <!-- Size & Price Section (visible for kebabs and customizable sides) -->
         <div class="modal-section" id="modalSizeSection">
             <h4>Size & Price</h4>
             <div class="modal-radio-group" id="modalKebabSizes">
@@ -1685,7 +1686,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             </div>
         </div>
 
-        <!-- Sauces Section (visible for kebabs only) -->
+        <!-- Sauces Section (visible for kebabs and customizable sides) -->
         <div class="modal-section" id="modalSaucesSection">
             <h4>Sauces</h4>
             <div class="modal-checkbox-group" id="modalKebabSauces">
