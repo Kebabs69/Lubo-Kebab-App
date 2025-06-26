@@ -121,7 +121,14 @@ const menuData = {
             { label: 'Large (10Pcs)', price: 4.50 }
         ]
     },
-    'side-salad': { name: 'Side Salad', type: 'side', price: 2.00 },
+    'chicken-nuggets': { // New: formerly Side Salad
+        name: 'Chicken Nuggets',
+        type: 'customizable-side',
+        sizes: [
+            { label: 'Small (4pcs)', price: 3.00 },
+            { label: 'Large (8pcs)', price: 5.00 }
+        ]
+    },
     'garlic-bread': { name: 'Garlic Bread', type: 'side', price: 1.50 }
 };
 
@@ -382,7 +389,7 @@ function openItemCustomizationModal(itemId, itemType, itemPrice = null) {
             modalKebabSizes.insertAdjacentHTML('beforeend', radioHtml);
         });
         currentItemBasePrice = 0; // Price depends on size selection
-    } else { // For 'drink' or 'side' (simple sides like Side Salad, Garlic Bread)
+    } else { // For 'drink' or 'side' (simple sides like Garlic Bread)
         modalSizeSection.style.display = 'none';
         modalToppingsSection.style.display = 'none';
         modalSaucesSection.style.display = 'none';

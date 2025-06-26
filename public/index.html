@@ -472,6 +472,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     margin-left: 10px;
     transition: background-color 0.3s ease;
     margin-top: 5px; /* Added some space from kebab name for consistency */
+    margin-bottom: 10px; /* Added margin for consistency */
 }
 .preview-btn:hover {
     background-color: #45a049;
@@ -1420,11 +1421,12 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
             <i class="fas fa-plus"></i>
          </button>
       </div>
-      <div class="menu-item" data-item-id="side-salad">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Side Salad <span class="price">£2.00</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Side Salad" data-image-url="https://placehold.co/300x200/33FF57/000000?text=Side+Salad">Preview</button>
-         <!-- NEW: Plus button for sides -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="side-salad" data-item-name="Side Salad" data-item-price="2.00" data-item-type="side">
+      <!-- Chicken Nuggets (formerly Side Salad) -->
+      <div class="menu-item" data-item-id="chicken-nuggets">
+         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Nuggets</h4>
+         <button type="button" class="preview-btn" data-image-title="Chicken Nuggets" data-image-url="https://placehold.co/300x200/FFD700/000000?text=Chicken+Nuggets">Preview</button>
+         <!-- NEW: Plus button for chicken nuggets -->
+         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chicken-nuggets" data-item-name="Chicken Nuggets" data-item-type="customizable-side">
             <i class="fas fa-plus"></i>
          </button>
       </div>
