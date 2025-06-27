@@ -47,7 +47,7 @@ const kebabModalCloseBtn = document.querySelector('#kebabCustomizationModal .keb
 let currentModalItem = {
     id: '',
     name: '',
-    basePrice: 0,
+    basePrice: 0, // This will store the price per unit, either from fixed price or selected size
     type: '' // 'kebab', 'drink', 'side', 'customizable-side'
 };
 
@@ -174,8 +174,8 @@ function updateCartDisplay() {
         const itemName = document.createElement('span');
         itemName.classList.add('item-name');
         itemName.textContent = `${item.quantity}x ${item.name}`;
-        if (item.size && item.type === 'kebab' || item.type === 'customizable-side') { // Only show size for kebabs and customizable sides
-            itemName.textContent += ` (${item.size})`;
+        if (item.size) { // Only show size if it exists
+            itemName.textContent += ` (${item.size.charAt(0).toUpperCase() + item.size.slice(1)})`;
         }
         itemInfo.appendChild(itemName);
 
@@ -310,22 +310,28 @@ function openKebabCustomizationModal(itemId) {
     currentModalItem.id = itemId;
     currentModalItem.name = item.name;
     currentModalItem.type = item.type;
+    // For non-customizable items, set basePrice directly from item.price
+    currentModalItem.basePrice = item.price || 0; // Will be overridden by size for customizable items
 
     modalKebabName.textContent = item.name;
     modalQuantityInput.value = 1; // Reset quantity to 1
 
     // Clear previous options
     modalKebabSizes.innerHTML = '';
-    modalKebabToppings.innerHTML = '';
-    modalKebabSauces.innerHTML = '';
     modalKebabNotes.value = '';
+
+    // Reset all checkboxes for toppings and sauces
+    document.querySelectorAll('#modalKebabToppings input[type="checkbox"]').forEach(cb => cb.checked = false);
+    document.querySelectorAll('#modalKebabSauces input[type="checkbox"]').forEach(cb => cb.checked = false);
+
 
     // Show/hide sections based on item type
     const sizeSection = document.getElementById('modalSizeSection');
     const toppingsSection = document.getElementById('modalToppingsSection');
     const saucesSection = document.getElementById('modalSaucesSection');
 
-    if (item.type === 'kebab' || item.type === 'customizable-side') {
+    // Handle Size & Price Section
+    if (item.sizes && Object.keys(item.sizes).length > 0) {
         sizeSection.style.display = 'block';
         // Populate sizes
         for (const size in item.sizes) {
@@ -338,25 +344,28 @@ function openKebabCustomizationModal(itemId) {
         if (Object.keys(item.sizes).length > 0) {
             modalKebabSizes.querySelector('input[type="radio"]').checked = true;
         }
-
-        // Show toppings and sauces for kebabs and customizable-sides
-        toppingsSection.style.display = item.type === 'kebab' ? 'block' : 'none'; // Only kebabs have toppings
-        saucesSection.style.display = 'block';
-
-        // Re-populate static toppings/sauces checkboxes (they are always the same)
-        // Ensure checkboxes are unchecked by default when modal opens
-        document.querySelectorAll('#modalKebabToppings input[type="checkbox"]').forEach(cb => cb.checked = false);
-        document.querySelectorAll('#modalKebabSauces input[type="checkbox"]').forEach(cb => cb.checked = false);
-
-    } else { // For drinks and simple sides
+        // Add event listener for size changes to update price
+        modalKebabSizes.addEventListener('change', updateModalPrice);
+    } else {
         sizeSection.style.display = 'none';
-        toppingsSection.style.display = 'none';
-        saucesSection.style.display = 'none';
-        currentModalItem.basePrice = item.price; // Set base price directly for non-customizable items
+        // For items without sizes (drinks, simple sides), basePrice is already set from item.price
     }
 
-    // Add event listener for size changes to update price
-    modalKebabSizes.addEventListener('change', updateModalPrice);
+    // Handle Salads Section (only for 'kebab' type)
+    if (item.type === 'kebab') {
+        toppingsSection.style.display = 'block';
+    } else {
+        toppingsSection.style.display = 'none';
+    }
+
+    // Handle Sauces Section (for 'kebab' and 'customizable-side' types)
+    if (item.type === 'kebab' || item.type === 'customizable-side') {
+        saucesSection.style.display = 'block';
+    } else {
+        saucesSection.style.display = 'none';
+    }
+
+    // Add event listeners for quantity changes to update price
     modalQuantityInput.addEventListener('input', updateModalPrice);
     modalQuantityInput.addEventListener('change', updateModalPrice); // For direct input changes
 
@@ -368,19 +377,23 @@ function openKebabCustomizationModal(itemId) {
 
 // Function to update the price displayed in the modal
 function updateModalPrice() {
-    let price = 0;
-    const quantity = parseInt(modalQuantityInput.value);
+    let pricePerUnit = 0;
+    const quantity = parseInt(modalQuantityInput.value) || 1; // Default to 1 if input is empty/invalid
 
     if (currentModalItem.type === 'kebab' || currentModalItem.type === 'customizable-side') {
         const selectedSizeRadio = modalKebabSizes.querySelector('input[name="kebabSize"]:checked');
         if (selectedSizeRadio) {
-            price = parseFloat(selectedSizeRadio.dataset.price);
+            pricePerUnit = parseFloat(selectedSizeRadio.dataset.price);
+        } else {
+            // If no size is selected for a customizable item, default to 0 or show a message
+            pricePerUnit = 0;
+            // Optionally, show a warning or prevent adding to cart if no size selected
         }
     } else { // For drinks and simple sides
-        price = currentModalItem.basePrice;
+        pricePerUnit = currentModalItem.basePrice;
     }
 
-    modalCurrentPrice.textContent = (price * quantity).toFixed(2);
+    modalCurrentPrice.textContent = (pricePerUnit * quantity).toFixed(2);
 }
 
 // Event listener for the "Add to Cart" button inside the customization modal
@@ -400,12 +413,12 @@ if (modalAddToCartButton) {
 
         if (currentModalItem.type === 'kebab' || currentModalItem.type === 'customizable-side') {
             const selectedSizeRadio = modalKebabSizes.querySelector('input[name="kebabSize"]:checked');
-            if (!selectedSizeRadio) {
+            if (!selectedSizeRadio && (currentModalItem.type === 'kebab' || currentModalItem.type === 'customizable-side')) {
                 showMessageModal('Selection Required', 'Please select a size for your item.', 'warning');
                 return;
             }
-            selectedPrice = parseFloat(selectedSizeRadio.dataset.price);
-            selectedSize = selectedSizeRadio.value;
+            selectedPrice = parseFloat(selectedSizeRadio ? selectedSizeRadio.dataset.price : 0);
+            selectedSize = selectedSizeRadio ? selectedSizeRadio.value : '';
 
             // Get selected toppings (only for kebabs)
             if (currentModalItem.type === 'kebab') {
@@ -414,11 +427,11 @@ if (modalAddToCartButton) {
                 });
             }
 
-            // Get selected sauces
+            // Get selected sauces (for kebabs and customizable sides)
             document.querySelectorAll('#modalKebabSauces input[type="checkbox"]:checked').forEach(checkbox => {
                 selectedSauces.push(checkbox.value);
             });
-        } else { // For drinks and simple sides
+        } else { // For drinks and simple sides (no sizes, toppings, or sauces)
             selectedPrice = currentModalItem.basePrice;
         }
 
@@ -474,33 +487,11 @@ if (kebabCustomizationModal) {
     });
 }
 
-// Event listeners for the new "Add to Cart" trigger buttons (the plus icons)
+// Event listeners for ALL "Add to Cart" trigger buttons (the plus icons)
 document.querySelectorAll('.add-to-cart-modal-trigger-button').forEach(button => {
     button.addEventListener('click', function() {
         const itemId = this.dataset.itemId;
-        const itemType = this.dataset.itemType; // Get the item type
-
-        // If it's a simple drink or side, add directly to cart without modal
-        if (itemType === 'drink' || itemType === 'side') {
-            const item = menuItems[itemId];
-            if (item) {
-                const simpleItemToAdd = {
-                    id: itemId,
-                    name: item.name,
-                    price: item.price,
-                    quantity: 1, // Default quantity for direct add
-                    type: item.type,
-                    size: '', // No size for simple items
-                    toppings: [],
-                    sauces: [],
-                    notes: ''
-                };
-                addItemToCart(simpleItemToAdd);
-            }
-        } else {
-            // For kebabs and customizable sides, open the customization modal
-            openKebabCustomizationModal(itemId);
-        }
+        openKebabCustomizationModal(itemId); // Always open modal now
     });
 });
 
@@ -754,4 +745,3 @@ document.addEventListener('DOMContentLoaded', () => {
     showMenuSection('kebabs-section');
     updateCartDisplay(); // Also update cart display on load
 });
-
