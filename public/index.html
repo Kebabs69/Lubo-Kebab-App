@@ -137,31 +137,123 @@
       background-color: red;
     }
 
+    /* NEW: Main layout container for sidebar and content */
+    .main-app-container {
+        display: flex;
+        flex-grow: 1; /* Allows it to take available vertical space */
+        max-width: 1200px; /* Max width for the whole app content */
+        margin: 20px auto; /* Center the app content */
+        background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+        border-radius: 15px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        overflow: hidden; /* Contains children, especially for rounded corners */
+    }
+
+    /* NEW: Sidebar Styling */
+    .sidebar {
+        width: 250px; /* Fixed width for the sidebar */
+        background-color: #2c3e50; /* Dark background for the sidebar */
+        color: white;
+        padding: 30px 0;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0; /* Prevent sidebar from shrinking */
+    }
+
+    .sidebar-nav {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .sidebar-nav-item {
+        padding: 15px 25px;
+        cursor: pointer;
+        font-size: 1.2em;
+        font-weight: 600;
+        transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+        border-bottom: 1px solid rgba(255,255,255,0.1); /* Subtle separator */
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .sidebar-nav-item:first-child {
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-nav-item:hover {
+        background-color: #34495e; /* Slightly lighter dark on hover */
+        transform: translateX(5px); /* Slight slide effect */
+    }
+
+    .sidebar-nav-item.active {
+        background-color: var(--primary-color); /* Highlight active item */
+        color: white;
+        border-left: 5px solid var(--accent-color); /* Stronger indicator */
+        padding-left: 20px; /* Adjust padding due to border */
+    }
+
+    .sidebar-nav-item i {
+        font-size: 1.1em;
+        color: var(--accent-color); /* Icon color */
+    }
+    .sidebar-nav-item.active i {
+        color: white; /* White icon when active */
+    }
+
+
+    /* NEW: Main Content Area Styling */
+    .main-content-area {
+        flex-grow: 1; /* Takes up remaining space */
+        padding: 20px;
+        display: flex;
+        flex-direction: column; /* Stack form and other elements vertically */
+    }
+
     form {
-      max-width: 900px;
-      margin: 40px auto;
-      background: #fff;
+      /* max-width: 900px; REMOVED: Max-width handled by main-app-container */
+      margin: 0; /* Removed auto margin, handled by main-content-area flex-grow */
+      background: #fff; /* Keep white background for the form itself */
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      flex-grow: 1; /* Allow form to grow within main-content-area */
     }
 
-    .wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 30px;
-      justify-content: center;
-      align-items: flex-start; /* CRITICAL FIX: Align items to the top, preventing vertical stretching */
+    /* NEW: Wrapper for toggled menu categories */
+    .menu-categories-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px;
+        justify-content: center;
+        align-items: flex-start;
+        margin-bottom: 20px; /* Space between menu items and cart */
     }
 
+    /* Existing container styles now apply to menu sections */
     .container {
       flex: 1;
       min-width: 280px;
-      border: 1px solid #e3e3e3; /* RE-ADDED: Base border for containers */
-      border-radius: 16px; /* RE-ADDED: Border radius for containers */
-      padding: 25px; /* RE-ADDED: Padding for containers */
-      background-color: #ffffff; /* RE-ADDED: Background for containers */
-      box-shadow: 0 4px 20px rgba(0,0,0,0.07); /* RE-ADDED: Shadow for containers */
+      border: 1px solid #e3e3e3;
+      border-radius: 16px;
+      padding: 25px;
+      background-color: #ffffff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    }
+
+    /* NEW: Styles for individual menu sections (kebabs, drinks, sides) */
+    .menu-section {
+        display: flex; /* Ensure inner content is flex for wrapping items */
+        flex-direction: column; /* Stack items vertically within a section */
+        gap: 20px; /* Space between individual menu items */
+        width: 100%; /* Each section takes full width of its parent */
+        min-height: 400px; /* Ensure sections have some height even if empty */
+    }
+
+    .hidden-menu-section {
+        display: none !important; /* Hide sections using !important to override flex/block */
     }
 
     /* Styles for images integrated directly into containers */
@@ -1009,6 +1101,60 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       padding: 12px;
   }
 
+  /* Responsive for main layout */
+  .main-app-container {
+      flex-direction: column; /* Stack sidebar and content on mobile */
+      margin: 10px; /* Reduce margin on small screens */
+  }
+
+  .sidebar {
+      width: 100%; /* Full width sidebar on mobile */
+      padding: 15px 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Shadow at bottom */
+      flex-direction: row; /* Layout nav items horizontally */
+      justify-content: center;
+      flex-wrap: wrap; /* Allow nav items to wrap */
+      gap: 10px; /* Space between nav items */
+  }
+
+  .sidebar-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+  }
+
+  .sidebar-nav-item {
+      padding: 10px 15px;
+      font-size: 1em;
+      border-bottom: none; /* Remove horizontal border */
+      border-right: 1px solid rgba(255,255,255,0.1); /* Add vertical separator */
+      border-left: none; /* Remove left border */
+      flex-grow: 1; /* Allow items to grow to fill space */
+      text-align: center;
+      justify-content: center; /* Center content within item */
+  }
+  .sidebar-nav-item:last-child {
+      border-right: none;
+  }
+  .sidebar-nav-item.active {
+      border-left: none; /* Remove left border for active on mobile */
+      border-bottom: 3px solid var(--accent-color); /* Underline active item */
+      padding-bottom: 12px; /* Adjust padding for underline */
+  }
+
+  .main-content-area {
+      padding: 15px;
+  }
+
+  form {
+      padding: 15px;
+  }
+
+  .menu-categories-wrapper {
+      gap: 15px;
+  }
+
 }
 
 /* Hero Section - Adapted for Register Page (carried over from your original, might not be fully used now) */
@@ -1299,347 +1445,359 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 </ul>
 </nav>
 
-<form id="orderForm">
-<div class="wrapper">
-   <div class="container" id="menu">
-      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
-            🥙 Menu
-         </h3>
-        <!-- Chicken Kebab -->
-        <div class="kebab-item">
-            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Kebab</h4>
-            <button type="button" class="preview-btn" data-image-title="Chicken Kebab" data-image-url="/assets/chicken-preview.png">Preview</button>
-            <!-- NEW: Button to open modal -->
-            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chicken-kebab" data-item-name="Chicken Kebab" data-item-type="kebab">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
+<!-- NEW: Main Application Container for Sidebar and Content -->
+<div class="main-app-container">
+    <!-- NEW: Sidebar Navigation -->
+    <aside class="sidebar">
+        <ul class="sidebar-nav">
+            <li class="sidebar-nav-item active" data-target="kebabs-section">
+                <i class="fas fa-drumstick-bite"></i> Kebabs
+            </li>
+            <li class="sidebar-nav-item" data-target="drinks-section">
+                <i class="fas fa-cocktail"></i> Drinks
+            </li>
+            <li class="sidebar-nav-item" data-target="sides-section">
+                <i class="fas fa-french-fries"></i> Sides
+            </li>
+        </ul>
+    </aside>
 
-        <!-- Lamb Kebab -->
-        <div class="kebab-item">
-            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
-            <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
-            <!-- NEW: Button to open modal -->
-            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="lamb-kebab" data-item-name="Lamb Kebab" data-item-type="kebab">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
+    <!-- NEW: Main Content Area -->
+    <div class="main-content-area">
+        <form id="orderForm">
+            <!-- NEW: Wrapper for dynamically displayed menu categories -->
+            <div class="menu-categories-wrapper">
+                <div class="container menu-section" id="kebabs-section">
+                    <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+                        🥙 Kebabs Menu
+                    </h3>
+                    <!-- Chicken Kebab -->
+                    <div class="kebab-item">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Kebab</h4>
+                        <button type="button" class="preview-btn" data-image-title="Chicken Kebab" data-image-url="/assets/chicken-preview.png">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chicken-kebab" data-item-name="Chicken Kebab" data-item-type="kebab">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
 
-        <!-- Mixed Grill (Now at the top of the kebabs section after Lamb) -->
-        <div class="kebab-item">
-            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
-            <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
-            <!-- NEW: Button to open modal -->
-            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="mixed-grill" data-item-name="Mixed Grill" data-item-type="kebab">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
+                    <!-- Lamb Kebab -->
+                    <div class="kebab-item">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Lamb Kebab</h4>
+                        <button type="button" class="preview-btn" data-image-title="Lamb Kebab" data-image-url="/assets/lamb-kebab-preview.png">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="lamb-kebab" data-item-name="Lamb Kebab" data-item-type="kebab">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
 
-        <!-- Veggie Wrap (Now at the bottom of the kebabs section) -->
-        <div class="kebab-item">
-            <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
-            <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
-            <!-- NEW: Button to open modal -->
-            <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="veggie-wrap" data-item-name="Veggie Wrap" data-item-type="kebab">
-                <i class="fas fa-plus"></i>
-            </button>
-        </div>
-   </div>
-   <div class="container" id="drinks">
-      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
-            🥤 Drinks
-         </h3>
-      <!-- Drinks Items - Updated to use .menu-item structure with Preview buttons and quantity inputs -->
-      <div class="menu-item" data-item-id="coca-cola">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Coca Cola <span class="price">£1.50</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Coca Cola" data-image-url="/assets/coca-cola.png">Preview</button>
-         <!-- NEW: Plus button for drinks -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="coca-cola" data-item-name="Coca Cola" data-item-price="1.50" data-item-type="drink">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-      <div class="menu-item" data-item-id="pepsi">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Pepsi <span class="price">£1.50</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Pepsi" data-image-url="/assets/pepsi.png">Preview</button>
-         <!-- NEW: Plus button for drinks -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="pepsi" data-item-name="Pepsi" data-item-price="1.50" data-item-type="drink">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-      <div class="menu-item" data-item-id="sprite">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Sprite <span class="price">£1.50</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Sprite" data-image-url="/assets/sprite.png">Preview</button>
-         <!-- NEW: Plus button for drinks -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="sprite" data-item-name="Sprite" data-item-price="1.50" data-item-type="drink">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-      <div class="menu-item" data-item-id="fanta">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Fanta <span class="price">£1.50</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Fanta" data-image-url="/assets/fanta.png">Preview</button>
-         <!-- NEW: Plus button for drinks -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="fanta" data-item-name="Fanta" data-item-price="1.50" data-item-type="drink">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-      <div class="menu-item" data-item-id="water">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Water <span class="price">£1.00</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Water" data-image-url="https://placehold.co/300x200/007BFF/FFFFFF?text=Water">Preview</button>
-         <!-- NEW: Plus button for drinks -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="water" data-item-name="Water" data-item-price="1.00" data-item-type="drink">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-   </div>
-   <div class="container" id="sides">
-      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
-            🥗 Sides
-         </h3>
-      <!-- Chips (formerly Fries) -->
-      <div class="menu-item" data-item-id="chips">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chips</h4>
-         <button type="button" class="preview-btn" data-image-title="Chips" data-image-url="/assets/Chips.jpg">Preview</button>
-         <!-- NEW: Plus button for chips -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chips" data-item-name="Chips" data-item-type="customizable-side">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-      <!-- Cheesy Chips -->
-      <div class="menu-item" data-item-id="cheesy-chips">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Cheesy Chips</h4>
-         <button type="button" class="preview-btn" data-image-title="Cheesy Chips" data-image-url="/assets/cheesy-chips.png">Preview</button>
-         <!-- NEW: Plus button for cheesy chips -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="cheesy-chips" data-item-name="Cheesy Chips" data-item-type="customizable-side">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-      <!-- Onion Rings (Now customizable) -->
-      <div class="menu-item" data-item-id="onion-rings">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Onion Rings</h4>
-         <button type="button" class="preview-btn" data-image-title="Onion Rings" data-image-url="/assets/onion-rings.png">Preview</button>
-         <!-- NEW: Plus button for onion rings -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="onion-rings" data-item-name="Onion Rings" data-item-type="customizable-side">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-      <!-- Chicken Nuggets (formerly Side Salad) -->
-      <div class="menu-item" data-item-id="chicken-nuggets">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Nuggets</h4>
-         <button type="button" class="preview-btn" data-image-title="Chicken Nuggets" data-image-url="/assets/Chicken-Nuggets.jpg">Preview</button>
-         <!-- NEW: Plus button for chicken nuggets -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chicken-nuggets" data-item-name="Chicken Nuggets" data-item-type="customizable-side">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-      <div class="menu-item" data-item-id="garlic-bread">
-         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Garlic Bread <span class="price">£1.50</span></h4>
-         <button type="button" class="preview-btn" data-image-title="Garlic Bread" data-image-url="https://placehold.co/300x200/DAA520/000000?text=Garlic+Bread">Preview</button>
-         <!-- NEW: Plus button for sides -->
-         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="garlic-bread" data-item-name="Garlic Bread" data-item-price="1.50" data-item-type="side">
-            <i class="fas fa-plus"></i>
-         </button>
-      </div>
-   </div>
-   <div class="container" id="cart">
-      <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
-            🛒 Your Cart
-         </h3>
-      <ul id="cartItems">
-          <!-- Cart items will be dynamically added here by JavaScript -->
-          <li style="color: #666; text-align: center; padding: 10px;">Your cart is empty.</li>
-      </ul>
-      <p class="total">
-            Total: £
-            <span id="totalPrice">
-            0.00
-            </span>
-      </p>
-      <input id="orderSummary" name="Order Summary" type="hidden"/>
+                    <!-- Mixed Grill -->
+                    <div class="kebab-item">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Mixed Grill</h4>
+                        <button type="button" class="preview-btn" data-image-title="Mixed Grill" data-image-url="/assets/mixed-grill-preview.jpg">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="mixed-grill" data-item-name="Mixed Grill" data-item-type="kebab">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
 
-      <!-- Clear Cart Button -->
-      <button type="button" id="clearCartBtn">
-          <i class="fas fa-trash-alt"></i> Clear Cart
-      </button>
+                    <!-- Veggie Wrap -->
+                    <div class="kebab-item">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Veggie Wrap</h4>
+                        <button type="button" class="preview-btn" data-image-title="Veggie Wrap" data-image-url="/assets/veggie-wrap-preview.png">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="veggie-wrap" data-item-name="Veggie Wrap" data-item-type="kebab">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
 
-      <!-- Estimated Delivery Time Display -->
-      <div style="margin-top: 20px; padding: 15px; border: 2px solid #d2691e; border-radius: 12px; background-color: #fffaf0; text-align: center;">
-         <p style="font-size: 20px; font-weight: bold; color: #d2691e;">
-               🚚 Estimated Delivery:
-            </p>
-         <p style="font-size: 24px; font-weight: bold; color: #27ae60;">
-               30-45 Minutes!
-            </p>
-         <p style="font-size: 14px; color: #666; margin-top: 5px;">
-               (Times may vary during peak hours.)
-            </p>
-      </div>
+                <div class="container menu-section hidden-menu-section" id="drinks-section">
+                    <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+                        🥤 Drinks Menu
+                    </h3>
+                    <!-- Drinks Items -->
+                    <div class="menu-item" data-item-id="coca-cola">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Coca Cola <span class="price">£1.50</span></h4>
+                        <button type="button" class="preview-btn" data-image-title="Coca Cola" data-image-url="/assets/coca-cola.png">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="coca-cola" data-item-name="Coca Cola" data-item-price="1.50" data-item-type="drink">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item" data-item-id="pepsi">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Pepsi <span class="price">£1.50</span></h4>
+                        <button type="button" class="preview-btn" data-image-title="Pepsi" data-image-url="/assets/pepsi.png">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="pepsi" data-item-name="Pepsi" data-item-price="1.50" data-item-type="drink">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item" data-item-id="sprite">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Sprite <span class="price">£1.50</span></h4>
+                        <button type="button" class="preview-btn" data-image-title="Sprite" data-image-url="/assets/sprite.png">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="sprite" data-item-name="Sprite" data-item-price="1.50" data-item-type="drink">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item" data-item-id="fanta">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Fanta <span class="price">£1.50</span></h4>
+                        <button type="button" class="preview-btn" data-image-title="Fanta" data-image-url="/assets/fanta.png">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="fanta" data-item-name="Fanta" data-item-price="1.50" data-item-type="drink">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item" data-item-id="water">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Water <span class="price">£1.00</span></h4>
+                        <button type="button" class="preview-btn" data-image-title="Water" data-image-url="https://placehold.co/300x200/007BFF/FFFFFF?text=Water">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="water" data-item-name="Water" data-item-price="1.00" data-item-type="drink">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
 
-
-      <h4>
-            Your Details
-         </h4>
-      <label>
-            Full Name:
-            <input name="Full Name" required="" type="text"/>
-      </label>
-      <label>
-            Email:
-            <input name="Email" required="" type="email"/>
-      </label>
-      <label>
-            Mobile Number:
-            <input name="Mobile Number" required="" type="tel"/>
-      </label>
-      <label>
-            Special Instructions:
-            <textarea name="Instructions"></textarea>
-      </label>
-      <label>
-            Delivery Address:
-            <textarea name="Delivery Address" required=""></textarea>
-      </label>
-      <label>
-         Payment Method:
-         <select id="paymentToggle" name="Payment Method" required>
-            <option value="cash">💵 Cash on Delivery</option>
-            <option value="card" selected>💳 Card (Stripe)</option>
-         </select>
-      </label>
-
-      <button id="payWithCardBtn" type="button" style="
-      display: none;
-      margin: 10px 0;
-      background-color: #27ae60;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer; /* Re-enabled by default */
-      box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-      ">
-         💳 Pay with Card
-      </button>
-      <button type="submit" style="
-      display: block;
-      width: 100%;
-      background-color: #c0392b;
-      color: white;
-      padding: 15px;
-      font-size: 18px;
-      font-weight: bold;
-      border: none;
-      border-radius: 10px;
-      margin-top: 20px;
-      cursor: pointer; /* Re-enabled by default */
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      ">
-         🧾 Place Order
-      </button>
-      <!-- UPDATED PAYMENT MESSAGE -->
-      <div style="margin-top: 20px; padding: 15px; border: 2px solid #27ae60; border-radius: 12px; background-color: #e6ffe6; text-align: center;">
-         <p style="font-size: 22px; font-weight: bold; color: #27ae60;">
-               ✅ Payment Options Available! ✅
-            </p>
-         <p style="font-size: 17px; color: #333;">
-               You can choose between
-               <strong>
-                  Cash on Delivery
-               </strong>
-               or secure online payment by
-               <strong>
-                  Card (Stripe)
-               </strong>
-               at checkout.
-            </p>
-         <p style="font-size: 17px; color: #333; margin-top: 10px;">
-               Simply select your preferred method above. We appreciate your business! 🙏
-            </p>
-      </div>
-   </div>
-</div>
-</form>
-<div id="confirmationMessage" style="display:none; margin: 40px auto; max-width: 600px; background-color: #d4edda; color: #155724; padding: 20px; border-radius: 12px; border: 2px solid #c3e6cb; text-align: center; font-size: 18px;">
-   ✅
-   <strong>
-    Thank you for your order!
-   </strong>
-<br/>
-   Your order has been received and will be processed shortly. We'll contact you if needed.
-  </div>
-<div id="freebie-banner">
-   🎁
-   <strong>
-    FREE Drink
-   </strong>
-   <br>with orders over
-   <strong>
-    £30
-   </strong>
-   ! 🎉
-  </div>
-<p style="color: white; font-size: 24px; background-color: #c0392b; padding: 10px; border-radius: 10px;">
-   Our phone number 👉1234567890
-  </p>
-<p style="color: white; font-size: 24px; background: #c0392b; padding: 10px; border-radius: 10px;">
-<img alt="Kebab" src="/assets/Kebab2.png" style="vertical-align: middle; border-radius: 8px;" width="100"/> <!-- Absolute path -->
-   Lubo's Kebab unique QR code — share it with your friends! 😋
-  </p>
-
-<!-- NEW: Testimonials Section -->
-<section id="testimonials-section">
-    <h2>What Our Customers Say</h2>
-    <div class="testimonials-grid">
-        <div class="testimonial-card">
-            <div class="stars">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                <div class="container menu-section hidden-menu-section" id="sides-section">
+                    <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+                        🥗 Sides Menu
+                    </h3>
+                    <!-- Chips -->
+                    <div class="menu-item" data-item-id="chips">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chips</h4>
+                        <button type="button" class="preview-btn" data-image-title="Chips" data-image-url="/assets/Chips.jpg">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chips" data-item-name="Chips" data-item-type="customizable-side">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <!-- Cheesy Chips -->
+                    <div class="menu-item" data-item-id="cheesy-chips">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Cheesy Chips</h4>
+                        <button type="button" class="preview-btn" data-image-title="Cheesy Chips" data-image-url="/assets/cheesy-chips.png">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="cheesy-chips" data-item-name="Cheesy Chips" data-item-type="customizable-side">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <!-- Onion Rings -->
+                    <div class="menu-item" data-item-id="onion-rings">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Onion Rings</h4>
+                        <button type="button" class="preview-btn" data-image-title="Onion Rings" data-image-url="/assets/onion-rings.png">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="onion-rings" data-item-name="Onion Rings" data-item-type="customizable-side">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <!-- Chicken Nuggets -->
+                    <div class="menu-item" data-item-id="chicken-nuggets">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Nuggets</h4>
+                        <button type="button" class="preview-btn" data-image-title="Chicken Nuggets" data-image-url="/assets/Chicken-Nuggets.jpg">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chicken-nuggets" data-item-name="Chicken Nuggets" data-item-type="customizable-side">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="menu-item" data-item-id="garlic-bread">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">Garlic Bread <span class="price">£1.50</span></h4>
+                        <button type="button" class="preview-btn" data-image-title="Garlic Bread" data-image-url="https://placehold.co/300x200/DAA520/000000?text=Garlic+Bread">Preview</button>
+                        <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="garlic-bread" data-item-name="Garlic Bread" data-item-price="1.50" data-item-type="side">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
-            <p>"Absolutely delicious kebabs! The meat is always tender, and the sauces are just perfect. My go-to place!"</p>
-            <div class="reviewer-name">- Samuel L.</div>
-        </div>
-        <div class="testimonial-card">
-            <div class="stars">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+
+            <!-- Cart remains outside the dynamically displayed menu sections -->
+            <div class="container" id="cart">
+                <h3 style="font-size: 22px;margin-bottom: 15px;color: #c0392b;border-bottom: 2px solid #eee;padding-bottom: 5px;">
+                    🛒 Your Cart
+                </h3>
+                <ul id="cartItems">
+                    <!-- Cart items will be dynamically added here by JavaScript -->
+                    <li style="color: #666; text-align: center; padding: 10px;">Your cart is empty.</li>
+                </ul>
+                <p class="total">
+                    Total: £
+                    <span id="totalPrice">
+                    0.00
+                    </span>
+                </p>
+                <input id="orderSummary" name="Order Summary" type="hidden"/>
+
+                <!-- Clear Cart Button -->
+                <button type="button" id="clearCartBtn">
+                    <i class="fas fa-trash-alt"></i> Clear Cart
+                </button>
+
+                <!-- Estimated Delivery Time Display -->
+                <div style="margin-top: 20px; padding: 15px; border: 2px solid #d2691e; border-radius: 12px; background-color: #fffaf0; text-align: center;">
+                    <p style="font-size: 20px; font-weight: bold; color: #d2691e;">
+                        🚚 Estimated Delivery:
+                    </p>
+                    <p style="font-size: 24px; font-weight: bold; color: #27ae60;">
+                        30-45 Minutes!
+                    </p>
+                    <p style="font-size: 14px; color: #666; margin-top: 5px;">
+                        (Times may vary during peak hours.)
+                    </p>
+                </div>
+
+
+                <h4>
+                    Your Details
+                </h4>
+                <label>
+                    Full Name:
+                    <input name="Full Name" required="" type="text"/>
+                </label>
+                <label>
+                    Email:
+                    <input name="Email" required="" type="email"/>
+                </label>
+                <label>
+                    Mobile Number:
+                    <input name="Mobile Number" required="" type="tel"/>
+                </label>
+                <label>
+                    Special Instructions:
+                    <textarea name="Instructions"></textarea>
+                </label>
+                <label>
+                    Delivery Address:
+                    <textarea name="Delivery Address" required=""></textarea>
+                </label>
+                <label>
+                    Payment Method:
+                    <select id="paymentToggle" name="Payment Method" required>
+                        <option value="cash">💵 Cash on Delivery</option>
+                        <option value="card" selected>💳 Card (Stripe)</option>
+                    </select>
+                </label>
+
+                <button id="payWithCardBtn" type="button" style="
+                display: none;
+                margin: 10px 0;
+                background-color: #27ae60;
+                color: white;
+                padding: 12px 20px;
+                border: none;
+                border-radius: 8px;
+                font-size: 16px;
+                font-weight: bold;
+                cursor: pointer; /* Re-enabled by default */
+                box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+                ">
+                    💳 Pay with Card
+                </button>
+                <button type="submit" style="
+                display: block;
+                width: 100%;
+                background-color: #c0392b;
+                color: white;
+                padding: 15px;
+                font-size: 18px;
+                font-weight: bold;
+                border: none;
+                border-radius: 10px;
+                margin-top: 20px;
+                cursor: pointer; /* Re-enabled by default */
+                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+                ">
+                    🧾 Place Order
+                </button>
+                <!-- UPDATED PAYMENT MESSAGE -->
+                <div style="margin-top: 20px; padding: 15px; border: 2px solid #27ae60; border-radius: 12px; background-color: #e6ffe6; text-align: center;">
+                    <p style="font-size: 22px; font-weight: bold; color: #27ae60;">
+                        ✅ Payment Options Available! ✅
+                    </p>
+                    <p style="font-size: 17px; color: #333;">
+                        You can choose between
+                        <strong>
+                            Cash on Delivery
+                        </strong>
+                        or secure online payment by
+                        <strong>
+                            Card (Stripe)
+                        </strong>
+                        at checkout.
+                    </p>
+                    <p style="font-size: 17px; color: #333; margin-top: 10px;">
+                        Simply select your preferred method above. We appreciate your business! 🙏
+                    </p>
+                </div>
             </div>
-            <p>"Great service and even better food. The veggie wrap is surprisingly flavorful. Highly recommend!"</p>
-            <div class="reviewer-name">- Julius B.</div>
+        </form>
+
+        <div id="confirmationMessage" style="display:none; margin: 40px auto; max-width: 600px; background-color: #d4edda; color: #155724; padding: 20px; border-radius: 12px; border: 2px solid #c3e6cb; text-align: center; font-size: 18px;">
+            ✅
+            <strong>
+                Thank you for your order!
+            </strong>
+            <br/>
+            Your order has been received and will be processed shortly. We'll contact you if needed.
         </div>
-        <div class="testimonial-card">
-            <div class="stars">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+        <div id="freebie-banner">
+            🎁
+            <strong>
+                FREE Drink
+            </strong>
+            <br>with orders over
+            <strong>
+                £30
+            </strong>
+            ! 🎉
+        </div>
+        <p style="color: white; font-size: 24px; background-color: #c0392b; padding: 10px; border-radius: 10px;">
+            Our phone number 👉1234567890
+        </p>
+        <p style="color: white; font-size: 24px; background: #c0392b; padding: 10px; border-radius: 10px;">
+            <img alt="Kebab" src="/assets/Kebab2.png" style="vertical-align: middle; border-radius: 8px;" width="100"/> Lubo's Kebab unique QR code — share it with your friends! 😋
+        </p>
+
+        <!-- NEW: Testimonials Section -->
+        <section id="testimonials-section">
+            <h2>What Our Customers Say</h2>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p>"Absolutely delicious kebabs! The meat is always tender, and the sauces are just perfect. My go-to place!"</p>
+                    <div class="reviewer-name">- Samuel L.</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p>"Great service and even better food. The veggie wrap is surprisingly flavorful. Highly recommend!"</p>
+                    <div class="reviewer-name">- Julius B.</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                    </div>
+                    <p>"Fast delivery and hot food. The mixed grill is fantastic value for money. Will order again!"</p>
+                    <div class="reviewer-name">- Alin S.</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p>"Lubo's Kebab never disappoints! Fresh ingredients, generous portions, and truly authentic taste."</p>
+                    <div class="reviewer-name">- Humza K.</div>
+                </div>
             </div>
-            <p>"Fast delivery and hot food. The mixed grill is fantastic value for money. Will order again!"</p>
-            <div class="reviewer-name">- Alin S.</div>
-        </div>
-        <div class="testimonial-card">
-            <div class="stars">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+        </section>
+        <!-- END NEW: Testimonials Section -->
+
+        <section id="container4">
+            <div id="row4">
+                <button class="btn">
+                    We are
+                </button>
             </div>
-            <p>"Lubo's Kebab never disappoints! Fresh ingredients, generous portions, and truly authentic taste."</p>
-            <div class="reviewer-name">- Humza K.</div>
-        </div>
+            <div id="row5">
+                <button class="btn">
+                    Happy to be here
+                </button>
+            </div>
+            <div id="row6">
+                <button class="btn">
+                    For you!!!
+                </button>
+            </div>
+        </section>
     </div>
-</section>
-<!-- END NEW: Testimonials Section -->
-
-<section id="container4">
-<div id="row4">
-<button class="btn">
-     We are
-    </button>
 </div>
-<div id="row5">
-<button class="btn">
-     Happy to be here
-    </button>
-</div>
-<div id="row6">
-<button class="btn">
-     For you!!!
-    </button>
-</div>
-</section>
 <!-- REMOVED: Opening hours card from here -->
 <footer>
    © 2025 Lubo's Kebab. All rights reserved.\n  </footer>
