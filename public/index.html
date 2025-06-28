@@ -189,37 +189,36 @@
     }
 
     .sidebar-nav-item.active {
-        background-color: var(--primary-color); /* Highlight active item */
+        background-color: var(--primary-color);
         color: white;
-        border-left: 5px solid var(--accent-color); /* Stronger indicator */
-        padding-left: 20px; /* Adjust padding due to border */
+        border-left: 5px solid var(--accent-color);
+        padding-left: 20px;
     }
 
     .sidebar-nav-item i {
         font-size: 1.1em;
-        color: var(--accent-color); /* Icon color */
+        color: var(--accent-color);
     }
     .sidebar-nav-item.active i {
-        color: white; /* White icon when active */
+        color: white;
     }
 
 
     /* NEW: Main Content Area Styling */
     .main-content-area {
-        flex-grow: 1; /* Takes up remaining space */
+        flex-grow: 1;
         padding: 20px;
         display: flex;
-        flex-direction: column; /* Stack form and other elements vertically */
+        flex-direction: column;
     }
 
     form {
-      /* max-width: 900px; REMOVED: Max-width handled by main-app-container */
-      margin: 0; /* Removed auto margin, handled by main-content-area flex-grow */
-      background: #fff; /* Keep white background for the form itself */
+      margin: 0;
+      background: #fff;
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      flex-grow: 1; /* Allow form to grow within main-content-area */
+      flex-grow: 1;
     }
 
     /* NEW: Wrapper for toggled menu categories */
@@ -229,7 +228,7 @@
         gap: 30px;
         justify-content: center;
         align-items: flex-start;
-        margin-bottom: 20px; /* Space between menu items and cart */
+        margin-bottom: 20px;
     }
 
     /* Existing container styles now apply to menu sections */
@@ -245,28 +244,28 @@
 
     /* NEW: Styles for individual menu sections (kebabs, drinks, sides) */
     .menu-section {
-        display: flex; /* Ensure inner content is flex for wrapping items */
-        flex-direction: column; /* Stack items vertically within a section */
-        gap: 20px; /* Space between individual menu items */
-        width: 100%; /* Each section takes full width of its parent */
-        min-height: 400px; /* Ensure sections have some height even if empty */
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        width: 100%;
+        min-height: 400px;
     }
 
     .hidden-menu-section {
-        display: none !important; /* Hide sections using !important to override flex/block */
+        display: none !important;
     }
 
     /* Styles for images integrated directly into containers */
     .container img {
-        max-width: 100%; /* Make images responsive initially */
+        max-width: 100%;
         height: auto;
-        border-radius: 12px; /* Rounded corners for images */
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Soft shadow for images */
-        margin: 15px 0; /* Vertical spacing around images */
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin: 15px 0;
     }
 
 
-    label, input, textarea, select { /* Added select here to apply default padding */
+    label, input, textarea, select {
       display: block;
       width: 100%;
       margin: 10px 0;
@@ -286,7 +285,7 @@
 
     /* Styles for the new Preview Button */
     .preview-btn {
-        background-color: #4CAF50; /* Green */
+        background-color: #4CAF50;
         color: white;
         padding: 5px 10px;
         border: none;
@@ -295,8 +294,8 @@
         font-size: 14px;
         margin-left: 10px;
         transition: background-color 0.3s ease;
-        margin-top: 5px; /* Added some space from kebab name for consistency */
-        margin-bottom: 10px; /* Added margin for consistency */
+        margin-top: 5px;
+        margin-bottom: 10px;
     }
     .preview-btn:hover {
         background-color: #45a049;
@@ -304,18 +303,18 @@
 
     /* Styles for the Modal (Image Popup) */
     .image-modal-overlay {
-        display: none; /* Hidden by default */
-        position: fixed; /* Stay in place */
-        z-index: 10000; /* Sit on top */
+        display: none;
+        position: fixed;
+        z-index: 10000;
         left: 0;
         top: 0;
-        width: 100%; /* Full width */
-        height: 100%; /* Full height */
-        overflow: auto; /* Enable scroll if needed */
-        background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
-        justify-content: center; /* Center content horizontally */
-        align-items: center; /* Center content vertically */
-        backdrop-filter: blur(5px); /* Optional blur effect */
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.8);
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
     }
 
     .image-modal-content {
@@ -324,7 +323,7 @@
         padding: 20px;
         border: 1px solid #888;
         border-radius: 12px;
-        width: 80%; /* Adjust width for desktop */
+        width: 80%;
         max-width: 700px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         position: relative;
@@ -334,8 +333,8 @@
     .image-modal-content img {
         max-width: 100%;
         height: auto;
-        display: block; /* Remove extra space below image */
-        margin: 0 auto 15px auto; /* Center image within modal */
+        display: block;
+        margin: 0 auto 15px auto;
         border-radius: 8px;
     }
 
@@ -418,10 +417,10 @@
 
     /* --- NEW TESTIMONIALS SECTION STYLES --- */
     #testimonials-section {
-        background-color: var(--light-bg); /* Light background for the section */
+        background-color: var(--light-bg);
         padding: 50px 20px;
         margin: 40px auto;
-        max-width: 1000px; /* Max width for content */
+        max-width: 1000px;
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
         text-align: center;
@@ -429,28 +428,28 @@
     }
 
     #testimonials-section h2 {
-        font-family: 'Roboto', sans-serif; /* A bold, clean font for titles */
+        font-family: 'Roboto', sans-serif;
         font-size: 2.5em;
         color: var(--primary-color);
         margin-bottom: 40px;
         position: relative;
-        display: inline-block; /* For the pseudo-element underline */
+        display: inline-block;
     }
 
     #testimonials-section h2::after {
         content: '';
         display: block;
-        width: 80px; /* Short underline */
+        width: 80px;
         height: 4px;
-        background-color: var(--accent-color); /* Yellow underline */
+        background-color: var(--accent-color);
         margin: 10px auto 0;
         border-radius: 2px;
     }
 
     .testimonials-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
-        gap: 30px; /* Space between testimonial cards */
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 30px;
         padding-top: 20px;
     }
 
@@ -458,21 +457,21 @@
         background-color: #fff;
         padding: 25px;
         border-radius: var(--border-radius);
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05); /* Softer shadow */
-        text-align: left; /* Align text within card */
-        border: 1px solid #f0f0f0; /* Very light border */
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        text-align: left;
+        border: 1px solid #f0f0f0;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
 
     .testimonial-card:hover {
-        transform: translateY(-8px); /* Lift effect on hover */
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* More pronounced shadow on hover */
+        transform: translateY(-8px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     }
 
     .testimonial-card .stars {
-        color: var(--accent-color); /* Yellow stars */
+        color: var(--accent-color);
         margin-bottom: 15px;
-        font-size: 1.2em; /* Slightly larger stars */
+        font-size: 1.2em;
     }
 
     .testimonial-card p {
@@ -484,7 +483,7 @@
 
     .testimonial-card .reviewer-name {
         font-weight: 600;
-        color: var(--primary-color); /* Red/orange name */
+        color: var(--primary-color);
         font-size: 1.1em;
     }
     /* --- END NEW TESTIMONIALS SECTION STYLES --- */
@@ -499,51 +498,51 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 /* Kebab Item Styling (Outer Border) */
 .kebab-item {
-    background-color: #ffffff; /* Explicit white background for clarity */
-    border: 1px solid black; /* SOLID BLACK BORDER */
-    border-radius: 12px; /* Rounded corners for the item block */
-    padding: 20px; /* Internal spacing */
-    margin-bottom: 25px; /* Space between kebab items */
-    box-shadow: 0 4px 10px rgba(0,0,0,0.07); /* Consistent shadow */
-    position: relative; /* Needed for positioning the add button */
-    text-align: center; /* ADDED: Center content within each kebab item */
-}
-
-/* NEW: Generic Menu Item styling for Drinks & Sides to match Kebabs */
-.menu-item {
     background-color: #ffffff;
-    border: 1px solid black; /* Black border */
+    border: 1px solid black;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 25px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.07);
     position: relative;
-    display: flex; /* For layout of item content */
+    text-align: center;
+}
+
+/* NEW: Generic Menu Item styling for Drinks & Sides to match Kebabs */
+.menu-item {
+    background-color: #ffffff;
+    border: 1px solid black;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.07);
+    position: relative;
+    display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Pushes quantity/add to bottom */
-    align-items: center; /* Centers content horizontally */
+    justify-content: space-between;
+    align-items: center;
     text-align: center;
 }
 
 /* New: Add button that triggers the modal for kebabs */
 .add-to-cart-modal-trigger-button {
     position: absolute;
-    top: 15px; /* Adjusted position */
-    right: 15px; /* Adjusted position */
-    background-color: #28a745; /* Green */
+    top: 15px;
+    right: 15px;
+    background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 50%; /* Make it circular */
-    width: 38px; /* Size of the circle */
-    height: 38px; /* Size of the circle */
-    font-size: 1.5em; /* Plus icon size */
+    border-radius: 50%;
+    width: 38px;
+    height: 38px;
+    font-size: 1.5em;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     transition: background-color 0.2s ease, transform 0.2s ease;
-    z-index: 5; /* Ensure it's above other elements if needed */
+    z-index: 5;
 }
 .add-to-cart-modal-trigger-button:hover {
     background-color: #218838;
@@ -556,7 +555,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 /* Styles for the new Preview Button */
 .preview-btn {
-    background-color: #4CAF50; /* Green */
+    background-color: #4CAF50;
     color: white;
     padding: 5px 10px;
     border: none;
@@ -565,8 +564,8 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     font-size: 14px;
     margin-left: 10px;
     transition: background-color 0.3s ease;
-    margin-top: 5px; /* Added some space from kebab name for consistency */
-    margin-bottom: 10px; /* Added margin for consistency */
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
 .preview-btn:hover {
     background-color: #45a049;
@@ -574,8 +573,8 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 
 /* Customization Options for each kebab (within the modal) */
-.kebab-item .customization-options { /* This refers to the original customization options, now inside the modal. */
-    background-color: #fff; /* Keep white for inner options */
+.kebab-item .customization-options {
+    background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 15px;
@@ -602,7 +601,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 .kebab-item .customization-options .checkbox-group label {
     display: flex;
     align-items: center;
-    width: auto; /* Override full width for checkboxes */
+    width: auto;
     margin: 0;
     font-size: 0.9em;
     color: #444;
@@ -610,7 +609,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 .kebab-item .customization-options .checkbox-group input[type="checkbox"] {
     margin-right: 5px;
-    width: auto; /* Keep checkbox small */
+    width: auto;
 }
 
 .kebab-item .customization-options textarea {
@@ -621,22 +620,8 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     border-radius: 6px;
 }
 
-
-/* Styles for the old item-selection-row structure (Drinks & Sides) */
-/* This specific rule for .item-selection-row is now commented out as items are inside .menu-item */
-/* .item-selection-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-top: 1px dashed #eee;
-}
-.item-selection-row:first-of-type {
-    border-top: none;
-} */
-
 .item-name-price {
-    flex-grow: 1; /* Allows name and price to take available space */
+    flex-grow: 1;
     font-size: 1.05em;
     font-weight: 500;
     color: var(--text-color);
@@ -650,20 +635,19 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 .item-quantity-control {
     display: flex;
     align-items: center;
-    gap: 10px; /* UNIFIED: Changed from 5px to 10px to match kebab controls */
-    margin-top: 15px; /* Added margin for separation within menu-item */
+    gap: 10px;
+    margin-top: 15px;
 }
 .item-quantity-control input[type="number"] {
-    width: 60px; /* Fixed width for quantity input */
+    width: 60px;
     padding: 6px 8px;
     border: 1px solid var(--border-color);
     border-radius: 10px;
     font-size: 0.95em;
     text-align: center;
     background-color: var(--light-bg);
-    -moz-appearance: textfield; /* Hide Firefox stepper arrows */
+    -moz-appearance: textfield;
 }
-/* Hide Chrome, Safari, Edge, Opera stepper arrows */
 .item-quantity-control input[type="number"]::-webkit-outer-spin-button,
 .item-quantity-control input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -671,13 +655,13 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 
 .add-to-cart-button {
-    background-color: #28a745; /* Green add button */
+    background-color: #28a745;
     color: white;
-    padding: 10px 15px; /* UNIFIED: Changed from 6px 12px to 10px 15px */
+    padding: 10px 15px;
     border: none;
-    border-radius: 8px; /* UNIFIED: Changed from 6px to 8px */
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1em; /* UNIFIED: Changed from 0.9em to 1em */
+    font-size: 1em;
     font-weight: 600;
     transition: background-color 0.2s ease, transform 0.1s ease;
 }
@@ -692,11 +676,11 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 /* Clear Cart Button Styling */
 #clearCartBtn {
-    display: block; /* Make it a block element */
-    width: 100%; /* Full width */
-    margin-top: 15px; /* Space above */
+    display: block;
+    width: 100%;
+    margin-top: 15px;
     padding: 12px 20px;
-    background-color: #e74c3c; /* Red color for a clear/delete action */
+    background-color: #e74c3c;
     color: white;
     border: none;
     border-radius: 8px;
@@ -707,7 +691,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     box-shadow: 0 3px 6px rgba(0,0,0,0.1);
 }
 #clearCartBtn:hover {
-    background-color: #c0392b; /* Darker red on hover */
+    background-color: #c0392b;
     transform: translateY(-2px);
 }
 #clearCartBtn:active {
@@ -718,18 +702,18 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 .cart-item-row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Align text and button to the top if item text wraps */
+    align-items: flex-start;
     padding: 10px 0;
-    border-bottom: 1px dashed #eee; /* Subtle separator between cart items */
+    border-bottom: 1px dashed #eee;
 }
 
 .cart-item-row:last-of-type {
-    border-bottom: none; /* No border after the last item */
+    border-bottom: none;
 }
 
 .cart-item-info {
-    flex-grow: 1; /* Allows item info to take most space */
-    margin-right: 10px; /* Space between text and button */
+    flex-grow: 1;
+    margin-right: 10px;
     font-size: 0.95em;
     color: var(--text-color);
 }
@@ -749,31 +733,31 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 .remove-item-button {
     background: none;
     border: none;
-    color: #e74c3c; /* Red for remove action */
-    font-size: 1.2em; /* Slightly larger icon */
+    color: #e74c3c;
+    font-size: 1.2em;
     cursor: pointer;
     padding: 5px;
     transition: color 0.2s ease, transform 0.2s ease;
-    flex-shrink: 0; /* Prevent button from shrinking */
+    flex-shrink: 0;
 }
 
 .remove-item-button:hover {
-    color: #c0392b; /* Darker red on hover */
+    color: #c0392b;
     transform: scale(1.1);
 }
 
 
 /* --- NEW KEBAB CUSTOMIZATION MODAL STYLES --- */
 #kebabCustomizationModal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 10002; /* Higher than other modals */
+    display: none;
+    position: fixed;
+    z-index: 10002;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.85); /* Darker overlay */
+    background-color: rgba(0,0,0,0.85);
     justify-content: center;
     align-items: center;
     backdrop-filter: blur(8px);
@@ -785,13 +769,13 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     padding: 30px;
     border-radius: 15px;
     width: 90%;
-    max-width: 600px; /* Max width for customization modal */
+    max-width: 600px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.4);
     position: relative;
     animation: fadeInScale 0.3s ease-out;
     display: flex;
-    flex-direction: column; /* Stack sections vertically */
-    gap: 20px; /* Space between sections */
+    flex-direction: column;
+    gap: 20px;
 }
 
 @keyframes fadeInScale {
@@ -842,14 +826,14 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 .modal-checkbox-group, .modal-radio-group {
     display: flex;
     flex-wrap: wrap;
-    gap: 15px; /* Space between options */
+    gap: 15px;
 }
 
 .modal-checkbox-group label, .modal-radio-group label {
     display: flex;
     align-items: center;
     cursor: pointer;
-    width: auto; /* Allow items to size naturally */
+    width: auto;
     font-size: 0.95em;
     color: #444;
 }
@@ -857,8 +841,8 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 .modal-checkbox-group input[type="checkbox"],
 .modal-radio-group input[type="radio"] {
     margin-right: 8px;
-    width: auto; /* Override full width */
-    transform: scale(1.2); /* Slightly larger checkboxes/radios */
+    width: auto;
+    transform: scale(1.2);
     cursor: pointer;
 }
 
@@ -877,19 +861,19 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.3);
 }
 
-.modal-radio-group input[type="radio"]:checked + span { /* Span is the text next to radio */
+.modal-radio-group input[type="radio"]:checked + span {
     font-weight: bold;
     color: var(--primary-color);
 }
 
 .modal-radio-group input[type="radio"]:checked {
-    accent-color: var(--primary-color); /* Highlight checked radio */
+    accent-color: var(--primary-color);
 }
 
 
 .modal-quantity-control {
     display: flex;
-    justify-content: center; /* Center the quantity controls */
+    justify-content: center;
     align-items: center;
     gap: 15px;
     margin-top: 15px;
@@ -916,14 +900,14 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 
 .modal-quantity-control input[type="number"] {
-    width: 80px; /* Wider input for quantity */
+    width: 80px;
     padding: 10px;
     text-align: center;
     font-size: 1.2em;
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background-color: #fcfcfc;
-    -moz-appearance: textfield; /* Hide Firefox stepper arrows */
+    -moz-appearance: textfield;
 }
 .modal-quantity-control input[type="number"]::-webkit-outer-spin-button,
 .modal-quantity-control input[type="number"]::-webkit-inner-spin-button {
@@ -952,7 +936,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 @media (max-width: 768px) {
   .wrapper {
     flex-direction: column;
-    align-items: stretch; /* Keep stretch for mobile as columns will naturally fill */
+    align-items: stretch;
   }
 
   .container {
@@ -960,7 +944,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   }
 
   .image-modal-content {
-      width: 90%; /* Larger on mobile */
+      width: 90%;
   }
 
 
@@ -1027,7 +1011,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       margin-bottom: 30px;
   }
   .testimonials-grid {
-      grid-template-columns: 1fr; /* Stack reviews on mobile */
+      grid-template-columns: 1fr;
   }
   .testimonial-card {
       padding: 20px;
@@ -1035,7 +1019,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
   /* Responsive for Kebab Order Controls (not directly used now for kebabs, but affects drinks/sides) */
   /* Re-purposing some of these for the modal quantity control if needed for responsiveness */
-  .kebab-order-controls { /* Still affects drinks/sides for layout */
+  .kebab-order-controls {
       flex-direction: column;
       align-items: stretch;
   }
@@ -1053,7 +1037,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   /* Responsive for Drinks/Sides quantity control */
   /* The .menu-item styling will mostly handle this now */
   .item-quantity-control {
-      flex-direction: row; /* Keep horizontal on mobile unless very small */
+      flex-direction: row;
       justify-content: center;
   }
   .item-quantity-control input[type="number"] {
@@ -1067,7 +1051,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   /* Responsive for Kebab Modal */
   .kebab-modal-content {
       padding: 20px;
-      margin: 20px; /* Give some space from screen edges */
+      margin: 20px;
   }
   .kebab-modal-title {
       font-size: 1.5em;
@@ -1076,14 +1060,14 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
       font-size: 1.1em;
   }
   .modal-checkbox-group, .modal-radio-group {
-      gap: 10px; /* Smaller gap on mobile */
+      gap: 10px;
   }
   .modal-checkbox-group label, .modal-radio-group label {
       font-size: 0.85em;
       padding: 8px 12px;
   }
   .modal-quantity-control {
-      flex-direction: row; /* Keep horizontal if possible, or adjust as needed */
+      flex-direction: row;
       justify-content: space-around;
       gap: 10px;
   }
@@ -1104,18 +1088,18 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
   /* Responsive for main layout */
   .main-app-container {
-      flex-direction: column; /* Stack sidebar and content on mobile */
-      margin: 10px; /* Reduce margin on small screens */
+      flex-direction: column;
+      margin: 10px;
   }
 
   .sidebar {
-      width: 100%; /* Full width sidebar on mobile */
+      width: 100%;
       padding: 15px 0;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Shadow at bottom */
-      flex-direction: row; /* Layout nav items horizontally */
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      flex-direction: row;
       justify-content: center;
-      flex-wrap: wrap; /* Allow nav items to wrap */
-      gap: 10px; /* Space between nav items */
+      flex-wrap: wrap;
+      gap: 10px;
   }
 
   .sidebar-nav {
@@ -1128,20 +1112,20 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
   .sidebar-nav-item {
       padding: 10px 15px;
       font-size: 1em;
-      border-bottom: none; /* Remove horizontal border */
-      border-right: 1px solid rgba(255,255,255,0.1); /* Add vertical separator */
-      border-left: none; /* Remove left border */
-      flex-grow: 1; /* Allow items to grow to fill space */
+      border-bottom: none;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      border-left: none;
+      flex-grow: 1;
       text-align: center;
-      justify-content: center; /* Center content within item */
+      justify-content: center;
   }
   .sidebar-nav-item:last-child {
       border-right: none;
   }
   .sidebar-nav-item.active {
-      border-left: none; /* Remove left border for active on mobile */
-      border-bottom: 3px solid var(--accent-color); /* Underline active item */
-      padding-bottom: 12px; /* Adjust padding for underline */
+      border-left: none;
+      border-bottom: 3px solid var(--accent-color);
+      padding-bottom: 12px;
   }
 
   .main-content-area {
@@ -1160,7 +1144,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 /* Hero Section - Adapted for Register Page (carried over from your original, might not be fully used now) */
 .hero-section {
-    background: rgba(0, 0, 0, 0.6); /* Overlay for readability */
+    background: rgba(0, 0, 0, 0.6);
     color: white;
     text-align: center;
     padding: 80px 20px;
@@ -1181,10 +1165,10 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 /* Form Container - Centralized and styled (consistent with login.html) */
 .form-container {
-    background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white */
+    background-color: rgba(255, 255, 255, 0.95);
     padding: 40px;
     max-width: 500px;
-    margin: 50px auto; /* Center the form with more margin */
+    margin: 50px auto;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     border: 1px solid var(--border-color);
@@ -1216,11 +1200,11 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 .form-container input[type="email"],
 .form-container input[type="password"] {
     width: 100%;
-    padding: 15px; /* Increased padding */
-    margin-bottom: 25px; /* More space between inputs */
+    padding: 15px;
+    margin-bottom: 25px;
     font-size: 17px;
     border: 1px solid var(--border-color);
-    border-radius: 8px; /* Slightly less rounded */
+    border-radius: 8px;
     background-color: #f9f9f9;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
@@ -1229,18 +1213,18 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 .form-container input[type="password"]:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.2); /* Focus shadow */
+    box-shadow: 0 0 0 3px rgba(210, 105, 30, 0.2);
 }
 
 .error {
-    color: #e6351f; /* Red for error messages */
+    color: #e6351f;
     font-weight: bold;
     text-align: center;
     margin-bottom: 20px;
     font-size: 0.95em;
 }
 
-.register-btn { /* Specific style for register button, keeping it separate for clarity */
+.register-btn {
     background-color: var(--primary-color);
     color: white;
     font-size: 20px;
@@ -1255,7 +1239,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 
 .register-btn:hover {
-    background-color: #a04000; /* Darker primary on hover */
+    background-color: #a04000;
     transform: translateY(-2px);
 }
 
@@ -1299,18 +1283,18 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 /* --- NEW MESSAGE MODAL STYLES --- */
 .message-modal-overlay {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 10001; /* Higher than image modal */
+    display: none;
+    position: fixed;
+    z-index: 10001;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.7); /* Darker overlay */
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
-    backdrop-filter: blur(8px); /* More pronounced blur */
+    background-color: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(8px);
 }
 
 .message-modal-content {
@@ -1318,13 +1302,13 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
     margin: auto;
     padding: 30px;
     border: 1px solid #ddd;
-    border-radius: 15px; /* More rounded */
+    border-radius: 15px;
     width: 90%;
-    max-width: 450px; /* Max width for message boxes */
+    max-width: 450px;
     box-shadow: var(--shadow-strong);
     position: relative;
     text-align: center;
-    animation: fadeInSlideDown 0.4s ease-out; /* Entry animation */
+    animation: fadeInSlideDown 0.4s ease-out;
 }
 
 @keyframes fadeInSlideDown {
@@ -1345,7 +1329,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 
 .message-modal-content h4 .icon {
     font-size: 1.1em;
-    color: var(--accent-color); /* Default icon color, can be overridden by type */
+    color: var(--accent-color);
 }
 
 .message-modal-content p {
@@ -1391,9 +1375,9 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
 }
 
 /* Specific colors for modal types */
-.message-modal-content.success .icon { color: #28A745; } /* Green for success */
-.message-modal-content.error .icon { color: #E74C3C; }   /* Red for error */
-.message-modal-content.warning .icon { color: #FFC107; } /* Yellow for warning */
+.message-modal-content.success .icon { color: #28A745; }
+.message-modal-content.error .icon { color: #E74C3C; }
+.message-modal-content.warning .icon { color: #FFC107; }
 
 /* Responsive for message modal */
 @media (max-width: 600px) {
@@ -1502,7 +1486,7 @@ input[type="text"], input[type="email"], input[type="tel"], input[type="number"]
                     <!-- Chicken Shish (formerly Veggie Wrap) -->
                     <div class="kebab-item">
                         <h4 style="margin-bottom: 10px; color: var(--primary-color);">Chicken Shish</h4>
-                        <button type="button" class="preview-btn" data-image-title="Chicken Shish" data-image-url="/assets/chicken-shish-preview.jpg">Preview</button>
+                        <button type="button" class="preview-btn" data-image-title="Chicken Shish" data-image-url="/assets/chicken-shish.jpg">Preview</button>
                         <button type="button" class="add-to-cart-modal-trigger-button" data-item-id="chicken-shish" data-item-name="Chicken Shish" data-item-type="kebab">
                             <i class="fas fa-plus"></i>
                         </button>
