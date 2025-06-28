@@ -79,11 +79,13 @@ const menuItems = {
             'large': 22.00
         }
     },
-    'veggie-wrap': {
-        name: 'Veggie Wrap',
-        type: 'kebab', // Categorized as kebab for customization options
+    // REMOVED 'veggie-wrap'
+    'chicken-shish': { // ADDED Chicken Shish
+        name: 'Chicken Shish',
+        type: 'kebab', // Set type to kebab so it gets salad and sauce options
         sizes: {
-            'regular': 6.00
+            'small': 4.00,
+            'large': 6.00
         }
     },
     'coca-cola': { name: 'Coca Cola', type: 'drink', price: 1.50 },
@@ -345,6 +347,8 @@ function openKebabCustomizationModal(itemId) {
             modalKebabSizes.querySelector('input[type="radio"]').checked = true;
         }
         // Add event listener for size changes to update price
+        // Remove previous listener to prevent duplicates
+        modalKebabSizes.removeEventListener('change', updateModalPrice);
         modalKebabSizes.addEventListener('change', updateModalPrice);
     } else {
         sizeSection.style.display = 'none';
@@ -366,6 +370,9 @@ function openKebabCustomizationModal(itemId) {
     }
 
     // Add event listeners for quantity changes to update price
+    // Remove previous listeners to prevent duplicates
+    modalQuantityInput.removeEventListener('input', updateModalPrice);
+    modalQuantityInput.removeEventListener('change', updateModalPrice);
     modalQuantityInput.addEventListener('input', updateModalPrice);
     modalQuantityInput.addEventListener('change', updateModalPrice); // For direct input changes
 
