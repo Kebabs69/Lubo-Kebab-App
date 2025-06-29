@@ -240,9 +240,11 @@ const itemDetails = {
 };
 
 function openKebabCustomizationModal(itemId) {
+    console.log("Opening customization modal for item ID:", itemId);
     currentItem = itemDetails[itemId];
     if (!currentItem) {
         showMessageModal('Error', 'Item details not found.', 'error');
+        console.error("Item details not found for ID:", itemId);
         return;
     }
 
@@ -256,7 +258,6 @@ function openKebabCustomizationModal(itemId) {
     modalKebabSizes.innerHTML = '';
 
     // Show/hide sections based on item type
-    // Changed 'kebab' to include 'burger' for toppings section
     document.getElementById('modalSizeSection').style.display = currentItem.sizes ? 'block' : 'none';
     document.getElementById('modalToppingsSection').style.display = (currentItem.type === 'kebab' || currentItem.type === 'burger') ? 'block' : 'none';
     document.getElementById('modalSaucesSection').style.display = (currentItem.type === 'kebab' || currentItem.type === 'customizable-side' || currentItem.type === 'burger') ? 'block' : 'none';
@@ -357,14 +358,16 @@ kebabCustomizationModal.addEventListener('click', (e) => {
 // Event listeners for opening customization modal
 document.querySelectorAll('.add-to-cart-modal-trigger-button').forEach(button => {
     button.addEventListener('click', function() {
+        console.log("Button clicked for item:", this.dataset.itemId, "Type:", this.dataset.itemType);
         const itemId = this.dataset.itemId;
-        const itemType = this.dataset.itemType; // This will now include 'burger'
+        const itemType = this.dataset.itemType;
 
-        if (itemType === 'kebab' || itemType === 'customizable-side' || itemType === 'burger' || itemType === 'side') { // Added 'side' to open customization modal for garlic bread
+        if (itemType === 'kebab' || itemType === 'customizable-side' || itemType === 'burger' || itemType === 'side') {
             openKebabCustomizationModal(itemId);
         } else { // For simple drinks
             const item = itemDetails[itemId];
             if (item) {
+                console.log("Directly adding simple item to cart:", item.name);
                 addToCart({
                     id: itemId,
                     name: item.name,
@@ -373,6 +376,9 @@ document.querySelectorAll('.add-to-cart-modal-trigger-button').forEach(button =>
                     customizations: {} // No customizations for simple items
                 });
                 showMessageModal('Item Added!', `${item.name} has been added to your cart.`, 'success');
+            } else {
+                console.error("Item details not found for direct add:", itemId);
+                showMessageModal('Error', 'Item details not found for direct add.', 'error');
             }
         }
     });
@@ -381,7 +387,11 @@ document.querySelectorAll('.add-to-cart-modal-trigger-button').forEach(button =>
 
 // Add to Cart from Kebab Customization Modal
 modalAddToCartButton.addEventListener('click', () => {
-    if (!currentItem) return;
+    console.log("Add to Cart button clicked in modal.");
+    if (!currentItem) {
+        console.error("No current item selected when Add to Cart was clicked.");
+        return;
+    }
 
     const quantity = parseInt(modalQuantityInput.value);
     if (quantity < 1) {
@@ -400,6 +410,7 @@ modalAddToCartButton.addEventListener('click', () => {
         selectedSize = 'Standard'; // Assign a default size for fixed-price items without explicit sizes
     } else {
         showMessageModal('Error', 'Please select a size for your item.', 'warning');
+        console.error("No size selected and no fixed price for item:", currentItem.name);
         return;
     }
 
@@ -427,14 +438,16 @@ modalAddToCartButton.addEventListener('click', () => {
         customizations.notes = notes;
     }
 
-    addToCart({
-        id: currentItem.id, // Use currentItem.id directly or pass it from the trigger button
+    const itemToAdd = {
+        id: currentItem.id,
         name: currentItem.name,
         size: selectedSize,
         price: selectedPrice,
         quantity: quantity,
         customizations: customizations
-    });
+    };
+    console.log("Item to add to cart:", itemToAdd);
+    addToCart(itemToAdd);
 
     kebabCustomizationModal.style.display = 'none';
     showMessageModal('Item Added!', `${quantity} x ${currentItem.name} (${selectedSize}) added to cart!`, 'success');
@@ -446,12 +459,15 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 const cartItemsContainer = document.getElementById('cartItems');
 const totalPriceSpan = document.getElementById('totalPrice');
 const orderSummaryInput = document.getElementById('orderSummary');
+const freebieBanner = document.getElementById('freebie-banner'); // Ensure freebieBanner is defined globally or passed
 
 function saveCart() {
     localStorage.setItem('cart', JSON.stringify(cart));
+    console.log("Cart saved to localStorage:", cart);
 }
 
 function renderCart() {
+    console.log("Rendering cart. Current cart state:", cart);
     cartItemsContainer.innerHTML = '';
     if (cart.length === 0) {
         cartItemsContainer.innerHTML = '<li style="color: #666; text-align: center; padding: 10px;">Your cart is empty.</li>';
@@ -468,7 +484,6 @@ function renderCart() {
             let customizationDetails = '';
             if (item.customizations) {
                 if (item.customizations.toppings && item.customizations.toppings.length > 0) {
-                    // Changed "Toppings" to "Salads/Toppings" for generality
                     customizationDetails += `Salads/Toppings: ${item.customizations.toppings.join(', ')}. `;
                 }
                 if (item.customizations.sauces && item.customizations.sauces.length > 0) {
@@ -494,6 +509,7 @@ function renderCart() {
 }
 
 function addToCart(item) {
+    console.log("Attempting to add item to cart:", item);
     // Check if item is already in cart with same customizations (for merging)
     const existingItemIndex = cart.findIndex(cartItem =>
         cartItem.id === item.id &&
@@ -502,14 +518,17 @@ function addToCart(item) {
     );
 
     if (existingItemIndex > -1) {
+        console.log("Merging with existing item:", cart[existingItemIndex]);
         cart[existingItemIndex].quantity += item.quantity;
     } else {
+        console.log("Adding new item to cart.");
         cart.push(item);
     }
     renderCart();
 }
 
 function removeFromCart(index) {
+    console.log("Removing item at index:", index);
     cart.splice(index, 1);
     renderCart();
 }
@@ -520,10 +539,10 @@ function updateCartTotal() {
     cart.forEach(item => {
         total += item.price * item.quantity;
         let itemSummary = `${item.quantity}x ${item.name}`;
-        if (item.size && item.size !== 'Standard') itemSummary += ` (${item.size})`; // Only add size if not 'Standard'
+        if (item.size && item.size !== 'Standard') itemSummary += ` (${item.size})`;
         if (item.customizations) {
             if (item.customizations.toppings && item.customizations.toppings.length > 0) {
-                itemSummary += ` [Salads/Toppings: ${item.customizations.toppings.join(', ')}]`; // Updated label
+                itemSummary += ` [Salads/Toppings: ${item.customizations.toppings.join(', ')}]`;
             }
             if (item.customizations.sauces && item.customizations.sauces.length > 0) {
                 itemSummary += ` [Sauces: ${item.customizations.sauces.join(', ')}]`;
@@ -535,16 +554,19 @@ function updateCartTotal() {
         orderSummaryText += itemSummary + '; ';
     });
     totalPriceSpan.textContent = total.toFixed(2);
-    orderSummaryInput.value = orderSummaryText.trim(); // Update hidden input for form submission
-    updateFreebieBanner(total); // Update freebie banner based on total
+    orderSummaryInput.value = orderSummaryText.trim();
+    updateFreebieBanner(total);
+    console.log("Cart total updated:", total.toFixed(2));
 }
 
 // Update Freebie Banner visibility
 function updateFreebieBanner(total) {
-    if (total >= 30) {
-        freebieBanner.style.display = 'block';
-    } else {
-        freebieBanner.style.display = 'none';
+    if (freebieBanner) { // Check if element exists
+        if (total >= 30) {
+            freebieBanner.style.display = 'block';
+        } else {
+            freebieBanner.style.display = 'none';
+        }
     }
 }
 
@@ -578,32 +600,36 @@ document.addEventListener('DOMContentLoaded', renderCart);
 const orderForm = document.getElementById('orderForm');
 const payWithCardBtn = document.getElementById('payWithCardBtn');
 const paymentToggle = document.getElementById('paymentToggle');
-const placeOrderBtn = orderForm.querySelector('button[type="submit"]'); // Get the Place Order button
+const placeOrderBtn = orderForm.querySelector('button[type="submit"]');
 
 // Toggle visibility of Pay with Card button based on payment method
 paymentToggle.addEventListener('change', function() {
+    console.log("Payment toggle changed to:", this.value);
     if (this.value === 'card') {
         payWithCardBtn.style.display = 'block';
-        placeOrderBtn.style.display = 'none'; // Hide Place Order
+        placeOrderBtn.style.display = 'none';
     } else {
         payWithCardBtn.style.display = 'none';
-        placeOrderBtn.style.display = 'block'; // Show Place Order
+        placeOrderBtn.style.display = 'block';
     }
 });
 
 // Initial state based on default selected option
-// Ensure this runs on load to set the correct button visibility
-if (paymentToggle.value === 'card') {
-    payWithCardBtn.style.display = 'block';
-    placeOrderBtn.style.display = 'none';
-} else {
-    payWithCardBtn.style.display = 'none';
-    placeOrderBtn.style.display = 'block';
-}
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOMContentLoaded: Initial payment toggle check.");
+    if (paymentToggle.value === 'card') {
+        payWithCardBtn.style.display = 'block';
+        placeOrderBtn.style.display = 'none';
+    } else {
+        payWithCardBtn.style.display = 'none';
+        placeOrderBtn.style.display = 'block';
+    }
+});
 
 
 // Handle 'Pay with Card' button click
 payWithCardBtn.addEventListener('click', async () => {
+    console.log("Pay with Card button clicked.");
     if (cart.length === 0) {
         showMessageModal('Empty Cart', 'Your cart is empty. Please add items before paying.', 'warning');
         return;
@@ -628,7 +654,8 @@ payWithCardBtn.addEventListener('click', async () => {
 
     // Create a Checkout Session on your server
     try {
-        const response = await fetch('https://lubo-kebab-app-1.onrender.com/create-checkout-session', { // CORRECTED BACKEND URL
+        console.log("Attempting to create Stripe checkout session...");
+        const response = await fetch('https://lubo-kebab-app-1.onrender.com/create-checkout-session', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -642,29 +669,29 @@ payWithCardBtn.addEventListener('click', async () => {
                     size: item.size,
                     customizations: item.customizations
                 })),
-                total: totalAmount.toFixed(0), // Stripe expects integer cents
-                customer_details: { // Pass customer details for pre-filling Stripe Checkout
+                total: totalAmount.toFixed(0),
+                customer_details: {
                     name: fullName,
                     email: email,
                     phone: mobileNumber,
                     address: {
                         line1: deliveryAddress,
-                        country: 'GB', // Assuming UK, adjust if needed
+                        country: 'GB',
                     },
                 },
-                // Add success and cancel URLs for Stripe redirection
                 success_url: 'https://lubo-kebab-app-1.onrender.com/success.html',
                 cancel_url: 'https://lubo-kebab-app-1.onrender.com/cancel.html',
             }),
         });
 
         const session = await response.json();
+        console.log("Stripe session response:", session);
 
         if (session.error) {
-            console.error('Backend Error:', session.error);
+            console.error('Backend Error creating Stripe session:', session.error);
             showMessageModal('Payment Error', `Error: ${session.error}`, 'error');
         } else if (session.id) {
-            // Redirect to Stripe Checkout
+            console.log("Redirecting to Stripe Checkout with session ID:", session.id);
             const result = await stripe.redirectToCheckout({
                 sessionId: session.id,
             });
@@ -674,10 +701,11 @@ payWithCardBtn.addEventListener('click', async () => {
                 showMessageModal('Payment Error', `Stripe Checkout Error: ${result.error.message}`, 'error');
             }
         } else {
+            console.error("Unexpected Stripe session response:", session);
             showMessageModal('Payment Error', 'Failed to create Stripe Checkout session. Please try again.', 'error');
         }
     } catch (error) {
-        console.error('Error during Stripe checkout:', error);
+        console.error('Error during Stripe checkout fetch:', error);
         showMessageModal('Payment Error', 'An unexpected error occurred during payment processing. Please check your internet connection and try again.', 'error');
     }
 });
@@ -685,7 +713,9 @@ payWithCardBtn.addEventListener('click', async () => {
 
 // Handle 'Place Order' button click (for cash on delivery)
 orderForm.addEventListener('submit', function(event) {
-    event.preventDefault(); // Prevent default form submission
+    event.preventDefault();
+
+    console.log("Place Order button clicked (Cash on Delivery path).");
 
     if (cart.length === 0) {
         showMessageModal('Empty Cart', 'Your cart is empty. Please add items before placing an order.', 'warning');
@@ -706,18 +736,17 @@ orderForm.addEventListener('submit', function(event) {
     const paymentMethod = paymentToggle.value;
 
     if (paymentMethod === 'cash') {
-        // Process cash on delivery order
+        console.log("Processing Cash on Delivery order.");
         showMessageModal('Order Placed!', 'Your cash on delivery order has been placed. Thank you!', 'success');
-        cart = []; // Clear cart after order
+        cart = [];
         renderCart();
-        orderForm.reset(); // Clear form fields
+        orderForm.reset();
         document.getElementById('confirmationMessage').style.display = 'block';
         setTimeout(() => {
             document.getElementById('confirmationMessage').style.display = 'none';
         }, 5000);
     } else {
-        // This block should ideally not be reached if button visibility is correctly managed.
-        // It's a fallback message if the form is submitted while 'card' is selected.
+        console.log("Form submitted with 'card' selected, but 'Place Order' button was clicked. This should not happen if UI logic is correct.");
         showMessageModal('Payment Required', 'Please use the "Pay with Card" button for card payments, or select "Cash on Delivery".', 'warning');
     }
 });
