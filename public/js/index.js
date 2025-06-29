@@ -185,12 +185,11 @@ const itemDetails = {
         name: 'Chicken Burger',
         type: 'burger',
         sizes: {
-            'Regular': 6.00,
-            'Large': 8.50
+            'Single': 6.50 // Changed to Single size, adjusted price
         },
-        defaultSize: 'Regular',
-        toppings: ['Lettuce', 'Tomato', 'Onion', 'Mayonnaise'],
-        sauces: ['Mayonnaise', 'Chili Sauce', 'BBQ Sauce']
+        defaultSize: 'Single',
+        toppings: ['Onion', 'Lettuce', 'Tomato', 'Cucumber', 'Cabbage', 'Pickles'], // Specified toppings
+        sauces: ['Ketchup', 'Mayonnaise', 'BBQ Sauce', 'Garlic Mayo', 'Mint Sauce', 'Chilli Sauce', 'Relish', 'Sweet Chilli'] // Specified sauces
     },
     'chips': {
         name: 'Chips',
