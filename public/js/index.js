@@ -121,7 +121,6 @@ const itemDetails = {
         type: 'kebab',
         sizes: {
             'Small': 7.00,
-            // 'Medium': 9.00, // REMOVED MEDIUM
             'Large': 11.00
         },
         defaultSize: 'Small',
@@ -133,7 +132,6 @@ const itemDetails = {
         type: 'kebab',
         sizes: {
             'Small': 7.50,
-            // 'Medium': 9.50, // REMOVED MEDIUM
             'Large': 11.50
         },
         defaultSize: 'Small',
@@ -163,6 +161,41 @@ const itemDetails = {
         toppings: ['Cabbage', 'Lettuce', 'Tomato', 'Cucumber', 'Onion', 'Pickles'],
         sauces: ['Garlic Sauce', 'Chili Sauce', 'Mayonnaise', 'Ketchup', 'BBQ Sauce', 'Mint Sauce', 'Relish', 'Sweet Chilli', 'Burger Sauce']
     },
+    // --- NEW BURGER ITEMS ---
+    'classic-beef-burger': {
+        name: 'Classic Beef Burger',
+        type: 'burger', // New type
+        sizes: {
+            'Single': 6.50,
+            'Double': 9.00
+        },
+        defaultSize: 'Single',
+        toppings: ['Lettuce', 'Tomato', 'Onion', 'Pickles', 'Cheese', 'Bacon', 'Jalapenos'],
+        sauces: ['Ketchup', 'Mayonnaise', 'Burger Sauce', 'BBQ Sauce', 'Chili Sauce']
+    },
+    'cheeseburger': {
+        name: 'Cheeseburger',
+        type: 'burger',
+        sizes: {
+            'Single': 7.00,
+            'Double': 9.50
+        },
+        defaultSize: 'Single',
+        toppings: ['Lettuce', 'Tomato', 'Onion', 'Pickles', 'Bacon', 'Jalapenos'], // Cheese is implied
+        sauces: ['Ketchup', 'Mayonnaise', 'Burger Sauce', 'BBQ Sauce', 'Chili Sauce']
+    },
+    'chicken-burger': {
+        name: 'Chicken Burger',
+        type: 'burger',
+        sizes: {
+            'Regular': 6.00,
+            'Large': 8.50
+        },
+        defaultSize: 'Regular',
+        toppings: ['Lettuce', 'Tomato', 'Onion', 'Mayonnaise'],
+        sauces: ['Mayonnaise', 'Chili Sauce', 'BBQ Sauce']
+    },
+    // --- END NEW BURGER ITEMS ---
     'chips': {
         name: 'Chips',
         type: 'customizable-side',
@@ -228,9 +261,10 @@ function openKebabCustomizationModal(itemId) {
     modalKebabSizes.innerHTML = '';
 
     // Show/hide sections based on item type
+    // Changed 'kebab' to include 'burger' for toppings section
     document.getElementById('modalSizeSection').style.display = currentItem.sizes ? 'block' : 'none';
-    document.getElementById('modalToppingsSection').style.display = currentItem.type === 'kebab' ? 'block' : 'none';
-    document.getElementById('modalSaucesSection').style.display = (currentItem.type === 'kebab' || currentItem.type === 'customizable-side') ? 'block' : 'none';
+    document.getElementById('modalToppingsSection').style.display = (currentItem.type === 'kebab' || currentItem.type === 'burger') ? 'block' : 'none';
+    document.getElementById('modalSaucesSection').style.display = (currentItem.type === 'kebab' || currentItem.type === 'customizable-side' || currentItem.type === 'burger') ? 'block' : 'none';
 
     // Populate sizes if available
     if (currentItem.sizes) {
@@ -251,8 +285,8 @@ function openKebabCustomizationModal(itemId) {
         }
     }
 
-    // Populate toppings for kebabs
-    if (currentItem.type === 'kebab' && currentItem.toppings) {
+    // Populate toppings for kebabs AND burgers
+    if ((currentItem.type === 'kebab' || currentItem.type === 'burger') && currentItem.toppings) {
         currentItem.toppings.forEach(topping => {
             const label = document.createElement('label');
             label.innerHTML = `<input type="checkbox" value="${topping}"> ${topping}`;
@@ -260,8 +294,8 @@ function openKebabCustomizationModal(itemId) {
         });
     }
 
-    // Populate sauces for kebabs and customizable sides
-    if ((currentItem.type === 'kebab' || currentItem.type === 'customizable-side') && currentItem.sauces) {
+    // Populate sauces for kebabs, customizable sides, AND burgers
+    if ((currentItem.type === 'kebab' || currentItem.type === 'customizable-side' || currentItem.type === 'burger') && currentItem.sauces) {
         currentItem.sauces.forEach(sauce => {
             const label = document.createElement('label');
             label.innerHTML = `<input type="checkbox" value="${sauce}"> ${sauce}`;
@@ -275,7 +309,7 @@ function openKebabCustomizationModal(itemId) {
 
 function updateModalTotalPrice() {
     let basePrice = 0;
-    if (currentItem.type === 'kebab' || currentItem.type === 'customizable-side') {
+    if (currentItem.sizes) { // Check if sizes exist for the item (kebabs, burgers, customizable-sides)
         const selectedSizeRadio = modalKebabSizes.querySelector('input[name="kebabSize"]:checked');
         if (selectedSizeRadio) {
             basePrice = parseFloat(selectedSizeRadio.dataset.price);
@@ -329,9 +363,9 @@ kebabCustomizationModal.addEventListener('click', (e) => {
 document.querySelectorAll('.add-to-cart-modal-trigger-button').forEach(button => {
     button.addEventListener('click', function() {
         const itemId = this.dataset.itemId;
-        const itemType = this.dataset.itemType;
+        const itemType = this.dataset.itemType; // This will now include 'burger'
 
-        if (itemType === 'kebab' || itemType === 'customizable-side') {
+        if (itemType === 'kebab' || itemType === 'customizable-side' || itemType === 'burger') {
             openKebabCustomizationModal(itemId);
         } else { // For simple drinks/sides, add directly to cart
             const item = itemDetails[itemId];
@@ -374,7 +408,8 @@ modalAddToCartButton.addEventListener('click', () => {
     }
 
     const customizations = {};
-    if (currentItem.type === 'kebab') {
+    // Apply toppings logic for both kebabs AND burgers
+    if ((currentItem.type === 'kebab' || currentItem.type === 'burger') && currentItem.toppings) {
         const selectedToppings = Array.from(modalKebabToppings.querySelectorAll('input[type="checkbox"]:checked'))
                                      .map(cb => cb.value);
         if (selectedToppings.length > 0) {
@@ -382,7 +417,8 @@ modalAddToCartButton.addEventListener('click', () => {
         }
     }
 
-    if (currentItem.type === 'kebab' || currentItem.type === 'customizable-side') {
+    // Apply sauces logic for kebabs, customizable sides, AND burgers
+    if ((currentItem.type === 'kebab' || currentItem.type === 'customizable-side' || currentItem.type === 'burger') && currentItem.sauces) {
         const selectedSauces = Array.from(modalKebabSauces.querySelectorAll('input[type="checkbox"]:checked'))
                                     .map(cb => cb.value);
         if (selectedSauces.length > 0) {
@@ -436,7 +472,8 @@ function renderCart() {
             let customizationDetails = '';
             if (item.customizations) {
                 if (item.customizations.toppings && item.customizations.toppings.length > 0) {
-                    customizationDetails += `Toppings: ${item.customizations.toppings.join(', ')}. `;
+                    // Changed "Toppings" to "Salads/Toppings" for generality
+                    customizationDetails += `Salads/Toppings: ${item.customizations.toppings.join(', ')}. `;
                 }
                 if (item.customizations.sauces && item.customizations.sauces.length > 0) {
                     customizationDetails += `Sauces: ${item.customizations.sauces.join(', ')}. `;
@@ -490,7 +527,7 @@ function updateCartTotal() {
         if (item.size) itemSummary += ` (${item.size})`;
         if (item.customizations) {
             if (item.customizations.toppings && item.customizations.toppings.length > 0) {
-                itemSummary += ` [Toppings: ${item.customizations.toppings.join(', ')}]`;
+                itemSummary += ` [Salads/Toppings: ${item.customizations.toppings.join(', ')}]`; // Updated label
             }
             if (item.customizations.sauces && item.customizations.sauces.length > 0) {
                 itemSummary += ` [Sauces: ${item.customizations.sauces.join(', ')}]`;
@@ -678,6 +715,12 @@ document.querySelectorAll('.sidebar-nav-item').forEach(item => {
         document.getElementById(targetId).classList.remove('hidden-menu-section');
     });
 });
+
+// Set default active section on load (Kebabs)
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('.sidebar-nav-item[data-target="kebabs-section"]').click();
+});
+
 
 // Logout Button functionality
 document.getElementById('logoutBtn').addEventListener('click', () => {
