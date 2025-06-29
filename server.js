@@ -464,14 +464,18 @@ app.post("/cash-order", async (req, res, next) => {
     const orderItemsText = order.map(item => {
         let itemDetail = `<li>${String(item.name).trim()} - £${(Number(item.price) || 0).toFixed(2)} (x${Number(item.quantity) || 1})`;
         if (item.customizations) {
-            if (item.customizations.sauces && item.customizations.sauces.length > 0) {
-                itemDetail += `<br>&nbsp;&nbsp;&nbsp;Sauces: ${item.customizations.sauces.map(s => String(s).trim()).join(', ')}`;
+            const sauces = item.customizations.sauces || []; // Ensure it's an array
+            const toppings = item.customizations.toppings || []; // Ensure it's an array
+            const notes = item.customizations.notes || ''; // Ensure it's a string
+
+            if (sauces.length > 0) {
+                itemDetail += `<br>&nbsp;&nbsp;&nbsp;Sauces: ${sauces.map(s => String(s).trim()).join(', ')}`;
             }
-            if (item.customizations.toppings && item.customizations.toppings.length > 0) {
-                itemDetail += `<br>&nbsp;&nbsp;&nbsp;Toppings: ${item.customizations.toppings.map(t => String(t).trim()).join(', ')}`;
+            if (toppings.length > 0) {
+                itemDetail += `<br>&nbsp;&nbsp;&nbsp;Toppings: ${toppings.map(t => String(t).trim()).join(', ')}`;
             }
-            if (item.customizations.notes) {
-                itemDetail += `<br>&nbsp;&nbsp;&nbsp;Notes: ${String(item.customizations.notes).trim()}`;
+            if (notes) {
+                itemDetail += `<br>&nbsp;&nbsp;&nbsp;Notes: ${String(notes).trim()}`;
             }
         }
         itemDetail += `</li>`;
@@ -536,39 +540,58 @@ app.post("/cash-order", async (req, res, next) => {
 
 // --- Stripe Checkout Session Endpoint ---
 app.post("/create-checkout-session", async (req, res, next) => {
-    const { cart, customerEmail } = req.body;
+    // Frontend sends `cart` and `customer_details` (which includes email, name, address, phone)
+    const { items, total, customer_details, success_url, cancel_url } = req.body;
 
-    logger.info("Creating Stripe session with cart (first 500 chars):", JSON.stringify(cart).substring(0, 500) + '...');
-    logger.info("Customer email for session:", customerEmail);
+    logger.info("Creating Stripe session with items (first 500 chars):", JSON.stringify(items).substring(0, 500) + '...');
+    logger.info("Customer details for session:", customer_details);
 
-    if (!cart || !Array.isArray(cart) || cart.length === 0) {
-        logger.error("❌ Cart is empty or invalid for session creation");
-        return res.status(400).json({ error: "Cart is empty or invalid" });
+    if (!items || !Array.isArray(items) || items.length === 0) {
+        logger.error("❌ Items array is empty or invalid for session creation");
+        return res.status(400).json({ error: "Items array is empty or invalid" });
     }
-    if (!customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customerEmail)) {
-        logger.error("❌ Invalid customer email format:", customerEmail);
-        return res.status(400).json({ error: "Invalid customer email format." });
+    // Basic validation for customer_details
+    if (!customer_details || !customer_details.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer_details.email)) {
+        logger.error("❌ Invalid or missing customer email in customer_details:", customer_details?.email);
+        return res.status(400).json({ error: "Invalid or missing customer email." });
     }
 
     try {
-        const line_items = cart.map(item => ({
-            price_data: {
-                currency: 'gbp',
-                product_data: {
-                    name: String(item.name) +
-                        (item.customizations && (item.customizations.sauces.length > 0 || item.customizations.toppings.length > 0 || item.customizations.notes)
-                            ? ' (' +
-                            (item.customizations.sauces.length > 0 ? 'Sauces: ' + item.customizations.sauces.map(s => String(s).trim()).join(', ') : '') +
-                            (item.customizations.sauces.length > 0 && item.customizations.toppings.length > 0 ? '; ' : '') +
-                            (item.customizations.toppings.length > 0 ? 'Toppings: ' + item.customizations.toppings.map(t => String(t).trim()).join(', ') : '') +
-                            ((item.customizations.sauces.length > 0 || item.customizations.toppings.length > 0) && item.customizations.notes ? '; ' : '') +
-                            (item.customizations.notes ? 'Notes: ' + String(item.customizations.notes).trim() : '')
-                            + ')' : ''), // ✅ Append customizations to product name for Stripe display
+        const line_items = items.map(item => {
+            let productName = String(item.name);
+            let customizationString = '';
+
+            // Ensure customizations exist and properties are arrays/strings
+            const customizations = item.customizations || {};
+            const sauces = customizations.sauces || [];
+            const toppings = customizations.toppings || [];
+            const notes = customizations.notes || '';
+
+            if (sauces.length > 0 || toppings.length > 0 || notes) {
+                let parts = [];
+                if (sauces.length > 0) {
+                    parts.push('Sauces: ' + sauces.map(s => String(s).trim()).join(', '));
+                }
+                if (toppings.length > 0) {
+                    parts.push('Toppings: ' + toppings.map(t => String(t).trim()).join(', '));
+                }
+                if (notes) {
+                    parts.push('Notes: ' + String(notes).trim());
+                }
+                customizationString = ' (' + parts.join('; ') + ')';
+            }
+
+            return {
+                price_data: {
+                    currency: 'gbp',
+                    product_data: {
+                        name: productName + customizationString, // Append customizations
+                    },
+                    unit_amount: Math.round(Number(item.price) * 100),
                 },
-                unit_amount: Math.round(Number(item.price) * 100),
-            },
-            quantity: Number(item.quantity) || 1,
-        }));
+                quantity: Number(item.quantity) || 1,
+            };
+        });
 
         logger.info("Line items for Stripe:", JSON.stringify(line_items));
 
@@ -576,12 +599,20 @@ app.post("/create-checkout-session", async (req, res, next) => {
             payment_method_types: ['card'],
             line_items,
             mode: 'payment',
-            customer_email: customerEmail,
-            success_url: `${process.env.YOUR_DOMAIN}/success.html`,
-            cancel_url: `${process.env.YOUR_DOMAIN}/cancel.html`,
-            // metadata: {
-            //   cart: JSON.stringify(cart) // Only use if you absolutely need the full cart in metadata, can cause payload too large.
-            // }
+            // Use customer_details object directly from frontend
+            customer_email: customer_details.email, // Stripe will pre-fill this
+            success_url: success_url || `${process.env.YOUR_DOMAIN}/success.html`, // Use provided URL or fallback
+            cancel_url: cancel_url || `${process.env.YOUR_DOMAIN}/cancel.html`,   // Use provided URL or fallback
+            // You can also pass customer_details for billing address pre-fill if needed,
+            // but `customer_email` is often enough for simple checkout.
+            // customer_details: {
+            //     address: {
+            //         line1: customer_details.address.line1,
+            //         country: customer_details.address.country,
+            //     },
+            //     name: customer_details.name,
+            //     phone: customer_details.phone,
+            // },
         });
 
         logger.info("✅ Stripe session created:", session.id);
