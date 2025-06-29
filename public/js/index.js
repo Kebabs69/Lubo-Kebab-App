@@ -161,10 +161,9 @@ const itemDetails = {
         toppings: ['Cabbage', 'Lettuce', 'Tomato', 'Cucumber', 'Onion', 'Pickles'],
         sauces: ['Garlic Sauce', 'Chili Sauce', 'Mayonnaise', 'Ketchup', 'BBQ Sauce', 'Mint Sauce', 'Relish', 'Sweet Chilli', 'Burger Sauce']
     },
-    // --- UPDATED BURGER ITEM ---
     'classic-beef-burger': {
-        name: '1/4lb Beef Burger', // Renamed
-        type: 'burger',
+        name: '1/4lb Beef Burger',
+        type: 'burger', // New type
         sizes: {
             'Single': 7.00 // Only one size, assuming a price
         },
@@ -176,12 +175,11 @@ const itemDetails = {
         name: 'Cheeseburger',
         type: 'burger',
         sizes: {
-            'Single': 7.00,
-            'Double': 9.50
+            'Single': 7.50 // Only one size, updated price
         },
         defaultSize: 'Single',
-        toppings: ['Lettuce', 'Tomato', 'Onion', 'Pickles', 'Bacon', 'Jalapenos'], // Cheese is implied
-        sauces: ['Ketchup', 'Mayonnaise', 'Burger Sauce', 'BBQ Sauce', 'Chili Sauce']
+        toppings: ['Onion', 'Lettuce', 'Tomato', 'Cucumber', 'Cabbage', 'Pickles'], // Specified toppings
+        sauces: ['Ketchup', 'Mayonnaise', 'BBQ Sauce', 'Garlic Mayo', 'Mint Sauce', 'Chilli Sauce', 'Relish', 'Sweet Chilli'] // Specified sauces
     },
     'chicken-burger': {
         name: 'Chicken Burger',
@@ -194,7 +192,6 @@ const itemDetails = {
         toppings: ['Lettuce', 'Tomato', 'Onion', 'Mayonnaise'],
         sauces: ['Mayonnaise', 'Chili Sauce', 'BBQ Sauce']
     },
-    // --- END UPDATED BURGER ITEM ---
     'chips': {
         name: 'Chips',
         type: 'customizable-side',
