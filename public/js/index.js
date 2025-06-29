@@ -362,7 +362,7 @@ document.querySelectorAll('.add-to-cart-modal-trigger-button').forEach(button =>
         const itemId = this.dataset.itemId;
         const itemType = this.dataset.itemType;
 
-        if (itemType === 'kebab' || itemType === 'customizable-side' || itemType === 'burger' || itemType === 'side') {
+        if (itemType === 'kebab' || itemType === 'customizable-side' || itemType === 'burger' || itemType === 'side') { // Added 'side' to open customization modal for garlic bread
             openKebabCustomizationModal(itemId);
         } else { // For simple drinks
             const item = itemDetails[itemId];
@@ -655,6 +655,17 @@ payWithCardBtn.addEventListener('click', async () => {
     // Create a Checkout Session on your server
     try {
         console.log("Attempting to create Stripe checkout session...");
+        // Collect all necessary customer details for the backend
+        const customerDetailsForStripe = {
+            name: fullName,
+            email: email,
+            phone: mobileNumber,
+            address: {
+                line1: deliveryAddress,
+                country: 'GB', // Assuming UK, adjust if needed
+            },
+        };
+
         const response = await fetch('https://lubo-kebab-app-1.onrender.com/create-checkout-session', {
             method: 'POST',
             headers: {
@@ -669,16 +680,8 @@ payWithCardBtn.addEventListener('click', async () => {
                     size: item.size,
                     customizations: item.customizations
                 })),
-                total: totalAmount.toFixed(0),
-                customer_details: {
-                    name: fullName,
-                    email: email,
-                    phone: mobileNumber,
-                    address: {
-                        line1: deliveryAddress,
-                        country: 'GB',
-                    },
-                },
+                total: totalAmount.toFixed(0), // Stripe expects integer cents
+                customer_details: customerDetailsForStripe, // Pass the collected customer details
                 success_url: 'https://lubo-kebab-app-1.onrender.com/success.html',
                 cancel_url: 'https://lubo-kebab-app-1.onrender.com/cancel.html',
             }),
@@ -712,7 +715,7 @@ payWithCardBtn.addEventListener('click', async () => {
 
 
 // Handle 'Place Order' button click (for cash on delivery)
-orderForm.addEventListener('submit', function(event) {
+orderForm.addEventListener('submit', async function(event) { // Added 'async'
     event.preventDefault();
 
     console.log("Place Order button clicked (Cash on Delivery path).");
@@ -737,14 +740,48 @@ orderForm.addEventListener('submit', function(event) {
 
     if (paymentMethod === 'cash') {
         console.log("Processing Cash on Delivery order.");
-        showMessageModal('Order Placed!', 'Your cash on delivery order has been placed. Thank you!', 'success');
-        cart = [];
-        renderCart();
-        orderForm.reset();
-        document.getElementById('confirmationMessage').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('confirmationMessage').style.display = 'none';
-        }, 5000);
+
+        // Prepare data for backend (optional, but good for consistency and future order storage)
+        const orderData = {
+            order: cart,
+            customer: {
+                name: fullName,
+                email: email,
+                phone: mobileNumber,
+                address: deliveryAddress,
+                instructions: orderForm.querySelector('textarea[name="Instructions"]').value,
+            },
+            total: parseFloat(totalPriceSpan.textContent),
+            paymentMethod: 'cash',
+        };
+
+        try {
+            // Send cash order data to backend (if you want to record it on server)
+            const response = await fetch('https://lubo-kebab-app-1.onrender.com/cash-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(orderData),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                console.log("Cash order sent to backend successfully:", result);
+                cart = []; // Clear cart after successful order
+                saveCart(); // Save empty cart to localStorage
+                orderForm.reset(); // Clear form fields
+                window.location.href = 'https://lubo-kebab-app-1.onrender.com/success.html'; // Redirect to success page
+            } else {
+                console.error("Backend error processing cash order:", result.message);
+                showMessageModal('Order Failed', `Failed to place cash order: ${result.message || 'An unknown error occurred.'}`, 'error');
+            }
+        } catch (error) {
+            console.error('Error sending cash order to backend:', error);
+            showMessageModal('Order Failed', 'An unexpected error occurred while placing your cash order. Please try again.', 'error');
+        }
+
     } else {
         console.log("Form submitted with 'card' selected, but 'Place Order' button was clicked. This should not happen if UI logic is correct.");
         showMessageModal('Payment Required', 'Please use the "Pay with Card" button for card payments, or select "Cash on Delivery".', 'warning');
