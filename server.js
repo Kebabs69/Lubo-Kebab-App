@@ -531,7 +531,8 @@ app.post("/cash-order", async (req, res, next) => {
         } else {
             logger.warn("[EMAIL] Email credentials or transporter not set. Skipping cash order email confirmations.");
         }
-        res.status(200).send("Cash order received and emails processed!");
+        // Changed from .send() to .json()
+        res.status(200).json({ message: "Cash order received and emails processed!" });
     } catch (error) {
         logger.error("❌ [EMAIL] Error processing cash order or sending emails:", error);
         next(error); // Pass error to centralized error handler
