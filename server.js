@@ -6,7 +6,10 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 app.use(cors());
-app.use(express.static(__dirname));
+
+// Absolute path fix for Render
+const publicPath = path.resolve(__dirname);
+app.use(express.static(publicPath));
 
 const mongoURI = process.env.MONGO_URI; 
 
@@ -18,7 +21,7 @@ const User = mongoose.model('User', new mongoose.Schema({
     username: String, 
     email: { type: String, unique: true, required: true }, 
     password: String, 
-    isAdmin: Boolean,
+    isAdmin: { type: Boolean, default: false },
     isVIP: { type: Boolean, default: false }, 
     avatar: { type: String, default: '👤' } 
 }));
@@ -55,10 +58,7 @@ app.get('/api/messages', async (req, res) => {
 app.post('/api/messages', async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(403).json("User not found");
-    
-    // Security: Remove any HTML tags from the message
     let cleanText = req.body.text.replace(/<[^>]*>?/gm, '');
-
     const msg = new Message({
         ...req.body,
         text: cleanText,
@@ -87,7 +87,7 @@ app.post('/api/register', async (req, res) => {
         });
         await user.save();
         res.json({ success: true });
-    } catch (err) { res.status(500).json({ error: "Registration failed" }); }
+    } catch (err) { res.status(500).json({ error: "Failed" }); }
 });
 
 app.post('/api/login', async (req, res) => {
@@ -95,5 +95,10 @@ app.post('/api/login', async (req, res) => {
     user ? res.json(user) : res.status(401).json("Fail");
 });
 
+// Root route fix: Explicitly serve index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(publicPath, 'index.html'));
+});
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server Live`));
+app.listen(PORT, () => console.log(`🚀 Server Live on port ${PORT}`));
