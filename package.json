@@ -1,23 +1,13 @@
 {
-  "name": "kebab-order.html",
-  "version": "1.0.0",
-  "description": "An interactive online menu and ordering system for Lubo's Kebab shop, featuring:",
+  "name": "brewbound-cafe-chat",
+  "version": "2.0.0",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "nodemailer": "^7.0.3",
-    "pg": "^8.16.2",
-    "sqlite3": "^5.1.7",
-    "stripe": "^18.2.1"
+    "express": "^4.18.2",
+    "socket.io": "^4.6.1",
+    "mongoose": "^8.0.0"
   }
 }
