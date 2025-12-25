@@ -8,16 +8,16 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Tell the server to look for files in the current directory
+// Serves files from the current folder
 app.use(express.static(__dirname));
 
 const mongoURI = process.env.MONGO_URI; 
 
 mongoose.connect(mongoURI)
-    .then(() => console.log("☕ Database Connected"))
+    .then(() => console.log("☕ Database Connected Successfully"))
     .catch(err => console.log("❌ DB Error:", err));
 
-// Models
+// Keep your Models exactly as they are
 const User = mongoose.model('User', new mongoose.Schema({
     username: String, 
     email: { type: String, unique: true, required: true }, 
@@ -42,10 +42,37 @@ app.get('/api/messages', async (req, res) => {
 app.post('/api/messages', async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(403).json("User not found");
+    
+    // VIP Room Protection Logic
+    if (req.body.room === 'VIP Lounge' && !user.isVIP && !user.isAdmin) {
+        return res.status(402).json({ error: "Payment Required" });
+    }
+
+    // Security: Remove any HTML tags from the message
     let cleanText = req.body.text.replace(/<[^>]*>?/gm, '');
-    const msg = new Message({ ...req.body, text: cleanText, avatar: user.avatar, isAdmin: user.isAdmin, isVIP: user.isVIP });
+
+    const msg = new Message({
+        ...req.body,
+        text: cleanText,
+        avatar: user.avatar,
+        isAdmin: user.isAdmin,
+        isVIP: user.isVIP
+    });
     await msg.save();
     res.json(msg);
+});
+
+app.delete('/api/messages/:id', async (req, res) => {
+    try {
+        const adminEmail = req.query.adminEmail;
+        const user = await User.findOne({ email: adminEmail });
+        if (user && user.isAdmin) {
+            await Message.findByIdAndDelete(req.params.id);
+            res.json({ success: true });
+        } else {
+            res.status(403).json({ error: "Unauthorized" });
+        }
+    } catch (err) { res.status(500).json(err); }
 });
 
 app.get('/api/user-status', async (req, res) => {
@@ -59,7 +86,7 @@ app.post('/api/register', async (req, res) => {
         const user = new User({ ...req.body, isAdmin: count === 0, isVIP: false });
         await user.save();
         res.json({ success: true });
-    } catch (err) { res.status(500).json({ error: "Fail" }); }
+    } catch (err) { res.status(500).json({ error: "Registration failed" }); }
 });
 
 app.post('/api/login', async (req, res) => {
@@ -67,21 +94,12 @@ app.post('/api/login', async (req, res) => {
     user ? res.json(user) : res.status(401).json("Fail");
 });
 
-// THE FIX: This manually checks where index.html is hiding
+// Render Deployment Fix
 app.get('*', (req, res) => {
-    const pathsToTry = [
-        path.join(__dirname, 'index.html'),
-        path.join(__dirname, 'public', 'index.html'),
-        path.join(process.cwd(), 'index.html')
-    ];
-
-    for (const p of pathsToTry) {
-        if (fs.existsSync(p)) {
-            return res.sendFile(p);
-        }
-    }
-    res.status(404).send("Error: index.html not found in " + __dirname);
+    const loc = path.join(__dirname, 'index.html');
+    if (fs.existsSync(loc)) return res.sendFile(loc);
+    res.status(404).send("index.html missing");
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server Live`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
