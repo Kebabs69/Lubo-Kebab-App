@@ -7,17 +7,15 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use(express.static(path.join(__dirname, 'public')));
+// Serves files from the current folder
 app.use(express.static(__dirname));
 
-// SECURITY: Uses Render's Environment Variable
 const mongoURI = process.env.MONGO_URI; 
 
 mongoose.connect(mongoURI)
     .then(() => console.log("☕ Connected Successfully"))
     .catch(err => console.log("❌ DB Error:", err));
 
-// UPDATED SCHEMA: Added isVIP to track paying users
 const User = mongoose.model('User', new mongoose.Schema({
     username: String, 
     email: { type: String, unique: true, required: true }, 
@@ -27,7 +25,6 @@ const User = mongoose.model('User', new mongoose.Schema({
     avatar: { type: String, default: '👤' } 
 }));
 
-// UPDATED SCHEMA: Messages store if sender is Admin or VIP
 const Message = mongoose.model('Message', new mongoose.Schema({
     username: String, 
     email: String, 
@@ -39,15 +36,7 @@ const Message = mongoose.model('Message', new mongoose.Schema({
     timestamp: { type: Date, default: Date.now }
 }));
 
-app.get('/api/users', async (req, res) => res.json(await User.find()));
-
-app.post('/api/ban', async (req, res) => {
-    await User.findOneAndDelete({ email: req.body.email });
-    await Message.deleteMany({ email: req.body.email });
-    res.json({ success: true });
-});
-
-// UPDATED: Added security check to ensure only admins can delete messages
+// UPDATED: Secure Delete Route
 app.delete('/api/messages/:id', async (req, res) => {
     try {
         const adminEmail = req.query.adminEmail;
@@ -64,11 +53,6 @@ app.delete('/api/messages/:id', async (req, res) => {
     }
 });
 
-app.post('/api/clear-chat', async (req, res) => {
-    await Message.deleteMany({});
-    res.json({ success: true });
-});
-
 app.get('/api/messages', async (req, res) => res.json(await Message.find().sort({ timestamp: 1 })));
 
 app.post('/api/messages', async (req, res) => {
@@ -76,7 +60,6 @@ app.post('/api/messages', async (req, res) => {
     if (!user) return res.status(403).json("Banned"); 
 
     let cleanText = req.body.text.replace(/<[^>]*>?/gm, '');
-
     const msg = new Message({
         ...req.body,
         text: cleanText,
@@ -100,18 +83,14 @@ app.post('/api/register', async (req, res) => {
     try {
         const { email, username, password, avatar } = req.body;
         const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ error: "Email already registered!" });
-        }
+        if (existingUser) return res.status(400).json({ error: "Email already registered!" });
         const count = await User.countDocuments();
         const user = new User({
             username, email, password, avatar: avatar || '👤', isAdmin: count === 0, isVIP: false
         });
         await user.save();
         res.json({ success: true });
-    } catch (err) {
-        res.status(500).json({ error: "Server Error" });
-    }
+    } catch (err) { res.status(500).json({ error: "Server Error" }); }
 });
 
 app.post('/api/login', async (req, res) => {
@@ -120,9 +99,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
-        if (err) res.sendFile(path.join(__dirname, 'index.html'));
-    });
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(10000, () => console.log("🚀 Server Live"));
